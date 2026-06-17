@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link, Outlet, useNavigate } from "react-router"
-import { Github, Menu, Search, ShieldCheck, Star } from "lucide-react"
+import { Github, Menu, PanelLeft, Search, ShieldCheck, Star } from "lucide-react"
 
 import { AppSidebar } from "@/components/app-sidebar"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -8,10 +8,27 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const REPO_URL = "https://github.com/algorisys-oss/netsec-katas"
+const SIDEBAR_KEY = "netsec-katas:sidebar-collapsed"
 
 export function RootLayout() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false) // mobile drawer
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem(SIDEBAR_KEY) === "1"
+    } catch {
+      return false
+    }
+  })
   const navigate = useNavigate()
+
+  // Persist the desktop collapsed state.
+  useEffect(() => {
+    try {
+      localStorage.setItem(SIDEBAR_KEY, collapsed ? "1" : "0")
+    } catch {
+      // ignore
+    }
+  }, [collapsed])
 
   // Press "/" anywhere (outside a field) to jump to search.
   useEffect(() => {
@@ -41,6 +58,17 @@ export function RootLayout() {
           onClick={() => setOpen((o) => !o)}
         >
           <Menu />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hidden md:inline-flex"
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-expanded={!collapsed}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          onClick={() => setCollapsed((c) => !c)}
+        >
+          <PanelLeft />
         </Button>
         <Link to="/" className="flex items-center gap-2 font-semibold">
           <ShieldCheck className="size-5 text-emerald-500" />
@@ -85,7 +113,8 @@ export function RootLayout() {
         <aside
           className={cn(
             "w-full shrink-0 border-r md:w-72",
-            open ? "block" : "hidden md:block",
+            open ? "block" : "hidden", // mobile drawer
+            collapsed ? "md:hidden" : "md:block", // desktop collapse
           )}
         >
           <div className="sticky top-14 max-h-[calc(100vh-3.5rem)] overflow-y-auto p-4">
