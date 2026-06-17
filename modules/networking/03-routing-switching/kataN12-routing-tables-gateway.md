@@ -199,7 +199,7 @@ Exceeded" — that *is* the routing table in motion (see N06).
 |---------|---------|-----|-----|-------|
 | Routing table | OS routing table / router RIB | **VPC Route** (per-subnet or per-VPC) | **Route Table** (per-subnet) | **(Azure: TODO)** |
 | Default gateway | Router IP on local segment | Implicitly the subnet's `.1` gateway | Implicitly the subnet's `.1` gateway | (Azure: TODO) |
-| Default route (`0.0.0.0/0`) | Static route to edge router/firewall | Route to **Internet Gateway** or **Cloud NAT** | Route to **Internet Gateway** or **NAT Gateway** | (Azure: TODO) |
+| Default route (`0.0.0.0/0`) | Static route to edge router/firewall | Route to **`default-internet-gateway`** (Cloud NAT adds SNAT for private-IP VMs; it is *not* a route next hop) | Route to **Internet Gateway** or **NAT Gateway** | (Azure: TODO) |
 | More-specific route wins | Longest prefix match | Same (longest prefix wins) | Same | Same |
 | Learned route (dynamic) | OSPF / BGP route | BGP route via **Cloud Router** (on Interconnect/VPN) | BGP route via **AWS Transit Gateway** or **Virtual Private Gateway** | (Azure: TODO) |
 | "No route to host" | ICMP Unreachable / drop | Same | Same | Same |

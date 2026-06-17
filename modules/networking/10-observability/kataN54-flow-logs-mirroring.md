@@ -200,13 +200,13 @@ exfiltrating to an unexpected internet IP after an OT/IT boundary break).
 | Packet mirroring / SPAN | SPAN port, network TAP | **Packet Mirroring** (policy on subnet or VM tag; copies to ILB/collector) | **VPC Traffic Mirroring** (on individual ENIs; copies to NLB or target ENI) | **Azure vNET TAP** — (Azure: TODO — feature exists in preview on select regions; check current GA status) |
 | IDS integration | Dedicated IDS appliance on SPAN port | Packet Mirroring → IDS VM or Cloud IDS (managed) | Traffic Mirroring → partner IDS (e.g. Suricata via Marketplace) or Gateway Load Balancer GWLB | Azure vNET TAP → partner sensor (Azure: TODO) |
 | Managed IDS (no sensor VM) | Rarely on-prem | **Cloud IDS** (powered by Palo Alto, mirrors under the hood) | **Amazon Inspector** (not traffic IDS — vulnerability scan); GuardDuty analyses VPC Flow Logs for threat signals | **Microsoft Defender for Cloud** + Azure Sentinel (log-based; no inline mirroring equivalent in GA) |
-| Egress / transit flow visibility | Core switch / MPLS PE router | Enable Flow Logs on **Cloud NAT** or **Cloud Router** for north-south; **Packet Mirroring** for east-west | Enable Flow Logs on **Transit Gateway** ENI or NAT Gateway | Enable Flow Logs on **VPN Gateway** or **NAT Gateway** (Azure: TODO) |
+| Egress / transit flow visibility | Core switch / MPLS PE router | Enable **VPC Flow Logs** (subnet-level) and **Cloud NAT logging** for north-south; **Packet Mirroring** for east-west | Enable Flow Logs on **Transit Gateway** ENI or NAT Gateway | Enable Flow Logs on **VPN Gateway** or **NAT Gateway** (Azure: TODO) |
 | Retention & compliance | Syslog/NetFlow on SIEM with defined retention | Set GCS bucket lifecycle (e.g. 90 days) with CMEK | S3 lifecycle policy; SSE-KMS | Azure Storage lifecycle management; CMEK via Key Vault |
 
 **Key differences worth explaining to the IT head:**
 
-- GCP's Packet Mirroring targets *subnets or VM tags* — easy to scope by workload
-  label without knowing individual IPs.
+- GCP's Packet Mirroring targets *subnets or VM network tags* — easy to scope by
+  workload tag without knowing individual IPs.
 - AWS Traffic Mirroring targets *individual ENIs* — more granular but operationally
   heavier at scale (one policy per ENI, quotas apply).
 - Neither copies traffic leaving the cloud (internet egress after NAT) by default.
@@ -352,8 +352,9 @@ Sketch the AWS equivalent for Northwind's `10.104.0.0/14` VPC:
   mirroring on high-throughput links.
 
 - **GCP vs AWS scope difference caught teams off guard.** GCP Packet Mirroring
-  is scoped by *subnet or VM tag* — attaching a label `mirror=true` to a VM
-  automatically enrolls it. AWS Traffic Mirroring must be configured on each ENI
+  is scoped by *subnet or VM network tag* — attaching the network **tag** (e.g.
+  `mirrored`) to a VM enrolls it. Network tags are not labels — a label will not
+  match a packet-mirroring tag filter. AWS Traffic Mirroring must be configured on each ENI
   individually, and there are per-session quotas. A team that designed the GCP
   policy and expected identical AWS behavior re-architected the collector when
   they hit ENI quota limits.

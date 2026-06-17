@@ -245,10 +245,13 @@ Using Meridian's GCP allocation `10.100.0.0/14`, carve the following subnets and
 verify the math:
 
 1. `prod-app-india` — needs up to 200 hosts in `asia-south1`. Choose the smallest
-   /prefix that fits. (Answer: /24 gives 254 usable hosts. /25 gives 126 — too
-   few; /24 is correct.)
-2. `prod-data-india` — 50 hosts. What's the smallest prefix? (Answer: /26 gives 62
-   usable hosts. `10.100.33.0/26` → hosts `.1–.62`, broadcast `.63`.)
+   /prefix that fits. (Answer: in GCP a /24 gives **252** usable addresses — GCP
+   reserves 4 per subnet: the network address, the `.1` gateway, and the
+   second-to-last and last addresses. 200 fits a /24; a /25 gives only **124**
+   usable — too few.)
+2. `prod-data-india` — 50 hosts. What's the smallest prefix? (Answer: a /26 gives
+   **60** usable in GCP — `10.100.33.0/26` spans `.0`–`.63` with `.0`, `.1`, `.62`,
+   and `.63` reserved, leaving `.2`–`.61`. 50 fits.)
 3. Confirm all chosen CIDRs are within `10.100.0.0/14`. (Range: `10.100.0.0` to
    `10.103.255.255`. Any `10.100.x.x` or `10.101–103.x.x` fits.)
 

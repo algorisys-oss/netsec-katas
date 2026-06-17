@@ -167,9 +167,10 @@ all EC2 instances in Meridian Bank's AWS environment.
 
 GCP metadata protection:
 ```
-# Require the Metadata-Flavor header — the SSRF attacker's app won't add it
-# but your legitimate application code should.
-# Block at the VPC level: outbound traffic to 169.254.169.254/32 denied.
+# Require the Metadata-Flavor: Google header — the SSRF attacker's request won't
+# carry it, but your legitimate application code does.
+# Note: 169.254.169.254 is link-local; VPC firewall rules don't reliably block it.
+# Restrict metadata access with an OS-level firewall rule / egress proxy if needed.
 ```
 
 AWS — enforce IMDSv2 only (no instance should accept IMDSv1):
@@ -187,7 +188,7 @@ aws ec2 describe-instances \
 |---------|---------|-----|-----|-------|
 | WAF managed rules (OWASP CRS) | F5 ASM / ModSecurity with OWASP CRS | Cloud Armor — managed protection rules include OWASP Top 10 rule groups | AWS WAF with AWS Managed Rules for OWASP Top 10 | (Azure: TODO) Azure WAF with OWASP CRS 3.2 on Application Gateway or Front Door |
 | Prevent public storage exposure (A05) | Firewall / ACL on storage system | Org Policy `constraints/storage.publicAccessPrevention` | S3 Block Public Access at account or bucket level | (Azure: TODO) Azure Defender for Storage |
-| SSRF — block metadata endpoint | Host firewall rule on 169.254.169.254 | VPC firewall rule blocking egress to `169.254.169.254/32`; metadata server requires `Metadata-Flavor: Google` header | Enforce IMDSv2 (`HttpTokens: required`) on EC2; VPC NACL block egress to 169.254.169.254/32 | (Azure: TODO) |
+| SSRF — block metadata endpoint | Host firewall rule on 169.254.169.254 | Require the `Metadata-Flavor: Google` header; 169.254.169.254 is link-local, so VPC firewall rules don't reliably block it — use an OS firewall rule / egress proxy | Enforce IMDSv2 (`HttpTokens: required`) and set a low metadata hop limit; NACLs/SGs **cannot** block IMDS (link-local) — use a host/container firewall rule to restrict it | (Azure: TODO) |
 | Secret / config management (A05) | CyberArk / HashiCorp Vault | Secret Manager; no secrets in env vars or IaC | AWS Secrets Manager / Parameter Store; no secrets in AMIs | (Azure: TODO) Key Vault |
 | Dependency scanning (A06) | WhiteSource / Black Duck on-prem | Cloud Build with Artifact Analysis (OSV-based); Assured OSS | Amazon Inspector; CodeGuru Security | (Azure: TODO) |
 | Auth / session management (A07) | LDAP + Kerberos; session cookies | Cloud Identity / Firebase Auth; Identity Platform | Amazon Cognito; IAM for service-to-service | (Azure: TODO) Entra ID |

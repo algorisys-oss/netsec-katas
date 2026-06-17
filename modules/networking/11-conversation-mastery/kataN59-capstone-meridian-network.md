@@ -344,8 +344,9 @@ the physical diversity of your dual-cloud hybrid design.
   Red flag: weeks or months — that velocity will kill digital channels.*
 
 - "How are flow logs retained, and who can query them in an incident?"
-  *Good answer: VPC Flow Logs exported to Cloud Logging / S3, retained 90 days
-  minimum (or longer per RBI), accessible to SOC under documented access policy.
+  *Good answer: VPC Flow Logs exported to Cloud Logging / S3, retained at
+  least 12 months per PCI DSS 10.5.1 (most recent 3 months immediately
+  available), longer per RBI, accessible to SOC under documented access policy.
   Red flag: 'we have logs somewhere' — not a controlled evidence chain.*
 
 **Red flags to listen for overall:**
@@ -378,7 +379,7 @@ scope and routing scope are independent. Control both or you leak information
 even when traffic is blocked.
 
 **BGP route leak from the wrong team.** A cloud engineer added a static route
-in the GCP hub VPC to `0.0.0.0/0` pointing at a NAT gateway for testing. That
+in the GCP hub VPC to `0.0.0.0/0` pointing at the default internet gateway for testing. That
 route was redistributed into BGP and advertised to HQ-DC1, which began using
 GCP as its default route to the internet — for all branch traffic. Internet
 performance degraded; the network team spent four hours finding it. Lesson:

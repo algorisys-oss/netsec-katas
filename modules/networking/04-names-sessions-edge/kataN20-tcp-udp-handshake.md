@@ -57,7 +57,7 @@ destination port field is 443. It says nothing about the payload — that is L7.
 | 22 | TCP | SSH | Remote management; restrict source tightly |
 | 53 | TCP+UDP | DNS | UDP for queries ≤512 B; TCP for zone transfers and large responses |
 | 80 | TCP | HTTP | Often redirected to 443; don't carry cardholder data |
-| 443 | TCP | HTTPS / TLS | The default secure web/API port |
+| 443 | TCP+UDP | HTTPS / TLS | TCP for classic HTTPS; **UDP 443** carries HTTP/3 (QUIC) — open both at the firewall |
 | 5432 | TCP | PostgreSQL | Never internet-exposed; internal only |
 | 6379 | TCP | Redis | Likewise; auth is often weak by default |
 | 8080, 8443 | TCP | Alt HTTP/HTTPS | Used by dev and some middleware |

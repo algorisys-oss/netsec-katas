@@ -156,8 +156,8 @@ Route name                Priority  Destination    Next hop
 subnet-route-app          0         10.100.1.0/24  local (VPC fabric)
 subnet-route-data         0         10.100.2.0/24  local (VPC fabric)
 subnet-route-mgmt         0         10.100.3.0/24  local (VPC fabric)
-nat-egress-app            1000      0.0.0.0/0      Cloud NAT router    [tag: nat-egress]
-nat-egress-mgmt           1000      0.0.0.0/0      Cloud NAT router    [tag: nat-egress]
+nat-egress-app            1000      0.0.0.0/0      default-internet-gateway  [tag: nat-egress]
+nat-egress-mgmt           1000      0.0.0.0/0      default-internet-gateway  [tag: nat-egress]
 ```
 
 GCP has no "blackhole" / "drop" next-hop — a VPC route's next hop must be a real
@@ -176,6 +176,11 @@ data subnet. This is what the auditor wants: provable isolation at the routing
 layer, not just the firewall layer.
 
 ### Cloud NAT egress IP
+
+**Cloud NAT is not a route next hop.** The `0.0.0.0/0` route's next hop is the
+`default-internet-gateway`; Cloud NAT is a managed **SNAT** service attached to a
+Cloud Router that lets VMs *without* external IPs actually use that route, by
+translating their private source IP to a NAT IP for the eligible subnet/VM ranges.
 
 Cloud NAT is configured on the Cloud Router in `asia-south1`. It is assigned a
 reserved static external IP, e.g. `34.100.150.10` (illustrative). Every outbound
