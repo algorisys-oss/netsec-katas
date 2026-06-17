@@ -57,7 +57,7 @@ The fundamental PCI network demand is **segmentation**:
   ┌───▼──────────────────────────────────────────────────────────┐
   │  CDE (Cardholder Data Environment)         ← PCI SCOPE       │
   │  Card processing · HSM · tokenisation engine                 │
-  │  10.10.1.0/24                                                │
+  │  10.10.20.0/24                                               │
   └───┬──────────────────────────────────────────────────────────┘
       │  Explicit firewall allow-list only; default-deny in both
       │  directions; all traffic logged
@@ -149,11 +149,11 @@ The network team must carve a PCI-scoped CDE subnet and demonstrate isolation.
 ```
   10.10.0.0/16   HQ-DC1 supernet
   ├── 10.10.0.0/24   Management / jump-host VLAN       (254 host addrs)
-  ├── 10.10.1.0/24   CDE — card processing, HSM        (254 host addrs)  ← PCI scope
   ├── 10.10.2.0/24   DMZ — internet-facing services    (254 host addrs)
   ├── 10.10.3.0/24   Core banking (internal)           (254 host addrs)
   ├── 10.10.4.0/24   SWIFT / interbank payments        (254 host addrs)  ← additional RBI zone
-  └── 10.10.5.0/24 – 10.10.255.0/24   Reserved / staff / DR paths
+  ├── 10.10.20.0/24  CDE — card processing, HSM        (254 host addrs)  ← PCI scope
+  └── 10.10.5.0/24 – 10.10.255.0/24   Reserved / staff / DR paths (excl. .20)
 ```
 
 Each /24 is a separate VLAN with a dedicated Layer-3 interface on the firewall
@@ -161,15 +161,15 @@ Each /24 is a separate VLAN with a dedicated Layer-3 interface on the firewall
 allow rule. Default-deny is the baseline — every unlisted flow is dropped and
 logged.
 
-**Allowed flows to/from the CDE (10.10.1.0/24):**
+**Allowed flows to/from the CDE (10.10.20.0/24):**
 
 ```
   Source            Destination       Port(s)          Purpose
   ──────────────────────────────────────────────────────────────────────────
-  10.10.2.0/24      10.10.1.0/24      TCP 8443         Payment gateway → card processor
-  10.10.0.0/24      10.10.1.0/24      TCP 22 (SSH)     Jump-host admin access
-  10.10.1.0/24      10.10.0.50/32     TCP 514 (syslog) CDE → log aggregator (SIEM)
-  10.10.1.0/24      10.10.0.51/32     UDP 123 (NTP)    CDE → internal NTP server
+  10.10.2.0/24      10.10.20.0/24     TCP 8443         Payment gateway → card processor
+  10.10.0.0/24      10.10.20.0/24     TCP 22 (SSH)     Jump-host admin access
+  10.10.20.0/24     10.10.0.50/32     TCP 514 (syslog) CDE → log aggregator (SIEM)
+  10.10.20.0/24     10.10.0.51/32     UDP 123 (NTP)    CDE → internal NTP server
   (all other flows)                                    DROP + log
 ```
 
@@ -201,7 +201,7 @@ needs to initiate a card payment:
   HQ-DC1  10.10.0.0/16  (on-prem)
       │
       ▼
-  CDE  10.10.1.0/24   ← raw PAN lives ONLY here
+  CDE  10.10.20.0/24  ← raw PAN lives ONLY here
 ```
 
 Tokenising before the data crosses the interconnect means the GCP side is **out
@@ -211,7 +211,7 @@ important cloud scoping decision for a bank on GCP/AWS.
 Data residency is maintained because:
 - The GCP resources are in `asia-south1` only; the VPC has an org-level policy
   (`constraints/gcp.resourceLocations`) restricting all resource creation to
-  `in:india-locations`.
+  `in:in-locations`.
 - No GCP storage bucket or BigQuery dataset has a replica outside India.
 - The interconnect terminates in Mumbai; traffic never crosses a foreign PoP.
 
@@ -220,7 +220,7 @@ Data residency is maintained because:
 | Compliance need | On-prem | GCP | AWS | Azure |
 |-----------------|---------|-----|-----|-------|
 | Network segmentation / CDE isolation | Firewall VLAN per zone | VPC with separate subnet + firewall rules; VPC Service Controls for API-level perimeter | Security Groups + NACLs per subnet; separate VPC per scope level | (Azure: TODO) |
-| Data-residency enforcement | Physical location of hardware | Org Policy `constraints/gcp.resourceLocations` pinned to `in:india-locations` | Service Control Policies (SCPs) in AWS Organizations blocking non-`ap-south-1` resource creation | (Azure: TODO) |
+| Data-residency enforcement | Physical location of hardware | Org Policy `constraints/gcp.resourceLocations` pinned to `in:in-locations` | Service Control Policies (SCPs) in AWS Organizations blocking non-`ap-south-1` resource creation | (Azure: TODO) |
 | Audit log completeness | Syslog/SNMP to SIEM; firewall logs | Cloud Audit Logs (Admin Activity + Data Access logs); VPC Flow Logs | CloudTrail (management + data events); VPC Flow Logs | (Azure: TODO) |
 | Log retention (PCI: 12 mo; RBI: 8 yr) | SIEM/NAS with retention policy | Cloud Logging log buckets with retention lock; export to Cloud Storage with Object Lock | CloudWatch Logs with retention + S3 with Object Lock | (Azure: TODO) |
 | Encryption in transit to CDE / regulated zone | TLS 1.2+ on every path; IPsec on WAN | External HTTPS LB with an SSL policy pinning min TLS 1.2+ (TLS-min-version is set on the LB SSL policy, not via an org constraint); Google-managed certs; Cloud Armor in front of the LB; VPC Service Controls for the API perimeter | ACM-managed certs; ALB/NLB SSL policy requiring TLS 1.2+ | (Azure: TODO) |
@@ -265,7 +265,7 @@ gcloud resource-manager org-policies describe \
   constraints/gcp.resourceLocations \
   --project=YOUR_PROJECT_ID
 ```
-A compliant project will show `in:india-locations` under `allowedValues`. An
+A compliant project will show `in:in-locations` under `allowedValues`. An
 unconstrained project (no policy returned, or `allValues: ALLOW`) means any region
 can be used — an RBI finding.
 
@@ -289,7 +289,7 @@ Default GCP flow log sampling is 0.5 (50%); you must set it to 1.0 explicitly.
 ### Part 4 — Pen-and-paper scoping drill [laptop / paper]
 
 A colleague proposes adding a "fraud analytics" server to the CDE subnet
-(`10.10.1.0/24`) so it can read card transactions in real time. Evaluate:
+(`10.10.20.0/24`) so it can read card transactions in real time. Evaluate:
 - Does this put the analytics server in PCI scope? (Yes — it is now directly
   on the CDE subnet.)
 - What alternative keeps analytics out of scope? (Consume a tokenised or

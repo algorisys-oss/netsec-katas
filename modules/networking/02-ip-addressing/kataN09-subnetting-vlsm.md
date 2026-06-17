@@ -35,7 +35,7 @@ Parent block:  10.10.0.0/16  (65,536 addresses — Meridian HQ-DC1)
                 ├─ DB tier         10.10.2.0/24   (256 addrs, 254 usable)
                 ├─ Mgmt/admin      10.10.3.0/26   ( 64 addrs,  62 usable)
                 ├─ DMZ             10.10.3.64/27  ( 32 addrs,  30 usable)
-                ├─ CDE / core bnk  10.10.3.96/27  ( 32 addrs,  30 usable)
+                ├─ CDE / core bnk  10.10.20.0/27  ( 32 addrs,  30 usable, in CDE /24)
                 ├─ WAN P2P DC1-DC2 10.10.3.128/30 (  4 addrs,   2 usable)
                 └─ (reserved for growth)
 ```
@@ -91,11 +91,18 @@ App / prod tier   10.10.0.0/23       10.10.0.0    10.10.1.255  .0.1 – .1.254
 DB tier           10.10.2.0/24       10.10.2.0    10.10.2.255  .2.1 – .2.254
 Mgmt / admin      10.10.3.0/26       10.10.3.0    10.10.3.63   .3.1 – .3.62
 DMZ               10.10.3.64/27      10.10.3.64   10.10.3.95   .3.65 – .3.94
-CDE / core bnk    10.10.3.96/27      10.10.3.96   10.10.3.127  .3.97 – .3.126
 WAN P2P (DC2)     10.10.3.128/30     10.10.3.128  10.10.3.131  .3.129 – .3.130
-(reserved)        10.10.3.132 onward
+CDE / core bnk    10.10.20.0/27      10.10.20.0   10.10.20.31  .20.1 – .20.30
+(reserved)        10.10.3.96/27, .3.132 onward
 (reserved)        10.10.4.0/22 onward  ← entire /22 free for future growth
 ```
+
+The CDE is carved from the **dedicated CDE block `10.10.20.0/24`** (the canonical
+PCI-scope range for HQ-DC1, see `reference/running-example.md`). Giving the CDE its
+own `/24` parent — rather than squeezing it next to DMZ in the `.3.x` range — keeps
+the regulated zone in a clearly-labeled, separately-routed block that an auditor can
+point at. Within that `/24`, only a `/27` is needed today (~20 hosts); the rest of
+the `/24` stays reserved for CDE growth and stays inside PCI scope.
 
 **Verify each subnet — no overlaps, all aligned:**
 
@@ -104,8 +111,9 @@ WAN P2P (DC2)     10.10.3.128/30     10.10.3.128  10.10.3.131  .3.129 – .3.130
   where the /23 ends + 1. ✓ No overlap.
 - `/26` at `10.10.3.0`: block size 64. `3×256 + 0 = 768` from base. `0 mod 64 = 0` ✓
 - `/27` at `10.10.3.64`: block size 32. `64 mod 32 = 0` ✓. Runs to `.3.95`.
-- `/27` at `10.10.3.96`: block size 32. `96 mod 32 = 0` ✓. Runs to `.3.127`.
 - `/30` at `10.10.3.128`: block size 4. `128 mod 4 = 0` ✓. Runs to `.3.131`.
+- `/27` at `10.10.20.0` (CDE, inside the `10.10.20.0/24` block): block size 32.
+  `0 mod 32 = 0` ✓. Runs to `.20.31`. Separate `/24` parent — no overlap with `.3.x`.
 
 **The resulting security picture at HQ-DC1:**
 
@@ -123,7 +131,7 @@ Internet
     │       │  (firewall blocks App→DB except port 5432)
     ├──[ DB tier: 10.10.2.0/24 ]───── databases (PostgreSQL, Oracle)
     │
-    ├──[ CDE: 10.10.3.96/27 ]──────── core banking, card systems
+    ├──[ CDE: 10.10.20.0/27 (in 10.10.20.0/24) ]── core banking, card systems
     │       (hardest-isolated; PCI-DSS scope; separate ACLs on every hop)
     │
     ├──[ Mgmt: 10.10.3.0/26 ]──────── jump-hosts, monitoring collectors
@@ -134,10 +142,13 @@ Internet
               .130 = DC2 router
 ```
 
-Notice: the CDE is a `/27` sharing the `.3.x` octet range with management and DMZ,
-but they are **different subnets with different routes and firewall rules**. Being
-adjacent in address space does not make them adjacent in security — the router and
-firewall between them enforce that boundary.
+Notice: the management and DMZ subnets share the `.3.x` octet range, but they are
+**different subnets with different routes and firewall rules**. Being adjacent in
+address space does not make them adjacent in security — the router and firewall
+between them enforce that boundary. The CDE goes one step further: it lives in its
+own `/24` parent (`10.10.20.0/24`), so even its supernet is distinct — the regulated
+zone is not just a different subnet, it is a different block an auditor can isolate
+and route separately.
 
 **Northwind contrast (see `reference/running-example.md`):**
 
@@ -181,8 +192,8 @@ ipcalc 10.10.0.0/23
 ipcalc 10.10.2.0/24
 ipcalc 10.10.3.0/26
 ipcalc 10.10.3.64/27
-ipcalc 10.10.3.96/27
 ipcalc 10.10.3.128/30
+ipcalc 10.10.20.0/27
 
 # Option 2: Python (no install needed on most systems)
 python3 - <<'EOF'
@@ -192,8 +203,8 @@ subnets = [
     "10.10.2.0/24",
     "10.10.3.0/26",
     "10.10.3.64/27",
-    "10.10.3.96/27",
     "10.10.3.128/30",
+    "10.10.20.0/27",
 ]
 for cidr in subnets:
     n = ip.ip_network(cidr)
@@ -209,8 +220,8 @@ Expected output (verify network/broadcast/usable match the table above):
 10.10.2.0/24        network=10.10.2.0  broadcast=10.10.2.255  usable=254
 10.10.3.0/26        network=10.10.3.0  broadcast=10.10.3.63   usable=62
 10.10.3.64/27       network=10.10.3.64 broadcast=10.10.3.95   usable=30
-10.10.3.96/27       network=10.10.3.96 broadcast=10.10.3.127  usable=30
 10.10.3.128/30      network=10.10.3.128 broadcast=10.10.3.131 usable=2
+10.10.20.0/27       network=10.10.20.0  broadcast=10.10.20.31 usable=30
 ```
 
 ### Part B — Detect overlap [laptop]
@@ -220,7 +231,7 @@ python3 - <<'EOF'
 import ipaddress as ip
 nets = [ip.ip_network(c) for c in [
     "10.10.0.0/23", "10.10.2.0/24", "10.10.3.0/26",
-    "10.10.3.64/27", "10.10.3.96/27", "10.10.3.128/30",
+    "10.10.3.64/27", "10.10.3.128/30", "10.10.20.0/27",
 ]]
 overlaps = [(a, b) for i, a in enumerate(nets)
             for b in nets[i+1:] if a.overlaps(b)]
@@ -263,8 +274,9 @@ Alignment check: each prefix starts at a multiple of its block size. `/25`→128
    enterprise network?
 2. Why must a /27 subnet start at an address that is a multiple of 32? What breaks
    if it doesn't?
-3. Meridian's CDE subnet is `10.10.3.96/27`. What is the broadcast address? What
-   is the last usable host address? (Work it, don't look it up.)
+3. Meridian's CDE subnet is `10.10.20.0/27` (carved from the dedicated CDE block
+   `10.10.20.0/24`). What is the broadcast address? What is the last usable host
+   address? (Work it, don't look it up.)
 4. AWS reserves 5 addresses per subnet; classic IPv4 reserves 2. If you size a
    `/28` for a cloud subnet, how many hosts can you actually assign?
 5. Why does address overlap between two sites make a site-to-site VPN fail, even

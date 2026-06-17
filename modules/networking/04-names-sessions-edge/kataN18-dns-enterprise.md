@@ -262,7 +262,8 @@ subnet; GCP assigns the IP from it).
 at `VPC-base + 2` (e.g. in `10.104.0.0/16` it's `10.104.0.2`). Inbound and
 outbound endpoints are ENIs (Elastic Network Interfaces) deployed into your
 subnets; forward rules are then applied to the outbound endpoint. Pricing:
-$0.125/hour per endpoint × 2 minimum AZ ENIs, plus per-query charges.
+$0.125/hour per ENI, minimum 2 ENIs per endpoint (one ENI per IP address you
+specify, up to 6 billable), plus per-query charges.
 
 ## Do it (the exercise)
 
@@ -356,8 +357,9 @@ gcloud dns policies create inbound-from-onprem \
   --enable-inbound-forwarding
 # GCP will assign an inbound endpoint IP from your VPC subnet
 # Retrieve it:
-gcloud dns policies describe inbound-from-onprem --format="json" \
-  | grep inboundForwardingAddress
+gcloud compute addresses list \
+  --filter='purpose="DNS_RESOLVER"' \
+  --format='csv(address,region,subnetwork)'
 ```
 
 **[needs cloud account] — AWS: create Route 53 Resolver inbound endpoint**

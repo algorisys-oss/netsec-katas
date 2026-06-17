@@ -352,9 +352,13 @@ instances — all while live. The right fix: org policy constraints
 (`gcp.resourceLocations`) that prevent resource creation outside approved regions.
 
 **"We'll plan IPs later."** For on-prem VLANs this is painful. For cloud VPCs
-it's worse: a VPC's primary CIDR cannot be changed after creation in AWS or GCP.
-You can add secondary ranges, but the original /16 stays. Get the supernet
-allocation right before the first `terraform apply`.
+it's worse — and the constraints differ by cloud. In AWS, a VPC's primary IPv4
+CIDR is immutable after creation; you can attach additional secondary CIDR
+blocks, but the original block stays. In GCP, the VPC itself has no CIDR (ranges
+live on subnets); a subnet's primary IPv4 range can be *expanded* in place
+(`gcloud compute networks subnets expand-ip-range`, e.g. /24 → /23) but never
+shrunk. Either way, get the supernet allocation right before the first
+`terraform apply`.
 
 ## Going deeper (optional)
 

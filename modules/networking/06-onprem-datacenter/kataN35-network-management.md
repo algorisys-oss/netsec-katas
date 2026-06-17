@@ -65,7 +65,8 @@ exports a summary record to a **collector**:
 ```
   Router / switch (NetFlow exporter)
     │
-    │  NetFlow v9 / IPFIX records (UDP, port 2055)
+    │  NetFlow records (UDP, conventional port 2055)
+    │  IPFIX records (TCP/UDP, IANA default 4739, per RFC 7011)
     ▼
   Flow collector (Elastic/ntopng/SolarWinds NTA/Kentik)
     │

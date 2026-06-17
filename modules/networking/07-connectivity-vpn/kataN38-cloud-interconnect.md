@@ -182,14 +182,16 @@ through a carrier partner. They chose the hosted model because:
 | Logical sub-circuit / VLAN on the port | 802.1Q sub-interface | **VLAN attachment** (Interconnect Attachment) | **Virtual Interface (VIF)** — private or transit | **ExpressRoute Circuit** peering (private peering) |
 | Multi-VPC / multi-VNet over one circuit | N/A (on-prem handled by the CE router) | **VLAN attachment + NCC** or Cross-Connect Router | **Direct Connect Gateway** (spans multiple VPCs/regions) | **ExpressRoute Global Reach** |
 | Speed options | Whatever you order (1/10/100 Gbps) | 50 Mbps – 50 Gbps (Partner); 10 or 100 Gbps (Dedicated) | 50 Mbps – 25 Gbps (Hosted); 1/10/100 Gbps (Dedicated) | 50 Mbps – 100 Gbps (Provider); 5/10/40/100 Gbps (ExpressRoute Direct) |
-| SLA | Carrier SLA (99.9–99.99%) | 99.9% (single) / 99.99% (redundant pair) | 99.9% (single-device, 2 locations) / 99.99% (redundant, 2 devices) | 99.95% (with redundant circuits) |
+| SLA | Carrier SLA (99.9–99.99%) | No SLA (single connection); 99.9% (two connections, same metro, two edge domains) / 99.99% (four connections, two metros) | 99.9% (single-device, 2 locations) / 99.99% (redundant, 2 devices) | 99.95% (with redundant circuits) |
 | Default encryption | None (private wire, not encrypted) | None; add MACsec (GA) or IPsec over IC | None; add MACsec (select ports) or IPsec over DX | None; add IPsec or MACsec (ExpressRoute Direct only) |
 | BGP AS used by cloud | — | AS 16550 (GCP) | AS 64512 (or custom private ASN) | AS 12076 (Azure) |
 
 > **GCP note:** Cloud Router is a fully managed regional BGP daemon — no VM to
 > patch, no BGP config on the GCP side beyond route advertisement policies.
-> Cloud Interconnect supports 99.99% SLA only with two VLAN attachments in two
-> separate metropolitan areas.
+> A single Cloud Interconnect connection carries no SLA: the 99.9% SLA requires
+> two connections in the same metro across two edge availability domains, and the
+> 99.99% SLA requires four connections — two in each of two separate metros, each
+> in a different edge availability domain.
 >
 > **AWS note:** A *private VIF* connects to a single VPC. A *transit VIF* connects
 > to a Direct Connect Gateway, which can then attach to Transit Gateways across
@@ -301,7 +303,8 @@ In AWS Console → Direct Connect → Virtual Interfaces:
    internet, even though both can carry the same traffic?
 3. What does BGP do in this context — what does each side advertise, and why is
    this better than static routes?
-4. A single dedicated interconnect gives 99.9% SLA. How do you get to 99.99%?
+4. A single GCP Cloud Interconnect connection carries no SLA. What configuration
+   reaches 99.9%, and what reaches 99.99%?
 5. A PCI auditor asks: "Is the interconnect an encrypted channel?" What is the
    correct answer, and what would you add to make it compliant?
 

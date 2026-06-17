@@ -101,7 +101,8 @@ GCP VPC "meridian-prod"
  ├── Subnet asia-south1-app   10.100.1.0/24
  ├── Subnet asia-south1-data  10.100.2.0/24
  └── Routes (VPC-wide):
-      10.100.0.0/14  → local (VPC internal)
+      10.100.1.0/24  → local (subnet route, auto-created)
+      10.100.2.0/24  → local (subnet route, auto-created)
       0.0.0.0/0      → default-internet-gateway  [tagged: internet-egress-allowed]
       0.0.0.0/0      → cloud-nat-router          [tagged: nat-egress]
       (no tag match) → implicitly dropped if no default route applies
@@ -152,7 +153,9 @@ CIDR math check:
 ```
 Route name                Priority  Destination    Next hop
 ──────────────────────────────────────────────────────────────────────────────
-local-vpc                 0         10.100.0.0/14  local (VPC fabric)
+subnet-route-app          0         10.100.1.0/24  local (VPC fabric)
+subnet-route-data         0         10.100.2.0/24  local (VPC fabric)
+subnet-route-mgmt         0         10.100.3.0/24  local (VPC fabric)
 nat-egress-app            1000      0.0.0.0/0      Cloud NAT router    [tag: nat-egress]
 nat-egress-mgmt           1000      0.0.0.0/0      Cloud NAT router    [tag: nat-egress]
 ```

@@ -180,7 +180,7 @@ The seven-vector review is cloud-agnostic, but the specific controls differ:
 | Connectivity blind spot | Unmonitored switch ports; dark VLAN | Intra-VPC east-west if flow logs off; IAP tunnels not in VPC flow | Same-SG same-host traffic not in VPC flow | Intra-VNet traffic without NSG flow logs |
 | Config drift / IaC | Gold config + RANCID diff | Terraform / Config Controller (KRM) / Config Sync (Deployment Manager deprecated); Org Policy for constraint enforcement | CloudFormation / Terraform; AWS Config rules | ARM / Bicep / Terraform; Azure Policy |
 | Compliance scoping | PCI segmentation: ASV scan boundary | Shared VPC + VPC Service Controls for CDE isolation | VPC + Security Hub for CDE; AWS Macie for data | (Azure: TODO) |
-| Single point of failure | Dual-homed core switch + HSRP | Dual Interconnect attachments in 2 metro areas + BGP | Dual Direct Connect connections in 2 AZs + BGP | (Azure: TODO) |
+| Single point of failure | Dual-homed core switch + HSRP | Dual Interconnect attachments in 2 metro areas + BGP | Dual Direct Connect connections at 2 separate DX locations + BGP | (Azure: TODO) |
 
 **Key GCP-vs-AWS difference the review must surface:** GCP VPC firewall rules
 are global (apply across all regions in the VPC); AWS Security Groups are

@@ -184,7 +184,7 @@ workload fleet.
 | Load balancer | F5/Nginx appliance (CapEx) | Cloud Load Balancing; forwarding rule-hr (~$0.025) + data processed (~$0.008/GB) | ALB/NLB; LCU-hr + data processed | Azure Load Balancer / Application Gateway; (Azure: TODO) |
 | NAT gateway | NAT device / PAT on router | Cloud NAT; gateway-hr + data processed (~$0.005–0.045/GB by region) | NAT Gateway; gateway-hr + data processed (~$0.045–0.052/GB) | NAT Gateway; (Azure: TODO) |
 | VPC endpoints / Private Service Connect | On-prem private network paths (no transit charge) | Private Service Connect endpoint; per endpoint-hr | VPC Interface / Gateway Endpoints; interface-hr + data for interface; gateway endpoints free | Private Endpoint; (Azure: TODO) |
-| Public (external) IP addresses | Static IP from ISP | External IP; ~$0.004–0.010/hr unused; $0/hr attached on Standard tier | Elastic IP; $0.005/hr unused; $0/hr attached to running instance | Public IP; (Azure: TODO) |
+| Public (external) IP addresses | Static IP from ISP | External IP; ~$0.005/hr in-use (attached to VM, running or stopped), higher rate reserved-but-unattached — not free since Feb 2024 | Elastic IP / public IPv4; ~$0.005/hr for all public IPv4 incl. attached to a running instance since Feb 2024 (only a 750 hr/month EC2 free-tier allowance) | Public IP; (Azure: TODO) |
 | CDN egress | CDN contract | Cloud CDN; ~$0.02–0.08/GB (cheaper than direct egress) | CloudFront; ~$0.0085–0.12/GB (tiered) | Azure CDN; (Azure: TODO) |
 
 ## Do it (the exercise)

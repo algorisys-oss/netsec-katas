@@ -38,13 +38,16 @@ Three important shifts from on-prem:
   east-west blind spot               per-resource enforcement
 ```
 
-**Key shift 1 — stateful by default.** Every major cloud firewall is stateful:
+**Key shift 1 — stateful by default.** The primary cloud firewall construct in
+each provider (GCP VPC rules, AWS Security Groups, Azure NSGs) is stateful:
 if you allow outbound TCP to port 443, the return traffic is automatically
-permitted; you never need a rule for reply packets.
+permitted; you never need a rule for reply packets. (AWS NACLs are the stateless
+exception — see the AWS section.)
 
-**Key shift 2 — deny by default.** Without an explicit allow rule, traffic is
-dropped. This is the right default; on-prem devices often arrive permissive and
-need to be locked down. Cloud starts locked.
+**Key shift 2 — deny by default.** GCP and AWS deny by default; Azure NSGs
+permit VNet-internal traffic by default (see Azure section). For GCP and AWS,
+without an explicit allow rule, traffic is dropped. This is the right default;
+on-prem devices often arrive permissive and need to be locked down.
 
 **Key shift 3 — east-west coverage.** On-prem firewalls often only see
 north-south traffic (internet ↔ inside). Cloud rules apply to VM-to-VM traffic

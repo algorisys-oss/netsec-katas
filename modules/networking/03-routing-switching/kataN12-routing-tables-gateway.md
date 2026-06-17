@@ -207,7 +207,8 @@ Exceeded" — that *is* the routing table in motion (see N06).
 
 **Key GCP distinction:** GCP VPC routes are *VPC-wide* by default; AWS routes are
 per-subnet. In GCP you attach a route with a priority (lower = preferred) rather
-than a metric. Priority 100 is GCP's default; use 200+ for backup routes. This
+than a metric. Priority 1000 is GCP's default (valid range 0–65535); set a
+primary route below 1000 and a backup route to a higher value. This
 matters when designing active/active interconnects.
 
 **AWS subnet gotcha:** every subnet in AWS must be associated with a route table.

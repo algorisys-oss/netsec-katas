@@ -208,7 +208,7 @@ banks is L3 at the DC edge with route-based failover, not stretched L2.
 | Concept | On-prem | GCP | AWS | Azure |
 |---------|---------|-----|-----|-------|
 | First-hop redundancy | HSRP / VRRP (routers) | Not needed — cloud routes are software-defined; the default route is a logical construct, not a physical router | Not needed — route tables point to logical gateways | (Azure: TODO) |
-| Link aggregation (LAG) | LACP / 802.3ad (physical switches) | Interconnect uses LACP on the on-prem side for Cloud Interconnect VLAN attachments | AWS Direct Connect uses LACP for LAG bundles (up to 4 × 10G or 4 × 100G) | (Azure: TODO) |
+| Link aggregation (LAG) | LACP / 802.3ad (physical switches) | Interconnect uses LACP on the on-prem side for Cloud Interconnect VLAN attachments | AWS Direct Connect uses LACP for LAG bundles (up to 4 × 10G or 2 × 100G) | (Azure: TODO) |
 | Zonal redundancy | Dual-homed racks across power domains | Deploy across multiple **zones** within a region; GCP zones = independent failure domains | Deploy across multiple **Availability Zones** (AZs); each AZ = one or more data centers | (Azure: TODO) |
 | N+1 / 2N compute HA | Redundant servers in passive standby | Managed instance groups (MIG) + health checks auto-replace failed instances | Auto Scaling Groups + ELB health checks; or multi-AZ RDS | (Azure: TODO) |
 | Link failover time | HSRP/VRRP: ~1–10 s tunable; LACP: sub-second | Milliseconds (software routing) | Milliseconds | (Azure: TODO) |

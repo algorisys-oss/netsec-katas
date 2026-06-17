@@ -257,8 +257,8 @@ for r in rfc1918:
 3. Name two immediate mitigations when you discover an overlap after an
    acquisition closes — and the trade-off each one carries.
 4. In Meridian Bank's plan, why are GCP (`10.100.0.0/14`) and AWS (`10.104.0.0/14`)
-   on adjacent /14 blocks rather than a single /13? (Hint: think blast radius and
-   independent routing.)
+   carved as separate adjacent /14 blocks rather than one shared block per cloud?
+   (Hint: think blast radius and independent routing.)
 5. What is an IPAM system's job, and what breaks if you manage address allocation
    in a spreadsheet across 3,000 sites?
 

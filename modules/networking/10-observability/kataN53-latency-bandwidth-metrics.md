@@ -120,7 +120,8 @@ The fraction of packets that leave the sender but never reach the receiver:
 ```
 
 Effects:
-- **TCP:** slow-start kicks in, throughput drops dramatically
+- **TCP:** cuts its congestion window (fast recovery on duplicate-ACK loss; full
+  slow-start only after a timeout), so throughput drops sharply
 - **UDP:** depends on the application — voice calls degrade; DNS may just retry;
   streaming buffers absorb small bursts
 
@@ -225,7 +226,7 @@ bandwidth utilization.
 |---------|---------|-----|-----|-------|
 | Latency measurement | `ping`, `mtr`, `iperf3` to a known host | `ping` to cloud IPs; GCP Network Intelligence Center → Connectivity Tests | `ping`; CloudWatch Network Monitor (previewed 2023) | (Azure: TODO) |
 | Bandwidth / throughput | `iperf3`, SNMP interface counters | VPC flow logs show byte counts; no built-in iperf equivalent — use GCE instances | VPC flow logs; CloudWatch NetworkIn/Out | (Azure: TODO) |
-| Jitter monitoring | IPSLA / IP SLA (Cisco), commercial NPM | Network Intelligence Center → Performance Dashboard | CloudWatch Network Monitor; VPC Reachability Analyzer | (Azure: TODO) |
+| Jitter monitoring | IPSLA / IP SLA (Cisco), commercial NPM | Network Intelligence Center → Performance Dashboard | CloudWatch Network Monitor; Internet Monitor (internet paths) | (Azure: TODO) |
 | Packet loss | Interface error counters; `mtr` | VPC flow logs (dropped flows); Packet Mirroring + `tcpdump` | VPC flow logs; Traffic Mirroring | (Azure: TODO) |
 | Flow data (NetFlow / IPFIX) | NetFlow on routers, sFlow on switches | VPC Flow Logs (aggregated, not per-packet) | VPC Flow Logs | (Azure: TODO) |
 | Active probing / synthetic monitoring | `iperf3`, IPSLA | Network Intelligence Center → Connectivity Tests; uptime checks via Cloud Monitoring | CloudWatch Synthetics; Network Monitor probes | (Azure: TODO) |

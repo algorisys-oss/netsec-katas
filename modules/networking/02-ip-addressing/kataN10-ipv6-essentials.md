@@ -147,23 +147,26 @@ interface. The host uses whichever protocol the destination supports (RFC 6555
 ### Meridian Bank's GCP environment gets IPv6
 
 Meridian's GCP VPC uses `10.100.0.0/14` for IPv4 (see `reference/running-example.md`).
-When enabling dual-stack, Google assigns a GUA /48 from its allocation:
+GCP's external-IPv6 model is **per-subnet, not per-VPC**: you don't get a /48 GUA
+to carve. When you enable a subnet with `--ipv6-access-type=EXTERNAL`, Google
+assigns *that subnet* its own /64 GUA prefix from Google's pool — you don't pick
+the bits, and the per-subnet /64s are not contiguous slices of a single /48:
 
 ```
-GCP assigned GUA:   2600:1900:4000::/48
+Each EXTERNAL subnet gets its own /64 GUA, assigned by Google:
 
-In a /48, the 16-bit subnet ID is bits 48–64 — that is the 4th hextet. So the
-/64 subnets are carved by varying the 4th hextet (the first three hextets stay
-fixed):
-
-  mobile-backend subnet (us-central1-a):  2600:1900:4000:0000::/64
-  analytics subnet      (us-central1-b):  2600:1900:4000:0001::/64
-  management subnet     (us-central1-c):  2600:1900:4000:0002::/64
+  mobile-backend subnet (us-central1-a):  2600:1900:4000:8a01::/64
+  analytics subnet      (us-central1-b):  2600:1900:42f0:1c00::/64
+  management subnet     (us-central1-c):  2600:1900:4111:3d00::/64
 ```
 
-A VM in the mobile-backend subnet (`2600:1900:4000:0000::/64`) gets:
+(The /48 GUA you might expect to carve does not exist in GCP's external model.
+GCP *does* assign a /48 to the VPC — but that is the **internal ULA** range, from
+which internal /64 subnets are derived; see the ULA discussion below.)
+
+A VM in the mobile-backend subnet (`2600:1900:4000:8a01::/64`) gets:
 - IPv4: `10.100.0.5/22` (internal)
-- IPv6: `2600:1900:4000::5/64` (GUA, internet-routable)
+- IPv6: `2600:1900:4000:8a01::5/64` (GUA, internet-routable)
 
 Notice: the IPv6 address is **globally routable by default** — no NAT. This
 changes the firewall model: the GCP VPC firewall (and any on-prem firewall for
@@ -205,7 +208,7 @@ Compress `2001:0db8:0000:0001:0000:0000:0000:0001`:
 
 | Concept | On-prem | GCP | AWS | Azure |
 |---------|---------|-----|-----|-------|
-| IPv6 address space | ISP assigns GUA /48; use ULA (fd::/8) internally | Google assigns /48 GUA per VPC; subnetworks get /64 | Amazon assigns /56 GUA per VPC; subnets get /64 from it | (Azure: TODO) |
+| IPv6 address space | ISP assigns GUA /48; use ULA (fd::/8) internally | EXTERNAL: Google assigns each subnet its own /64 GUA from its pool (no per-VPC /48 to carve). INTERNAL: VPC gets a /48 ULA, internal /64 subnets derived from it | Amazon assigns /56 GUA per VPC; subnets get /64 from it | (Azure: TODO) |
 | Dual-stack enablement | Native on modern routers; enable per-interface | Enable per-subnet ("Stack type: IPv4 and IPv6") on VPC creation or later | Enable per VPC + subnet; requires explicit IPv6 CIDR association | (Azure: TODO) |
 | Replaces ARP | NDP (ICMPv6 RA/NS/NA) on the segment | Managed by GCP (hypervisor handles NDP) | Managed by AWS (VPC does not expose NDP) | (Azure: TODO) |
 | Private addressing | ULA (RFC 4193, fd::/8) | ULA supported; GUA commonly used in internal subnets too | ULA supported for internal; VPC IPv6 CIDRs are GUA | (Azure: TODO) |
@@ -214,9 +217,13 @@ Compress `2001:0db8:0000:0001:0000:0000:0000:0001`:
 | Link-local | fe80::/10, always present, not routed | Present on VM interfaces; used for router-VM communication | Present; AWS routes IPv6 via GUA, not link-local | (Azure: TODO) |
 
 **Critical difference between GCP and AWS IPv6 approach:**
-GCP assigns a single /48 to the VPC and lets you carve /64 subnets freely.
+For *external* (internet-routable) IPv6, GCP assigns each subnet its own /64 GUA
+from Google's pool — there is no per-VPC /48 GUA you carve, and you don't choose
+the prefix bits. (GCP does allocate a /48 per VPC, but that is the *internal* ULA
+range; internal /64 subnets are derived from it.)
 AWS assigns a /56 per VPC (or you can use BYOIP for a /48), and each subnet gets
-a /64. The AWS /56 → /64 math: 2^(64−56) = 256 possible /64 subnets per VPC.
+a /64 carved from that /56. The AWS /56 → /64 math: 2^(64−56) = 256 possible /64
+subnets per VPC.
 
 ## Do it (the exercise)
 
@@ -254,8 +261,9 @@ EOF
 python3 - <<'EOF'
 import ipaddress
 
-# Meridian's GUA block
-block = ipaddress.ip_network("2600:1900:4000::/48")
+# A /48 you DO carve into /64s: GCP's INTERNAL (ULA) VPC range, or an AWS BYOIP /48.
+# (GCP EXTERNAL IPv6 is per-subnet /64 assigned by Google — nothing to carve.)
+block = ipaddress.ip_network("fd20:1900:4000::/48")
 print(f"Block: {block}")
 print(f"Total /64 subnets available: {2**(64-48)}")   # 65,536
 
@@ -350,8 +358,9 @@ aws ec2 associate-subnet-cidr-block \
   *(In FSI, regulators sometimes ask to correlate a session to a device; random
   rotating IIDs can complicate that audit trail.)*
 
-**A good answer sounds like:** "We're dual-stack on GCP; Google assigns us a /48
-and we carve /64s per subnet. Our firewall rules are mirrored for IPv6. On-prem is
+**A good answer sounds like:** "We're dual-stack on GCP; for external IPv6 Google
+assigns each subnet its own /64 GUA from its pool (the /48 we hold is the internal
+ULA range). Our firewall rules are mirrored for IPv6. On-prem is
 still IPv4-only — our edge firewalls are IPv4-only appliances, so hybrid IPv6 is
 on the roadmap but not live." Clear, self-aware, with known gaps.
 

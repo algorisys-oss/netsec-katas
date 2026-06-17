@@ -242,7 +242,7 @@ used by service meshes (Istio, Linkerd) and GCP Certificate Authority Service.
 | Private / internal CA | On-prem PKI (ADCS, EJBCA) | **Certificate Authority Service (CAS)** — managed private CA, hierarchy supported | **AWS Private CA** (ACM PCA) — managed private CA | **Azure Private CA** via App Service or DigiCert integration (Azure: TODO) |
 | mTLS enforcement | Hardware LB (F5, A10), nginx, Envoy | Cloud LB → backend mTLS; **Cloud Service Mesh** / **Traffic Director** | ALB mutual TLS (GA since 2023); **API Gateway** mTLS | **API Management** mutual cert auth; App Gateway (Azure: TODO) |
 | TLS termination at edge | HAProxy, nginx, F5 in DMZ | Cloud HTTPS Load Balancer (global anycast, L7) | Application Load Balancer (ALB); CloudFront | Azure Application Gateway / Front Door (Azure: TODO) |
-| TLS passthrough | L4 device (TCP LB) | **Cloud TCP/SSL Proxy** (SSL Proxy for TCP 443) | **Network Load Balancer (NLB)** TCP passthrough | Azure Load Balancer L4 (Azure: TODO) |
+| TLS passthrough | L4 device (TCP LB) | **External passthrough Network Load Balancer** (L4 TCP/UDP) | **Network Load Balancer (NLB)** TCP passthrough | Azure Load Balancer L4 (Azure: TODO) |
 | Certificate lifecycle / auto-renewal | Manual (cron + certbot) or ACME | Google-managed certs auto-renew; CAS issues short-lived certs | ACM auto-renews; ACM PCA for private | (Azure: TODO) |
 | Cipher policy / TLS version control | Cipher string on nginx/F5 | **SSL Policy** on Cloud LB (MODERN / RESTRICTED / COMPATIBLE) | **Security Policy** on ALB/CloudFront | (Azure: TODO) |
 

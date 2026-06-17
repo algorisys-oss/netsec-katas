@@ -279,7 +279,7 @@ Draw the full DNS forwarding topology for Meridian Bank:
 - GCP Cloud DNS private zone serves `private.meridian-prod.gcp`
   — inbound policy endpoint at `10.100.0.2`
 - AWS Route 53 PHZ serves `meridian-aws.internal`
-  — inbound resolver endpoint at `10.104.0.2`
+  — inbound resolver endpoint at `10.104.16.10`
 
 Write out the conditional forwarder rules you would add to the on-prem DNS server
 and the forwarding zones you would create in GCP Cloud DNS and AWS Route 53.
@@ -311,7 +311,8 @@ before doing it in a real cloud console [needs cloud account].
 - Create an inbound DNS policy, associate with the VPC, note the assigned IPs.
 
 **AWS:** VPC → Route 53 Resolver →
-- Create an inbound endpoint (choose subnets, get two ENI IPs per AZ).
+- Create an inbound endpoint (choose subnets across at least two AZs; minimum two
+  IPs total — one ENI/IP per chosen subnet).
 - Create an outbound endpoint + forwarding rule for `internal.meridian.local`
   pointing to the on-prem DNS server.
 

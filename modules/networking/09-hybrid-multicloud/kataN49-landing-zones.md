@@ -226,8 +226,10 @@ addressed with NAT at the DC edge, not in cloud.
 - AWS VPCs are **regional**; cross-region needs Transit Gateway inter-region
   peering or a separate TGW per region.
 - **AWS Control Tower** provisions an Account Vending Machine — new spoke accounts
-  get baseline config (CloudTrail, Config, GuardDuty) automatically via Account
-  Factory.
+  get baseline config (org CloudTrail, AWS Config) automatically via Account
+  Factory. GuardDuty is *not* part of this baseline; it is a separate, optional
+  enablement (delegated-admin in the audit/security account, or added via Landing
+  Zone Accelerator).
 - SCPs are **deny-only** restrictions applied at OU level; they do not grant
   permissions — IAM still governs what is allowed within the boundary.
 

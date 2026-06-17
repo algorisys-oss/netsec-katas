@@ -62,7 +62,7 @@ AWS uses a *different* convention: every VPC has a resolver at `VPC-base + 2`
 this the *VPC DNS resolver* or "Amazon-provided DNS." (AWS also exposes the same
 service at the link-local `169.254.169.253`.) Route 53 Resolver adds inbound and
 outbound endpoints on top for hybrid flows. The key thing to remember: **GCP =
-link-local `169.254.169.254`; AWS = subnet `base + 2`.**
+link-local `169.254.169.254`; AWS = VPC `base + 2`.**
 
 ```
   On-prem resolver                Cloud VPC
@@ -304,7 +304,7 @@ stale answer for an hour. Always confirm TTLs before a cutover.
    private zone return NXDOMAIN to external resolvers?
 2. What IP does the VPC resolver use in GCP versus AWS, and why are they
    different schemes? (GCP: the link-local metadata address `169.254.169.254`,
-   the same everywhere; AWS: the subnet's `base + 2`, e.g. `10.104.0.2`.)
+   the same everywhere; AWS: the VPC's `base + 2`, e.g. `10.104.0.2`.)
 3. An on-prem server needs to resolve a GCP private zone name. What two things
    must you configure, and on which side?
 4. A GCP microservice queries `core.meridian.local` — where does it go if no

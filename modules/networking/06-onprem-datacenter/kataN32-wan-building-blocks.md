@@ -214,10 +214,16 @@ traceroute -n 8.8.8.8     # Linux/macOS
 tracert -d 8.8.8.8        # Windows
 ```
 
-Look at hops 2–5. If you see private IP ranges (`10.x.x.x`, `192.168.x.x`,
-`172.16–31.x.x`) after the first hop: you are crossing your ISP's MPLS core —
-those are their PE/P routers' loopbacks, not reachable from the internet. Count
-how many hops are inside the carrier before reaching public IP space.
+Look at hops 2–5. Hop 1 is normally your own LAN gateway (`192.168.x.x`). If you
+see private IP ranges (`10.x.x.x`, `192.168.x.x`, `172.16–31.x.x`) or shared
+CGNAT space (`100.64.0.0/10`, RFC 6598) after that, those are usually your ISP's
+internal/carrier-grade-NAT addressing on its IP access network — not reachable
+from the public internet. Note: an ordinary broadband path to `8.8.8.8` does not
+typically traverse an MPLS L3VPN core at all; and even on a real MPLS WAN circuit
+the carrier's P routers often do not decrement the customer packet's TTL, so the
+core may not appear in traceroute. When it does, you may see a few carrier
+internal hops. Count how many hops are inside the carrier before reaching public
+IP space.
 
 **Part 3 — Map Meridian's branch subnet [laptop / paper]**
 

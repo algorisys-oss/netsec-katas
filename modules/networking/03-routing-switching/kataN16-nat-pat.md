@@ -110,7 +110,7 @@ use here).
 Three subnets need internet access:
 - `10.10.1.0/24` — application servers (servers initiate, e.g. OCSP checks, APIs)
 - `10.10.2.0/24` — staff desktops
-- `10.10.10.0/24` — PCI CDE (cardholder environment — **must NOT traverse the
+- `10.10.20.0/24` — PCI CDE (cardholder environment — **must NOT traverse the
   same NAT path as staff**, per PCI-DSS segmentation)
 
 The IT head's solution:
@@ -120,7 +120,7 @@ The IT head's solution:
   ─────────────────  ───────────────  ─────────────────────────────────────
   10.10.1.0/24  ──▶  203.0.113.1      app servers → internet (PAT, shared)
   10.10.2.0/24  ──▶  203.0.113.2      staff egress (PAT, shared)
-  10.10.10.0/24 ──▶  203.0.113.3      CDE dedicated NAT IP — for allow-listing
+  10.10.20.0/24 ──▶  203.0.113.3      CDE dedicated NAT IP — for allow-listing
                                        at payment processors; PCI-required
 ```
 

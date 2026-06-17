@@ -143,7 +143,7 @@ workloads and the mobile banking API.
 **Scenario A — IDS/IPS placement in HQ-DC1**
 
 The security team wants to detect port scanning and SQL injection attempts against
-the database servers in the CDE segment (`10.10.50.0/24` — a typical subnet within
+the database servers in the CDE segment (`10.10.20.0/24` — a typical subnet within
 the DC1 range).
 
 ```
@@ -159,7 +159,7 @@ the DC1 range).
      │
   ┌──────────────────────────────────┐
   │   Core banking  10.10.10.0/24   │
-  │   CDE           10.10.50.0/24   │  ← DB servers here
+  │   CDE           10.10.20.0/24   │  ← DB servers here
   │   Management    10.10.1.0/24    │
   └──────────────────────────────────┘
 ```
@@ -170,7 +170,7 @@ north-south traffic. The IDS passive tap on the core switch's SPAN port catches
 which the perimeter IPS never sees.
 
 A real detection: the IDS alerts on a port scan from `10.10.10.42` (a compromised
-workstation in core-banking) to `10.10.50.0/24` (CDE). The firewall would have
+workstation in core-banking) to `10.10.20.0/24` (CDE). The firewall would have
 allowed it (same internal zone); the IPS inline at the perimeter never saw it. Only
 the east-west sensor catches it. This is exactly why N27's segmentation and this
 kata's sensors are **both** necessary — defense in depth (S01).
@@ -185,11 +185,13 @@ attack arrives over the public internet path to the GCP external load balancer.
 Without mitigation: the GCP load balancer's connection table fills. Legitimate
 users get TCP RST or timeout.
 
-With **Google Cloud Armor**: Cloud Armor sits in front of the GCP external HTTP(S)
-load balancer. It absorbs the SYN flood at Google's edge (Google's edge capacity
-is measured in Pbps — the attack volume never reaches Meridian's forwarding rules).
-Cloud Armor's adaptive protection also detects the L7 pattern if the attacker
-switches to an HTTP flood.
+With GCP's edge defenses: the SYN flood is an L3/L4 protocol attack, and Google's
+edge network and Cloud Load Balancing infrastructure absorb it automatically and
+always-on — no Cloud Armor policy is involved at this layer (Google's edge capacity
+is measured in Pbps, so the attack volume never reaches Meridian's forwarding rules).
+**Google Cloud Armor** sits in front of the GCP external HTTP(S) load balancer at
+L7: if the attacker switches to an HTTP flood, Cloud Armor's adaptive protection
+detects the L7 pattern and applies rate-based/ML-generated rules.
 
 ---
 
@@ -390,7 +392,7 @@ plus regular review of alerts. (This was Requirement 11.4 in PCI-DSS v3.2.1; v4.
 renumbered it to 11.5.) "We have a firewall" does not satisfy this.
 Auditors will ask for evidence of IDS/IPS placement *and* tuning records and alert
 review logs. If Meridian Bank's PCI scope includes the card-processing segment
-(`10.10.50.0/24`), the security team must demonstrate monitored detection coverage
+(`10.10.20.0/24`), the security team must demonstrate monitored detection coverage
 of traffic entering and leaving it.
 
 **DDoS on a bank's internet banking portal — the reputational spike.**  

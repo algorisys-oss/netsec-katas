@@ -166,7 +166,7 @@ Meridian's estate:
 ```
 
 The analyst gets access to `10.10.5.0/24`. But the VPN policy allows `10.0.0.0/8`,
-so a compromised laptop at `10.40.200.47` could also reach `10.10.50.0/24` (card
+so a compromised laptop at `10.40.200.47` could also reach `10.10.20.0/24` (card
 processing), `10.10.100.0/24` (SWIFT gateway), and DC2's replication interfaces at
 `10.20.0.0/16`. That is the blast radius of a single stolen credential.
 
@@ -268,7 +268,7 @@ Given Meridian Bank's IP plan:
 - VPN client pool: `10.40.200.0/24`
 - Corp offices: `10.40.0.0/16`
 - HQ-DC1: `10.10.0.0/16`
-- PCI cardholder subnet: `10.10.50.0/24`
+- PCI cardholder subnet: `10.10.20.0/24`
 - SWIFT gateway: `10.10.100.0/24`
 
 If VPN policy is "send all `10.0.0.0/8` through the tunnel," answer:
@@ -282,7 +282,7 @@ If VPN policy is "send all `10.0.0.0/8` through the tunnel," answer:
  consuming its own network + broadcast address, so the true usable-host
  count is somewhat lower than the flat 2^24 − 2 = 16,777,214 — but the
  order of magnitude is the point);
- 2. At least `10.10.50.0/24`; 3. Exactly one application URL — no network IP at all.)
+ 2. At least `10.10.20.0/24`; 3. Exactly one application URL — no network IP at all.)
 
 **Part 4 — Explore GCP Cloud IAP [needs cloud account]**
 
@@ -379,7 +379,7 @@ applications. They do not work transparently for:
 - Legacy banking protocols (ISO 8583 over proprietary TCP, TIBCO messaging, etc.)
   — plan for VPN residue.
 
-**Meridian Bank FSI trap — PCI split-tunnel rule.** PCI-DSS v4.0 requirement 1.3.2
+**Meridian Bank FSI trap — PCI split-tunnel rule.** PCI-DSS v4.0 requirement 1.3.1
 requires that inbound traffic to the CDE be restricted to what is necessary. If
 a split-tunnel VPN client is simultaneously on the internet and routed to the CDE,
 the QSA (Qualified Security Assessor) may argue the client is an internet-connected

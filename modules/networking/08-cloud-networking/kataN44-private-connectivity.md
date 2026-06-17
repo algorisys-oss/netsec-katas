@@ -60,7 +60,8 @@ The mechanism differs per cloud; the mental model is the same.
 **GCP — Private Service Connect (PSC)**
 
 PSC is GCP's current preferred mechanism (replacing older Private Service Access /
-VPC peering with `/29` allocations for some services). A PSC endpoint is a
+VPC peering, where the consumer allocates an IP range of **at least a /24** for
+some services). A PSC endpoint is a
 **forwarding rule** that points to a PSC published service or a Google-managed
 service API. GCP assigns it a private IP from a subnet you specify; DNS resolves
 to that IP. The traffic flows over Google's internal network, not the internet.
@@ -76,8 +77,9 @@ Consumer VPC (Meridian Bank)          Google-managed service
   VM (10.100.0.10)
      │
      ▼
- PSC subnet: 10.100.16.0/28           Google's internal
-  PSC endpoint                       →  service fabric
+ Endpoint subnet: 10.100.16.0/28      Google's internal
+  (regular subnet)                     service fabric
+  PSC endpoint                       →
   10.100.16.4  ──────────────────────
   (forwarding rule)
      │
@@ -142,8 +144,11 @@ read from a **Cloud SQL** (PostgreSQL) instance storing account data.
 
 ### Step 1 — allocate a PSC endpoint subnet
 
-Reserve a small subnet for PSC endpoints. GCP requires endpoints sit in a
-`/29` or larger subnet with **Purpose: PRIVATE_SERVICE_CONNECT**. Choose a range
+Reserve a small **regular** subnet for PSC consumer endpoints. A PSC consumer
+endpoint is a forwarding rule placed in an ordinary subnet of your VPC — *not* a
+subnet with **Purpose: PRIVATE_SERVICE_CONNECT** (that special-purpose NAT subnet
+is used only on the **producer** side, when you publish a service via a service
+attachment, and cannot hold VM instances or forwarding rules). Choose a range
 from the GCP allocation:
 
 ```
@@ -152,8 +157,10 @@ GCP supernet: 10.100.0.0/14  (10.100.0.0 – 10.103.255.255)
   meridian-prod-psc:       10.100.16.0/28  (PSC endpoints — 16 IPs, enough)
 ```
 
-Subnet math check: `10.100.16.0/28` → network 10.100.16.0, broadcast 10.100.16.15,
-usable 10.100.16.1–10.100.16.14. All within the `10.100.0.0/14` supernet (last
+Subnet math check: `10.100.16.0/28` → network 10.100.16.0, broadcast 10.100.16.15.
+In a regular GCP subnet, GCP reserves 4 addresses (network, default gateway,
+second-to-last, and broadcast), so a /28 yields **12 usable** host IPs (see
+`reference/cheatsheet-cidr.md`). All within the `10.100.0.0/14` supernet (last
 address in /14 is 10.103.255.255). Correct — no overlap.
 
 ### Step 2 — create the PSC endpoint (forwarding rule)
@@ -224,9 +231,9 @@ AWS automatically creates a private hosted zone entry when you enable
 | Producer side (publish your service privately) | n/a (internal network) | PSC published service (ServiceAttachment) | VPC Endpoint Service (backed by NLB) | Private Link Service |
 | Free gateway-style endpoint | Static route to internal service | Not applicable | **Gateway VPC Endpoint** (S3 + DynamoDB only) | (Azure: TODO) |
 | Private DNS override required? | n/a | Yes — Cloud DNS private zone | Yes — Route 53 private hosted zone (auto if enabled) | Yes — Azure Private DNS Zone |
-| Endpoint IP assigned from | — | Subnet you specify (Purpose: PSC) | Subnet in your VPC (assigned by AWS) | Subnet in your VNet |
+| Endpoint IP assigned from | — | Regular subnet you specify (consumer side) | Subnet in your VPC (assigned by AWS) | Subnet in your VNet |
 | Transitive access (on-prem via VPN/interconnect) | Native | Requires DNS forwarding + PSC endpoint reachable via hybrid path | Requires Route 53 Resolver + endpoint in subnet reachable from on-prem | Requires custom DNS + Private Endpoint reachable from on-prem |
-| Older / predecessor pattern | — | Private Service Access (VPC peering `/29`) | *(no equivalent predecessor for PrivateLink)* | (Azure: TODO) |
+| Older / predecessor pattern | — | Private Service Access (VPC peering; consumer allocates a /24 or larger range) | *(no equivalent predecessor for PrivateLink)* | (Azure: TODO) |
 
 ## Do it (the exercise)
 
@@ -252,8 +259,9 @@ Given Meridian Bank's GCP CIDR `10.100.0.0/14`:
 
 1. Sketch which `/28` to reserve for PSC endpoints. Verify it is within the /14
    and does not overlap `10.100.0.0/20` (the app subnet).
-2. How many PSC endpoint IPs does a `/28` give you? (Answer: 14 usable after
-   network and broadcast.)
+2. How many PSC endpoint IPs does a `/28` give you? (Answer: 12 usable in a
+   regular GCP subnet — GCP reserves 4 addresses per subnet, not just network
+   and broadcast.)
 3. What happens if you put a PSC endpoint in the same subnet as your workloads?
    (It works technically but defeats the principle of isolating service endpoints
    for easier firewall auditing — the CISO will ask.)
@@ -336,8 +344,9 @@ IP because no private DNS zone had been created. The PSC endpoint was never used
 The fix is two commands; the discovery took two weeks.
 
 **VPC peering to managed-services VPC — then regretting it.** The older GCP
-Private Service Access pattern allocates a `/29` from your IP space and peers the
-managed-service VPC to yours. If your VPC is already peered to others, you hit
+Private Service Access pattern has the consumer allocate an IP range of at least a
+`/24` (Google recommends a `/16`) from your IP space and peers the managed-service
+VPC to yours. If your VPC is already peered to others, you hit
 GCP's **transitive peering limitation** (GCP does not allow peering chains: A↔B
 and B↔C does not let A reach C). PSC was introduced partly to escape this. If
 you're in a design with many VPCs or Shared VPC (N52), PSC is the right answer.

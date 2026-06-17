@@ -173,7 +173,7 @@ left headroom for mirror traffic.
 **Proposed (spine-leaf, merchant silicon):**
 
 ```
-  Spine:  4 × 100G Arista 7280CR2 (48 × 100G ports each)
+  Spine:  4 × 100G Arista 7280CR2 (each terminates 32 leaves × 2 links = 64 × 100G leaf-facing ports)
   Leaf:   32 × 48-port Arista 7050X3 (48 × 25G server, 8 × 100G uplinks)
   Servers: 32 racks × 48 servers = 1,536 servers at full build
 ```
@@ -344,10 +344,13 @@ fits easily. Yes.)*
   that looked fine until compliance tooling was counted as traffic. Lesson:
   always include monitoring and capture in your oversubscription budget.
 
-- **3-tier STP instability.** Spanning-tree convergence on a large 3-tier fabric
-  can take 30–50 seconds for Rapid PVST+, and much longer if a misconfigured
-  switch sends a topology change notification. In a bank, "30 seconds dark" is
-  an incident. Spine-leaf eliminates this failure mode by running L3 everywhere.
+- **3-tier STP instability.** Classic spanning-tree (802.1D) convergence on a
+  large 3-tier fabric can take 30–50 seconds (Max Age 20s + 2 × Forward Delay
+  15s = 50s). Rapid PVST+ / RSTP (802.1w) normally converges in ~1–2 seconds —
+  but you only get that if every switch stays in RSTP; a switch that falls back
+  to classic STP, or a topology-change-notification storm from a misconfigured
+  switch, drags you back to the slow regime. In a bank, "30 seconds dark" is an
+  incident. Spine-leaf eliminates this failure mode by running L3 everywhere.
 
 - **The M&A spine-leaf that was really just re-labeled 3-tier.** Northwind
   acquired a company that claimed "spine-leaf" — and the diagram looked right —

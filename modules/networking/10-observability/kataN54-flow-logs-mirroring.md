@@ -54,7 +54,7 @@ time (compliance), cheap to store, and fast to query.
 | Question | Flow logs? | Needs mirroring? |
 |----------|-----------|-----------------|
 | Did host A talk to host B on port 443? | Yes | No |
-| Was that connection allowed or denied? | Yes (action field) | No |
+| Was that connection allowed or denied? | GCP: no — needs Firewall Rules Logging. AWS: yes (`action` = ACCEPT/REJECT) | No |
 | How many bytes were transferred? | Yes | No |
 | Which client IP is hammering our API? | Yes | No |
 | What was the HTTP path or query string? | No | Yes |
@@ -144,8 +144,12 @@ IP `10.100.16.45:8443` looks like:
   start_time:             2026-06-17T03:42:11Z
   end_time:               2026-06-17T03:42:12Z
   reporter:               SRC
-  disposition:            ACCEPTED
 ```
+
+(Note: VPC Flow Logs have no allow/deny field — they only record traffic that
+was actually transmitted, i.e. allowed. To see ALLOWED/DENIED decisions in GCP
+you enable the separate **Firewall Rules Logging** feature, whose record carries
+a `disposition` field with values `ALLOWED` / `DENIED`.)
 
 The auditor can now answer "which IPs talked to the CDE on which day" from a
 BigQuery query — no live traffic capture needed.
@@ -216,7 +220,7 @@ exfiltrating to an unexpected internet IP after an OT/IT boundary break).
 1. Download a sample GCP VPC Flow Log in JSON from the public GCP documentation
    sample set (search "VPC Flow Logs log record example") and identify each field:
    `connection.src_ip`, `connection.dst_ip`, `connection.dst_port`,
-   `connection.protocol`, `bytes_sent`, `disposition`. Map each to its NetFlow
+   `connection.protocol`, `bytes_sent`, `packets_sent`. Map each to its NetFlow
    v9 / IPFIX equivalent.
 
 2. Simulate what a flow log query looks like. If you have BigQuery or Athena
@@ -229,13 +233,12 @@ exfiltrating to an unexpected internet IP after an OT/IT boundary break).
      connection.dst_ip,
      connection.dst_port,
      SUM(bytes_sent)   AS total_bytes,
-     COUNT(*)          AS flow_count,
-     disposition
+     COUNT(*)          AS flow_count
    FROM   `project.dataset.vpc_flows`
    WHERE  TIMESTAMP_TRUNC(start_time, DAY) = CURRENT_DATE()
      AND  NET.IP_TRUNC(NET.SAFE_IP_FROM_STRING(connection.dst_ip), 20)
             = NET.IP_FROM_STRING('10.100.16.0')
-   GROUP BY 1,2,3,6
+   GROUP BY 1,2,3
    ORDER BY total_bytes DESC
    LIMIT  20;
    ```

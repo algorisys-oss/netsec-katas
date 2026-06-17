@@ -125,8 +125,8 @@ firewall rules between them — a PCI-DSS requirement 1 control.
 VLAN  ID   Subnet            Gateway          Purpose
 ──────────────────────────────────────────────────────────────────
   10  10   10.10.10.0/24   10.10.10.1       Web tier (DMZ-ish)
-  20  20   10.10.20.0/24   10.10.20.1       App tier
-  30  30   10.10.30.0/24   10.10.30.1       DB tier (CDE)
+  20  20   10.10.20.0/24   10.10.20.1       DB tier (CDE)
+  30  30   10.10.30.0/24   10.10.30.1       App tier
   40  40   10.10.40.0/24   10.10.40.1       Staff workstations
   99  99   10.10.99.0/28   10.10.99.1       OOB management (14 hosts)
 ```
@@ -137,19 +137,19 @@ broadcast). 14 hosts covers all network devices in DC1 without wasting space.
 
 ### Traffic flow: web tier → DB tier
 
-A web server in VLAN 10 queries the database in VLAN 30. The path:
+A web server in VLAN 10 queries the database in VLAN 20. The path:
 
 ```
   web-01 (10.10.10.5)
     │  L2 frame to default gateway 10.10.10.1 (SVI on L3 switch)
     ▼
   L3 Switch SVI 10.10.10.1
-    │  routes packet to 10.10.30.0/24 → exits SVI 10.10.30.1
+    │  routes packet to 10.10.20.0/24 → exits SVI 10.10.20.1
     │  traffic passes through inter-VLAN firewall ACL:
-    │    PERMIT  10.10.10.0/24 → 10.10.30.0/24  tcp dport 5432
+    │    PERMIT  10.10.10.0/24 → 10.10.20.0/24  tcp dport 5432
     │    DENY    any
     ▼
-  db-01 (10.10.30.7)  ← packet arrives, firewall permitted it
+  db-01 (10.10.20.7)  ← packet arrives, firewall permitted it
 ```
 
 If someone moved db-01 into VLAN 10 by mistake, it would share a broadcast

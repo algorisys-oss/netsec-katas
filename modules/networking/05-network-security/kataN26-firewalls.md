@@ -114,10 +114,10 @@ the later specific `deny` rules were meant to block.
 ```
   BAD ordering:
   1. permit  any → 10.10.0.0/16  any        ← matches everything going to HQ-DC1
-  2. deny    any → 10.10.10.0/24 any        ← NEVER reached; rule above already matched
+  2. deny    any → 10.10.20.0/24 any        ← NEVER reached; rule above already matched
 
   GOOD ordering (specific before general):
-  1. deny    any → 10.10.10.0/24 any        ← CDE segment blocked first
+  1. deny    any → 10.10.20.0/24 any        ← CDE segment blocked first
   2. permit  any → 10.10.0.0/16  TCP 443    ← then allow specific traffic to the rest
   3. deny    any → any            any        ← default-deny
 ```
@@ -138,7 +138,7 @@ a discussion about *which* applications are permitted through, not just the port
 The Meridian Bank mobile backend lives in GCP (`10.100.0.0/14`, see
 `reference/running-example.md`). Specifically, the application tier is in
 `10.100.2.0/24`. Core banking lives at HQ-DC1 on `10.10.0.0/16`; the PCI
-cardholder data environment (CDE) sits in `10.10.10.0/24`.
+cardholder data environment (CDE) sits in `10.10.20.0/24`.
 
 The requirement: mobile app servers (in GCP, `10.100.2.0/24`) must query the
 core banking API (at `10.10.1.20`, port 8443/TCP) but must **never** reach the
@@ -150,7 +150,7 @@ Here is the firewall rule base on the HQ-DC1 perimeter firewall (edge of
 ```
   Rule  Action  Protocol  Source           Dest             Dst Port  Comment
   ────  ──────  ────────  ───────────────  ───────────────  ────────  ─────────────────────
-   1    DENY    any       10.100.0.0/14    10.10.10.0/24    any       Block cloud→CDE
+   1    DENY    any       10.100.0.0/14    10.10.20.0/24    any       Block cloud→CDE
    2    PERMIT  TCP       10.100.2.0/24    10.10.1.20/32    8443      Cloud app→core API
    3    DENY    any       any              any              any       Default deny
 ```
@@ -391,7 +391,7 @@ anywhere in that block can now reach the core API. Always request the specific
 subnet — for Meridian Bank, `10.100.2.0/24` not `10.100.0.0/14`.
 
 **Rule base ordering surprises.** An engineer adds a well-intentioned
-`deny 10.100.0.0/14 → 10.10.10.0/24` (block cloud→CDE) at the *bottom* of the
+`deny 10.100.0.0/14 → 10.10.20.0/24` (block cloud→CDE) at the *bottom* of the
 rule base, after a `permit 10.100.0.0/14 → 10.10.0.0/16 any` that already covers
 the CDE subnet. The deny is never evaluated. The firewall passed traffic to the
 CDE for months before an audit caught it.

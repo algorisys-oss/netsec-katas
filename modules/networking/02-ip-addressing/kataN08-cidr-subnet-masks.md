@@ -289,7 +289,7 @@ engineer writes `10.10.1.0 0.0.0.63`. Same thing; different notation. Read which
 format you're given before translating.
 
 **Meridian Bank: the /20 block for a small DMZ.** A past project allocated
-`10.10.20.0/20` (4,094 hosts) for a DMZ that held four servers. The wasted space
+`10.10.16.0/20` (4,094 hosts) for a DMZ that held four servers. The wasted space
 wasn't the real problem — every security scan of the "DMZ" also scanned 4,090
 unused addresses and triggered false positives in the IDS. Size purposefully.
 

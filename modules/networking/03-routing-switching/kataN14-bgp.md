@@ -91,8 +91,8 @@ Meridian Bank HQ-DC1 (`10.10.0.0/16`) has two paths to GCP (`10.100.0.0/14`):
   advertises `10.10.0.0/16` and `10.20.0.0/16` outbound — only those two
   prefixes (filtered via prefix-list), not `10.0.0.0/8`.
 - On the on-prem CPE side, BFD detects the interconnect failure sub-second; on
-  the GCP-managed side, Cloud Router's BFD minimum interval is 1000 ms, so with a
-  typical detect multiplier of ~3 the GCP side detects the failure in ~3 seconds.
+  the GCP-managed side, Cloud Router's BFD minimum interval is 1000 ms and its
+  minimum detect multiplier is 5, so the GCP side detects the failure in ~5 seconds.
   Either way BGP then withdraws the LOCAL_PREF 200 routes and traffic falls back
   to the VPN path (LOCAL_PREF 100).
 
@@ -108,7 +108,7 @@ and N11 for the Northwind/Eastfield overlap story).
 |---------|---------|-----|-----|-------|
 | Private interconnect | MPLS / leased line | Cloud Interconnect (Dedicated or Partner) | AWS Direct Connect | (Azure: TODO) |
 | BGP speaker | CPE router you own | Cloud Router (managed; no router VM) | Virtual Private Gateway or Transit Gateway | (Azure: TODO) |
-| ASN on cloud side | Carrier ASN | AS15169 public, or private ASN per VLAN attachment | Default AS7224, or customer-chosen private ASN | (Azure: TODO) |
+| ASN on cloud side | Carrier ASN | AS15169 public, or private ASN per VLAN attachment | Private VGW default 64512 (since 2018; AS7224 is the legacy default, still used on public VIFs), or customer-chosen private ASN | (Azure: TODO) |
 | Route propagation | Redistribute BGP → OSPF on CPE | Cloud Router auto-populates VPC route table | BGP routes propagate to VGW / TGW route table | (Azure: TODO) |
 | Path preference (outbound from on-prem) | LOCAL_PREF on CPE | Set LOCAL_PREF on your CPE; Cloud Router does not expose LOCAL_PREF | Set LOCAL_PREF on customer router | (Azure: TODO) |
 | Path preference (inbound to cloud) | MED, AS_PATH prepend | Cloud Router honours MED; lower = preferred entry | AWS honours MED and AS_PATH length | (Azure: TODO) |
@@ -154,13 +154,14 @@ iBGP (internal). Count how many ASes the packet crosses before reaching AS15169.
 ### 3. Check RPKI validity [laptop]
 
 ```bash
-# Cloudflare public RPKI validator — no auth
-curl -s "https://rpki.cloudflare.com/api/v1/validity/15169/8.8.8.0/24" \
+# RIPE Stat public RPKI validation API — no auth
+curl -s "https://stat.ripe.net/data/rpki-validation/data.json?resource=AS15169&prefix=8.8.8.0/24" \
   | python3 -m json.tool
 ```
 
-Look for `"status": "valid"`. An `"invalid"` means the advertisement doesn't
-match the ROA — a router with ROV enforced would drop it.
+Look for `"status": "valid"` (and the matching ROA under `validating_roas`). An
+`"invalid"` means the advertisement doesn't match the ROA — a router with ROV
+enforced would drop it.
 
 ### 4. Paper exercise — path design [paper]
 

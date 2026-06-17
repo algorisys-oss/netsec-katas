@@ -35,7 +35,7 @@ yet, so it *broadcasts*:
     │                                           │
     │──── DISCOVER (broadcast, src 0.0.0.0) ───►│  "Anyone out there? I need an IP."
     │                                           │
-    │◄─── OFFER (broadcast, server proposes) ───│  "Here's 10.10.50.15/24, GW .1, DNS .5"
+    │◄─── OFFER (server proposes) ──────────────│  "Here's 10.10.50.15/24, GW .1, DNS .5"
     │                                           │
     │──── REQUEST (broadcast, client accepts) ──►│  "I'll take that offer from you."
     │                                           │
@@ -44,8 +44,13 @@ yet, so it *broadcasts*:
 ```
 
 Why broadcast? The client doesn't know the server's IP yet, so it can't unicast.
-The DHCP server *also* broadcasts the OFFER because the client has no IP to
-unicast to. Both broadcasts stay on the local segment — which is why each subnet
+The OFFER (and ACK) is broadcast only when the client sets the *broadcast flag*
+(the 'B' bit) in the DISCOVER — per RFC 2131 §4.1. Many clients set it, which is
+why you commonly see broadcast OFFERs. When the flag is clear (and giaddr/ciaddr
+are zero), the server *unicasts* the OFFER/ACK to the client's hardware (MAC)
+address and the offered `yiaddr` — it can address the frame to the client's MAC
+even though the client has no configured IP yet. Either way the reply stays on
+the local segment — which is why each subnet
 needs either a DHCP server reachable directly, or a **DHCP relay agent** (IP
 Helper on Cisco, `ip helper-address`) forwarding the broadcast as unicast to a
 central server.
@@ -241,8 +246,8 @@ re-DHCP until restarted or forced.
 
 ## Say it back (self-check)
 
-1. Name the four messages in the DHCP DORA handshake and why broadcasts are used
-   for DISCOVER and OFFER.
+1. Name the four messages in the DHCP DORA handshake and why DISCOVER is
+   broadcast — and what determines whether the OFFER is broadcast or unicast.
 2. What is a DHCP relay agent and why is one needed for centralized DHCP across
    multiple subnets?
 3. What does the `giaddr` field tell the DHCP server, and what does the server do

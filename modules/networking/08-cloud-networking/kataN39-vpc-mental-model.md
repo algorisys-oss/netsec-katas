@@ -147,9 +147,16 @@ reserves non-overlapping ranges to support hybrid routing without NAT:
 
 ```
   HQ-DC1 (on-prem):    10.10.0.0/16
-  GCP VPC:             10.100.0.0/14  (10.100.0.0 – 10.103.255.255)
-  AWS VPC (ap-south):  10.104.0.0/14  (10.104.0.0 – 10.107.255.255)
+  GCP allocation:      10.100.0.0/14  (10.100.0.0 – 10.103.255.255)
+  AWS allocation:      10.104.0.0/14  (10.104.0.0 – 10.107.255.255)
 ```
+
+These /14s are *IPAM reservation envelopes* — non-overlapping ranges set aside
+for each cloud, not the CIDR of any single VPC. On GCP a VPC has no fixed block,
+so its subnets simply draw from the allocation. On AWS a single VPC's primary
+IPv4 CIDR is capped at /16 (min /28), so the AWS VPC uses one /16 (e.g.
+`10.104.0.0/16`) as its primary CIDR, adding secondary CIDRs from the rest of the
+/14 only if it needs more space.
 
 **GCP side — global VPC "meridian-prod":**
 
@@ -173,7 +180,8 @@ VPC makes firewall policy uniform, but the architect must verify that subnets
 containing regulated data are never routed to out-of-country regions — that is a
 policy choice, not automatic.
 
-**AWS side — regional VPC in ap-south-1 (Mumbai):**
+**AWS side — regional VPC in ap-south-1 (Mumbai), primary CIDR `10.104.0.0/16`
+(drawn from the `10.104.0.0/14` allocation):**
 
 ```
   Subnet                  CIDR             AZ              Purpose
@@ -186,7 +194,7 @@ policy choice, not automatic.
 
   /25 check: 10.104.0.0/25 → hosts 10.104.0.1–10.104.0.126, broadcast .127  ✓
   /24 check: 10.104.1.0/24 → hosts 10.104.1.1–10.104.1.254, broadcast .255  ✓
-  All within 10.104.0.0/14 (10.104.0.0–10.107.255.255)                       ✓
+  All within VPC primary CIDR 10.104.0.0/16 (10.104.0.0–10.104.255.255)      ✓
   No overlap with GCP (10.100–10.103) or on-prem (10.10)                      ✓
 ```
 
@@ -246,12 +254,14 @@ verify the math:
 
 **Part 2 — Paper: AWS subnet plan for ap-south-1** [laptop]
 
-Using AWS allocation `10.104.0.0/14`, carve a multi-AZ design for two AZs with
-app and data tiers. No subnet should have fewer than 50 hosts.
+From the AWS allocation `10.104.0.0/14`, use `10.104.0.0/16` as the VPC's primary
+CIDR (remember a single AWS VPC primary CIDR is capped at /16), then carve a
+multi-AZ design for two AZs with app and data tiers. No subnet should have fewer
+than 50 hosts.
 
 1. List your CIDRs with AZ assignments.
 2. Verify no overlap between any two subnets.
-3. Confirm all are within `10.104.0.0/14`.
+3. Confirm all are within the VPC's `10.104.0.0/16`.
 
 **Part 3 — Observation: compare the VPC models** [laptop]
 
@@ -260,7 +270,7 @@ resources needed), answer:
 
 - In GCP, how many subnets can a single VPC contain, and do they have to be in the
   same region? (Hint: VPC quotas page in GCP docs.)
-- In AWS, if you have a VPC `10.104.0.0/14`, what is the minimum subnet size the
+- In AWS, if you have a VPC with primary CIDR `10.104.0.0/16`, what is the minimum subnet size the
   console allows? (Answer: /28 = 16 addresses, 11 usable after AWS reserves 5.)
 - AWS reserves 5 IP addresses per subnet. Which are they? (First four + last:
   `.0` network, `.1` VPC router, `.2` DNS, `.3` reserved for future, `.255`
@@ -270,8 +280,8 @@ resources needed), answer:
 
 Draw (on paper or a text file) Meridian's final dual-cloud network showing:
 - HQ-DC1 `10.10.0.0/16`
-- GCP VPC `10.100.0.0/14` with two regional subnets in `asia-south1`
-- AWS VPC `10.104.0.0/14` with four AZ subnets in `ap-south-1`
+- GCP VPC (from the `10.100.0.0/14` allocation) with two regional subnets in `asia-south1`
+- AWS VPC primary CIDR `10.104.0.0/16` (from the `10.104.0.0/14` allocation) with four AZ subnets in `ap-south-1`
 - Arrows showing: Interconnect (HQ → GCP), Direct Connect (HQ → AWS), and
   the hybrid routing requirement that no CIDR overlaps.
 

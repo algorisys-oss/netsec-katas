@@ -172,7 +172,7 @@ Directory), the byte count, and the verdict.
 | Managed cloud egress proxy / SWG | Zscaler, Forcepoint (CASB/SWG) | **Secure Web Proxy** (regional, Envoy-based explicit proxy; PAC-free — clients point to the SWP endpoint directly) | **AWS Network Firewall** with domain allowlisting (L7 SNI filtering) or marketplace SWG | (Azure: TODO) |
 | PAC file hosting | IIS / Apache / DHCP WPAD | GCS bucket over HTTPS or internal HTTPS LB | S3 bucket over HTTPS or internal ALB | (Azure: TODO) |
 | URL categorization / content filtering | Squid + SquidGuard / BlueCoat | **Chrome Enterprise** policies + Secure Web Proxy URL lists | AWS Network Firewall domain lists | (Azure: TODO) |
-| TLS inspection (SSL bump) | Squid with CA cert / Forcepoint | Secure Web Proxy supports TLS inspection (GA) | AWS Network Firewall supports native TLS inspection for ingress and egress (egress TLS decryption GA Dec 2023) — no third-party NVA required for basic TLS inspection | (Azure: TODO) |
+| TLS inspection (SSL bump) | Squid with CA cert / Forcepoint | Secure Web Proxy supports TLS inspection (Preview) | AWS Network Firewall supports native TLS inspection for ingress and egress (egress TLS decryption GA Dec 2023) — no third-party NVA required for basic TLS inspection | (Azure: TODO) |
 | Identity-aware proxy egress (ZTNA) | Zscaler ZIA, Netskope | Beyond Corp / **Chrome Enterprise Premium** (Google's ZTNA/SWG offering) | AWS Verified Access (inbound); Zscaler/Netskope on top for egress | (Azure: TODO) |
 
 **Note on "cloud-native" forward proxy:** in a cloud VPC, workloads that need

@@ -105,7 +105,7 @@ new GCP mobile-banking deployment:
       │
   [Firewall]
       │
-  [Core banking DB]  10.10.5.0/24  (HQ-DC1)
+  [Core banking DB]  10.10.20.0/24  (HQ-DC1, CDE subnet)
       │
   [Branch network]   10.30.0.0/16
 ```
@@ -114,7 +114,7 @@ Apply the protocol:
 
 **Step 1 — Orient.**
 Internet → Cloud LB → App servers (GCP, 10.100.1.0/24) → Firewall → Core DB
-(HQ-DC1, 10.10.5.0/24). Branches also reach the Core DB. Three zones, but only
+(HQ-DC1, 10.10.20.0/24). Branches also reach the Core DB. Three zones, but only
 one firewall drawn.
 
 **Step 2 — Trace the customer flow.**
@@ -128,7 +128,7 @@ one firewall drawn.
       │  ??? port — SQL? REST? What protocol crosses the firewall?
   Firewall
       │  ??? rule — who approved it? source/dest/port?
-  Core banking DB (10.10.5.0/24)
+  Core banking DB (10.10.20.0/24)
 ```
 
 Three "???" hops. Each is a question. Likely questions:
@@ -170,8 +170,9 @@ The diagram shows no management access. Questions:
 
 **Step 6 — Compliance scope.**
 
-The Core DB (10.10.5.0/24) sits in HQ-DC1, which is the PCI-CDE (see
-running-example.md). Questions:
+The Core DB sits in the segmented CDE subnet (10.10.20.0/24) within HQ-DC1 (see
+running-example.md) — note that HQ-DC1 as a whole is *not* the CDE; only this
+segmented /24 is. Questions:
 - Is the app server zone in PCI scope? If it processes or transmits card data, it
   may be. The diagram doesn't say.
 - Is the branch network (10.30.0.0/16) ever in CDE scope? Branches that process
@@ -245,7 +246,7 @@ presenter answers. After five minutes, swap.
    you about that firewall?
 4. At Meridian Bank, if an app server in GCP (10.100.1.0/24) is compromised, which
    other subnets in the running example could an attacker potentially reach? What
-   would need to be true for the Core DB (10.10.5.0/24) to be reachable?
+   would need to be true for the Core DB (10.10.20.0/24) to be reachable?
 5. Why might the branch network (10.30.0.0/16) be in PCI-CDE scope at Meridian Bank,
    even though it doesn't host the Core DB?
 
@@ -262,7 +263,7 @@ rule base is probably ad hoc and undocumented.
 
 **Q2: "What enforces the boundary between the app zone and the core banking zone?"**
 Good answer: "A stateful firewall with a specific allow list: source 10.100.1.0/24,
-dest 10.10.5.0/24, port 5432 (Postgres), approved in CAB change #4471." They know
+dest 10.10.20.0/24, port 5432 (Postgres), approved in CAB change #4471." They know
 the rule.
 Red flag: "the firewall is there" with no detail on *what rules*. A firewall with
 no rules (or default-allow) is decoration.
