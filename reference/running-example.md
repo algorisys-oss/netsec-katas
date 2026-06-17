@@ -30,6 +30,7 @@ keep regulated data in-country, prove it to the auditor.**
 ### IP plan (we grow this through the katas — start here)
 - Enterprise supernet (RFC 1918): `10.0.0.0/8` carved by region/site.
   - `10.10.0.0/16` — HQ-DC1
+    - `10.10.20.0/24` — CDE (cardholder data environment, PCI scope) within HQ-DC1
   - `10.20.0.0/16` — DC2 (DR)
   - `10.30.0.0/16` — branches (further subnetted per branch)
   - `10.40.0.0/16` — corp offices
