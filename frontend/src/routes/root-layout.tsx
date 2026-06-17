@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
 import { Link, Outlet, useNavigate } from "react-router"
-import { Menu, Search, ShieldCheck } from "lucide-react"
+import { Github, Menu, Search, ShieldCheck, Star } from "lucide-react"
 
 import { AppSidebar } from "@/components/app-sidebar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+
+const REPO_URL = "https://github.com/algorisys-oss/netsec-katas"
 
 export function RootLayout() {
   const [open, setOpen] = useState(false)
@@ -29,7 +31,7 @@ export function RootLayout() {
   }, [navigate])
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <Button
           variant="ghost"
@@ -59,11 +61,27 @@ export function RootLayout() {
               </kbd>
             </Link>
           </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            asChild
+            className="gap-1.5 text-muted-foreground"
+          >
+            <a
+              href={REPO_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Star this project on GitHub"
+            >
+              <Star className="size-4" />
+              <span className="hidden sm:inline">Star</span>
+            </a>
+          </Button>
           <ThemeToggle />
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-7xl">
+      <div className="mx-auto flex w-full max-w-7xl flex-1">
         <aside
           className={cn(
             "w-full shrink-0 border-r md:w-72",
@@ -79,6 +97,23 @@ export function RootLayout() {
           <Outlet />
         </main>
       </div>
+
+      <footer className="border-t">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-sm text-muted-foreground sm:flex-row">
+          <p>
+            © {new Date().getFullYear()} Algorisys Technologies Pvt Ltd. All
+            rights reserved.
+          </p>
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+          >
+            <Github className="size-4" /> Source on GitHub
+          </a>
+        </div>
+      </footer>
     </div>
   )
 }

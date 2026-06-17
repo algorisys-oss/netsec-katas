@@ -40,10 +40,12 @@ See [`plan.md`](plan.md) for the full module/kata map and status.
 web app** for navigation, progress tracking, and search:
 
 ```bash
-cd frontend
-npm install
-npm run dev        # http://localhost:5173
+./dev.sh           # start the dev server (http://localhost:5173)
+./gh.sh            # build + publish to GitHub Pages (gh-pages branch)
 ```
+
+(Or from `frontend/`: `npm install`, then `npm run dev` / `npm run gh`.)
+The published site lives at <https://algorisys-oss.github.io/netsec-katas/>.
 
 The app is a React 19 + Vite + React Router 7 + shadcn/ui SPA with **no backend** —
 it reads the kata Markdown straight from `modules/` at build time, so adding a
