@@ -5,75 +5,290 @@ in any kata to its entry here. Grow this as katas are written. Keep alphabetical
 
 > Format: **Term** (layer/area) — one-line definition. *Where it's taught:* kata id.
 
-- **ABAC** (security/IAM) — Attribute-Based Access Control: access decided by
-  attributes (role, dept, time, resource tags). *S07.*
-- **ARP** (L2) — Address Resolution Protocol: finds the MAC for a known IP on the
-  local segment. *N05.*
-- **BGP** (L3) — Border Gateway Protocol: routing protocol that exchanges routes
-  between networks; runs the internet and your cloud edge. *N14.*
-- **Blast radius** — how far an attacker or failure can spread from one
-  compromised point; limited by segmentation. *N01, N27.*
-- **Broadcast domain** (L2) — the set of hosts an Ethernet broadcast (e.g. ARP)
-  reaches; one switch/VLAN = one domain; routers and VLANs bound it. *N05, N15.*
-- **CAB** (process) — Change Advisory Board: the body that authorizes network/
-  infra changes and their windows in regulated shops. *N02.*
-- **CIA triad** (security) — Confidentiality, Integrity, Availability: the three
-  properties security protects. *S01.*
-- **CIDR** (L3) — Classless Inter-Domain Routing: `a.b.c.d/n` notation; `/n` =
-  number of network bits. *N08.*
-- **CDE** (compliance) — Cardholder Data Environment: the PCI-DSS-scoped segment
-  holding card data; must be isolated. *N29, S18.*
-- **Default gateway** (L3) — the router a host sends traffic to when the
-  destination isn't on its local subnet. *N12.*
-- **Defense in depth** (security) — layering independent controls so one failure
-  isn't fatal. *S01.*
-- **DMZ** (security/network) — a semi-trusted zone between the internet and
-  internal networks for internet-facing services. *N27.*
+- **3-way handshake** — The TCP connection-setup sequence: SYN (client proposes sequence number) → SYN-ACK (server acknowledges and proposes its own) → ACK (client confirms); only after this exchange does data flow.
+- **802.1Q** — The IEEE standard defining VLAN tagging; inserts a 4-byte tag into an Ethernet frame carrying a 12-bit VLAN ID (VID 0–4095), enabling trunk links to carry multiple VLANs on one physical connection.
+- **ABAC** (security/IAM) — Attribute-Based Access Control: access decided by attributes (role, dept, time, resource tags). *S07.*
+- **access port** — A switch port that carries traffic for exactly one VLAN and strips/adds the 802.1Q tag invisibly to the end device; the normal port type for servers, PCs, and IP phones.
+- **Account Vending Machine** — The automated pipeline (typically AWS Control Tower's Account Factory) that provisions new cloud accounts pre-configured with baseline monitoring, guardrails, and network wiring — so teams get a compliant spoke in minutes rather than weeks.
+- **Address overlap** — The condition where two or more network segments share the same IP prefix, making it impossible for a router to distinguish which segment a packet is destined for — the primary cause of M&A and hybrid integration failures.
+- **Administrative distance (AD)** — A per-source trustworthiness score (0–255, lower = more preferred) that a router uses to break ties when two protocols know the same prefix; static routes (AD 1) silently override OSPF routes (AD 110) for the same destination.
+- **ALG (Application-Layer Gateway)** — A NAT helper that inspects and rewrites IP addresses embedded inside application payloads (e.g., FTP, SIP) so they survive address translation; adds complexity and is often disabled in cloud environments. N16.
+- **Anycast** — An IP addressing scheme where the same IP prefix is advertised from multiple geographic locations; the network routes each client to the nearest one — used by GCP's global HTTPS Load Balancing so a single VIP is served from all edge PoPs.
+- **API gateway** — A reverse proxy that adds API-management controls on top of load balancing: AuthN/AuthZ enforcement (JWT/API-key validation), rate limiting, request/response transformation, versioning, and per-route observability — enforced at one central point before requests reach backend services.
+- **APIPA** — Automatic Private IP Addressing: a host self-assigns a 169.254.x.x/16 address when DHCP fails; a 169.254 address on a device is the reliable sign that DHCP did not respond.
+- **ARP** (L2) — Address Resolution Protocol: finds the MAC for a known IP on the local segment. *N05.*
+- **ASN (AS Number)** — A unique number identifying an Autonomous System; public ASNs (1–64511) are assigned by IANA/RIRs; private ASNs (64512–65534) are used on enterprise WANs and private cloud interconnects, analogous to RFC 1918 for IPs.
+- **Asymmetric routing** — A condition where the forward path (A→B) and return path (B→A) traverse different routers; breaks stateful firewalls that expect to see both directions of a flow. (L3)
+- **Authoritative name server** — The DNS server that holds the actual records for a zone and gives definitive (non-cached) answers; whoever owns the domain controls this.
+- **Autonomous System (AS)** — A network under one administrative routing policy, identified by an ASN; the boundary between eBGP (inter-AS) and iBGP (intra-AS) sessions.
+- **Availability Zone (AZ)** — A physically isolated data-center location within a cloud region; in AWS, subnets are scoped per-AZ, requiring one subnet per AZ for multi-AZ high availability.
+- **AWS RAM (Resource Access Manager)** — (AWS) An AWS service that allows a network account to share VPC subnets (and other resources) with other AWS accounts in the same organisation, enabling the AWS equivalent of GCP Shared VPC.
+- **Backend service / backend pool** — The LB construct that groups a set of server instances (or endpoints) and carries the health-check, algorithm, and session-affinity config; called Backend Service in GCP and Target Group in AWS.
+- **Bandwidth** — The maximum data rate a link or provisioned circuit can carry, in bits per second — a capacity figure, not a performance measurement. N53.
+- **BFD (Bidirectional Forwarding Detection)** — A lightweight protocol (RFC 5880) that sends fast hello packets between two endpoints to detect link or path failure in milliseconds, allowing routing protocols like OSPF or BGP to re-converge far faster than their native hello timers allow.
+- **BGP** (L3) — Border Gateway Protocol: routing protocol that exchanges routes between networks; runs the internet and your cloud edge. *N14.*
+- **Blast radius** — how far an attacker or failure can spread from one compromised point; limited by segmentation. *N01, N27.*
+- **Break-even (interconnect)** — The monthly data volume at which a committed dedicated interconnect port (flat fee + lower per-GB rate) becomes cheaper than routing the same traffic over an internet VPN or public egress; a key calculation before signing an interconnect commitment.
+- **Broadcast address** — The last address in a subnet (all host bits set to 1); reaching every host in the subnet; not assignable to any device.
+- **Broadcast domain** (L2) — the set of hosts an Ethernet broadcast (e.g. ARP) reaches; one switch/VLAN = one domain; routers and VLANs bound it. *N05, N15.*
+- **CAB** (process) — Change Advisory Board: the body that authorizes network/ infra changes and their windows in regulated shops. *N02.*
+- **Cache-hit ratio** — The proportion of CDN requests served from edge cache without contacting the origin; a ratio above 80–90 % significantly reduces origin load and egress cost. *N47.*
+- **CBWFQ (Class-Based Weighted Fair Queuing)** — A queuing discipline that allocates a guaranteed bandwidth percentage to each traffic class; serves classes proportionally when the link is congested.
+- **CDE** (compliance) — Cardholder Data Environment: the PCI-DSS-scoped segment holding card data; must be isolated. *N29, S18.*
+- **CDN** — Content Delivery Network: a globally distributed set of edge nodes (PoPs) that cache content near users, reducing latency and origin load; terminates TLS but does not inspect payloads for attacks. N25.
+- **CE (Customer Edge)** — The router at the customer's site that connects to the MPLS carrier; the CE-to-PE link is the demarcation between the customer's responsibility and the carrier's managed core.
+- **Certificate Transparency (CT)** — Public, append-only logs (RFC 6962) where CAs must record every issued certificate; enables auditors and domain owners to detect misissued or rogue certs (searchable at crt.sh).
+- **CGNAT** — Carrier-Grade NAT: NAT performed by ISPs using RFC 6598 shared address space (100.64.0.0/10) to share a pool of public IPs across many subscribers; not globally routable.
+- **CIA triad** (security) — Confidentiality, Integrity, Availability: the three properties security protects. *S01.*
+- **CIDR** (L3) — Classless Inter-Domain Routing: `a.b.c.d/n` notation; `/n` = number of network bits. *N08.*
+- **CIR/EIR** — Committed Information Rate / Excess Information Rate: the bandwidth tiers in an MPLS or carrier WAN contract; CIR traffic is guaranteed delivery, EIR traffic is delivered best-effort and may be dropped during congestion.
+- **Classful addressing** — The pre-CIDR (pre-1993) scheme that divided IPv4 space into fixed Class A (/8), B (/16), and C (/24) blocks; abandoned because it wasted addresses and was replaced by CIDR.
+- **Cloud Armor** — GCP's managed WAF and DDoS mitigation service applied to external load balancers; the GCP equivalent of AWS WAF + Shield.
+- **Cloud DNS inbound policy** — (GCP) A Cloud DNS resource that creates reserved forwarding IP addresses inside a VPC subnet so on-premises DNS servers have a stable target to which they can forward private-zone queries.
+- **Cloud IDS** — GCP's managed intrusion-detection service powered by Palo Alto Networks threat signatures; uses Packet Mirroring internally so no sensor VM is required. N54.
+- **Cloud Interconnect** — GCP's dedicated private physical link (10 or 100 Gbps) between an on-prem router and a GCP VPC, carrying BGP-learned routes via Cloud Router; the GCP equivalent of AWS Direct Connect.
+- **Cloud IPAM** — A service or process for tracking and allocating IP address ranges across cloud VPCs and on-prem, preventing CIDR overlap before it blocks hybrid connectivity.
+- **Cloud NAT / NAT Gateway** — Managed outbound-only NAT service (GCP: Cloud NAT; AWS: NAT Gateway) that translates private VM IPs to one or more public IPs so VMs can initiate internet connections without being internet-addressable themselves. N41, N16.
+- **Cloud Router** — GCP's managed BGP routing component that runs inside a VPC and exchanges routes with on-prem via Cloud Interconnect or HA VPN; the mechanism by which on-prem prefixes propagate into GCP spoke VPCs in a hub-and-spoke design.
+- **CMDB** — Configuration Management Database: the authoritative registry of every network device, server, and service, including their relationships; used to validate that SNMP monitoring covers all known assets and that NetFlow anomalies can be attributed to known hosts.
+- **conditional forwarder** — A DNS server rule that forwards queries matching a specific domain suffix to a designated resolver IP rather than recursing to the public internet; the primary tool for bridging on-prem and cloud-private DNS namespaces.
+- **conditional forwarding** — A DNS resolver configuration that sends queries for a specific zone to a nominated nameserver rather than recursing — the mechanism that makes private cloud zones resolvable from on-prem and vice versa.
+- **CONNECT method (HTTP)** — The HTTP method a client sends to a proxy to open a raw TCP tunnel to a destination; used for all HTTPS traffic so the proxy relays the TLS stream without decrypting it. (N23)
+- **Connected route** — A routing-table entry auto-created when an interface is configured with an IP address; marks the directly-attached subnet as reachable without a gateway. (L3)
+- **Connection tracking table** — (firewall/L4) — a stateful firewall's in-memory record of active sessions (src IP, src port, dst IP, dst port, protocol, state); return packets matching an entry are automatically permitted without an explicit rule.
+- **Connectivity Tests** — GCP Network Intelligence Center feature that simulates a packet through GCP routing and firewall configuration without sending real traffic, returning DELIVERED or DROPPED with the matching rule — used for pre-change validation and triage.
+- **Convergence (routing)** — The time for all routers to agree on an updated forwarding topology after a link or router change; OSPF convergence with default timers is ~40–90 s, tunable to sub-second with fast-hello timers and BFD.
+- **CPE (Customer Premises Equipment)** — The router or gateway device located at the customer's site that terminates a WAN circuit or interconnect and runs the BGP session on the enterprise side.
+- **CRL (Certificate Revocation List)** — Signed list published by a CA (RFC 5280) of certificate serial numbers that have been revoked before their expiry; clients download it to check cert validity.
+- **cross-connect** — A physical cable (copper or fiber) inside a colocation facility that links two different tenants' equipment — e.g., the cable between a GCP Cloud Interconnect port and an AWS Direct Connect port in the same Equinix cage; must be ordered separately from either cloud port.
+- **DDI** — DNS + DHCP + IPAM: the integrated management discipline (and product category) that ties dynamic address assignment, hostname resolution, and address tracking into a single audit trail; Infoblox is the FSI gold standard.
+- **DDoS** — Distributed Denial of Service — an attack that exhausts a resource (bandwidth, connection table, or application threads) using traffic from many sources; mitigation must occur upstream of the victim network.
+- **Default gateway** (L3) — the router a host sends traffic to when the destination isn't on its local subnet. *N12.*
+- **Default-deny** — (firewall/security) — a firewall posture where the final rule drops all traffic not explicitly permitted (whitelist model); mandated by PCI-DSS Req 1.3 and RBI guidelines for production FSI networks.
+- **Defense in depth** (security) — layering independent controls so one failure isn't fatal. *S01.*
+- **DHCP** — Dynamic Host Configuration Protocol (RFC 2131): the protocol that automatically assigns IP address, subnet mask, default gateway, and DNS server to a host that broadcasts a request on joining a network.
+- **DHCP relay agent** — A function on a router interface (e.g. Cisco 'ip helper-address') that intercepts DHCP broadcast DISCOVER messages and forwards them as unicast to a central DHCP server, enabling centralized DHCP across multiple subnets.
+- **DHCP snooping** — An L2 switch feature that marks switch ports as trusted (DHCP server side) or untrusted (client side) and drops DHCP OFFER/ACK packets arriving on untrusted ports, blocking rogue DHCP servers.
+- **DiffServ** — Differentiated Services: the IETF framework (RFC 2475) for scalable QoS using DSCP markings and per-hop behaviors rather than per-flow state in every router; the basis of modern enterprise and carrier QoS.
+- **Direct Connect** — AWS's dedicated private network connection (1–100 Gbps) from an on-prem router to an AWS VPC, carrying BGP-advertised routes; the AWS equivalent of GCP Cloud Interconnect.
+- **Direct Connect Gateway (AWS)** — An AWS construct that lets a single Direct Connect circuit reach VPCs across multiple AWS regions and accounts via Transit Gateways; enables hub-and-spoke hybrid connectivity without a circuit per region.
+- **DMZ** (security/network) — a semi-trusted zone between the internet and internal networks for internet-facing services. *N27.*
 - **DNS** (L7) — Domain Name System: resolves hostnames to IPs. *N17.*
-- **Egress** (cloud/cost) — outbound data transfer; often the surprise line item
-  in cloud bills. *N01, N51.*
-- **Encapsulation** (all layers) — wrapping each layer's data in the next layer's
-  header/trailer going down the stack; reversed (decapsulation) going up. *N04.*
-- **Forward proxy** (L7) — sits in front of *clients*, controlling/observing their
-  outbound traffic. *N23.*
+- **DNS inbound endpoint** — A cloud-managed IP address inside your VPC (GCP) or a set of ENIs (AWS Route 53 Resolver) that accepts DNS queries from on-prem resolvers forwarded over a private link, enabling hybrid name resolution.
+- **DNS outbound policy** — A VPC-level configuration (GCP: DNS outbound server policy; AWS: Route 53 Resolver outbound endpoint + forwarding rule) that instructs cloud resolvers to forward queries for specified zones to on-prem nameservers.
+- **DNS record TTL (resource-record TTL)** — The number of seconds a recursive resolver may cache a DNS answer before re-querying the authoritative server; distinct from the IP-header TTL (hop counter in N06); low values enable fast failover, high values improve performance but slow propagation of changes.
+- **DNSSEC** — DNS Security Extensions (RFC 4033–4035): cryptographic signing of DNS records so resolvers can verify answers have not been tampered with; protects against cache-poisoning attacks.
+- **DORA** — The four-message DHCP handshake sequence: DISCOVER → OFFER → REQUEST → ACK; DISCOVER and REQUEST are client broadcasts because the client has no IP yet.
+- **DPD (Dead Peer Detection)** — An IKEv2 keepalive mechanism that detects a silently dead VPN peer and triggers tunnel teardown and failover; prevents prolonged traffic blackholing.
+- **DPDP Act** — Digital Personal Data Protection Act (India, 2023): the legislation governing how Indian personal data must be collected, processed, and stored; relevant to architects because it reinforces RBI data-residency obligations and imposes breach notification duties.
+- **DPI (Deep Packet Inspection)** — Inspection of packet payloads (beyond headers) to identify the application generating traffic — used by SD-WAN CPEs and NGFWs to classify flows for app-aware routing or security policy. N33.
+- **DSCP (Differentiated Services Code Point)** — A 6-bit field in the IP header used to mark packets for QoS treatment; routers and MPLS carriers honour DSCP markings to place traffic into the correct service class (e.g., voice vs best-effort).
+- **Dual-stack** — A network host or infrastructure element that runs both IPv4 and IPv6 simultaneously, using whichever protocol the destination supports; the standard enterprise IPv6 migration approach.
+- **East-west traffic** — Lateral traffic between services or hosts inside a network (server-to-server, pod-to-pod); unchecked in flat networks and the primary vector for ransomware spread and attacker pivoting; controlled by internal firewalls, security groups, or micro-segmentation.
+- **eBGP (external BGP)** — BGP sessions between routers in *different* Autonomous Systems — how ISPs, cloud providers, and enterprises exchange routes across administrative boundaries; the session type that 'runs the internet.'
+- **ECMP** — Equal-Cost Multi-Path routing: distributes traffic across multiple equal-cost paths (e.g., all spines) by hashing flow identifiers, fully utilizing all links simultaneously without spanning-tree. (N30)
+- **EF (Expedited Forwarding)** — DSCP value 46 (decimal); the highest-priority per-hop behavior defined in RFC 3246; used for voice/real-time traffic that cannot tolerate queuing delay or jitter.
+- **Egress** (cloud/cost) — outbound data transfer; often the surprise line item in cloud bills. *N01, N51.*
+- **Egress pattern** — One of four standard designs classifying how cloud VMs reach destinations outside the VPC: no egress, NAT-only egress, direct internet egress, or forced egress through a firewall/inspection appliance. N41.
+- **Encapsulation** (all layers) — wrapping each layer's data in the next layer's header/trailer going down the stack; reversed (decapsulation) going up. *N04.*
+- **ENI (Elastic Network Interface)** — AWS construct: the virtual NIC attached to an EC2 instance; Security Groups are attached to ENIs, not to the instance directly, so a multi-homed instance can have different rules per interface.
+- **ephemeral port** — A short-lived source port (typically 32768–60999 on Linux, 49152–65535 per IANA) assigned automatically by the OS when a client opens a connection; firewall rules reference destination ports, not ephemeral ports.
+- **ESP (Encapsulating Security Payload)** — The IPsec protocol that encrypts and authenticates the packet payload; uses IP protocol number 50; the component that carries actual data through a VPN tunnel.
+- **EUI-64** — A method for deriving a 64-bit IPv6 Interface Identifier from a 48-bit MAC address by inserting 0xFFFE in the middle and flipping bit 7; used by SLAAC to form a host's interface portion of its address.
+- **FHRP** — First-hop redundancy protocol — a family of protocols (HSRP, VRRP) that give two or more routers a shared virtual IP/MAC so hosts have a fault-tolerant default gateway.
+- **Forward proxy** (L7) — sits in front of *clients*, controlling/observing their outbound traffic. *N23.*
+- **Forward secrecy** — Property of a key-exchange algorithm (e.g. ECDHE) where session keys are ephemeral; compromise of the server's long-term private key cannot decrypt previously recorded sessions.
+- **Forwarding rule (cloud LB)** — A GCP Cloud Load Balancing construct that maps a frontend IP+port to a backend service; billed by the hour per rule regardless of traffic, making unused rules a hidden cost.
+- **Forwarding zone (DNS)** — A DNS zone configuration that proxies queries for a given domain to a designated upstream resolver (e.g., an on-prem DNS server) rather than answering authoritatively; used in GCP Cloud DNS and AWS Route 53 Resolver rules for hybrid name resolution.
+- **Front door** — The combined CDN + WAF + global load balancer entry point for an internet-facing service; terminates TLS, caches static content at the edge, inspects traffic for attacks, and routes clean requests to the origin. N25.
+- **Gateway VPC Endpoint** — A free, route-table-only AWS endpoint type (no ENI) supported exclusively for Amazon S3 and DynamoDB; adds a prefix-list route to the VPC route table rather than injecting an IP.
+- **giaddr** — Gateway IP Address — the field in a DHCP packet populated by a relay agent with the relay interface's IP; tells the DHCP server which subnet scope to draw from when responding.
+- **Global front door** — A cloud load balancer that uses anycast to accept traffic at the nearest point of presence worldwide and route it to backends over the provider's private backbone, avoiding public internet hops.
+- **Gratuitous ARP** — An ARP reply sent without a prior request, used by a newly-active FHRP router to announce that the virtual MAC now lives on its port, forcing switches to update their CAM tables immediately.
+- **GUA (Global Unicast Address)** — IPv6 addresses from the 2000::/3 block that are globally routable on the public internet; the IPv6 equivalent of public IPv4 addresses; assigned to cloud VPCs by providers.
+- **Hairpin NAT** — When an internal host reaches a service by its public IP while both are inside the same network, forcing traffic to traverse the NAT device and back; fixed by split-horizon DNS so internal hosts resolve to the private IP directly. N16.
+- **Health check (LB)** — A periodic probe (TCP, HTTP, HTTPS) an LB sends to each backend to decide whether to include it in the active pool; governs how quickly a failed server stops receiving traffic.
+- **Hierarchical Firewall Policy (GCP)** — GCP construct that enforces firewall rules at org, folder, or project scope, overriding VPC-level rules; the governance primitive that lets a central security team set hard boundaries no project team can bypass.
+- **Host project** — (GCP Shared VPC) The GCP project that owns the Shared VPC, its subnets, and centrally managed firewall rules; the platform team's domain.
+- **HSRP** — Hot Standby Router Protocol — Cisco-proprietary FHRP; routers elect an Active and a Standby; the Active owns the virtual IP/MAC; Standby takes over when hellos stop.
 - **IAM** (security) — Identity & Access Management: managing who can do what. *S04–S08.*
-- **MAC address** (L2) — hardware address unique to a NIC; local-segment scope;
-  rewritten at each hop. *N03, N05.*
-- **mTLS** (security/L6) — mutual TLS: both client and server present certificates.
-  *N21, S15.*
-- **MSS** (L4) — Maximum Segment Size: largest TCP payload per segment;
-  ≈ MTU − IP − TCP headers (1460 over a 1500 MTU). *N04.*
-- **MTU** (L2/L3) — Maximum Transmission Unit: largest payload a link carries in
-  one frame (typically 1500 bytes Ethernet); tunnels lower it. *N04.*
-- **NAT** (L3) — Network Address Translation: rewrites IPs (typically private↔
-  public). *N16.*
-- **NSG / Security Group / firewall rule** (cloud) — cloud-native packet filters;
-  models differ per cloud. *N42.*
+- **iBGP (internal BGP)** — BGP sessions between routers within the *same* Autonomous System, propagating externally-learned routes to interior routers without using OSPF to carry them.
+- **Identity-Aware Proxy (IAP)** — A reverse proxy that intercepts application requests and enforces identity authentication and optionally device posture before forwarding to the backend, implementing the ZTNA principle without requiring a client VPN; Google Cloud IAP is the canonical cloud-native example.
+- **IDS** — Intrusion Detection System — a passive sensor that receives a copy of traffic (via SPAN/mirror) and raises alerts on suspicious patterns; it cannot block traffic.
+- **IKE (Internet Key Exchange)** — The protocol that negotiates cipher suites, performs Diffie-Hellman key exchange, and authenticates IPsec peers before data flows; runs on UDP 500/4500. IKEv2 (RFC 7296) is the current standard.
+- **Inbound resolver endpoint** — A real IP address provisioned inside a cloud VPC (GCP: inbound DNS policy; AWS: Route 53 Resolver inbound endpoint) that accepts DNS queries arriving over VPN or Interconnect from on-prem, forwarding them to the VPC resolver so private zone names can be resolved by on-prem clients.
+- **Interface VPC Endpoint** — The AWS PrivateLink-based endpoint type: an ENI placed in a VPC subnet representing an AWS or third-party service; requires per-AZ provisioning and has hourly + data-processing costs.
+- **internet exchange (IX)** — A physical colocation facility where multiple network providers (including cloud providers) peer or interconnect; used to establish private cross-cloud paths by co-locating Cloud Interconnect and Direct Connect ports in the same building.
+- **Internet Gateway (IGW)** — AWS construct attached to a VPC that enables bidirectional internet traffic for instances with public IPs; a subnet is 'public' when its route table sends 0.0.0.0/0 to the IGW.
+- **IPAM** — IP Address Management: the system or process (tool, spreadsheet, or dedicated software) an enterprise uses to track, allocate, and audit IP address space across sites and clouds.
+- **iperf3** — Open-source active-measurement tool for measuring TCP and UDP throughput, jitter, and packet loss between two endpoints; the standard first test for 'how much capacity does this path actually deliver?'. N53.
+- **IPFIX** — IP Flow Information Export (RFC 7011): the IETF-standard, template-based flow-export protocol that supersedes Cisco NetFlow v9; vendor-neutral and supports IPv6, MPLS, and custom fields.
+- **IPS** — Intrusion Prevention System — an inline sensor that sits in the traffic path, inspects every packet, and can drop or reset sessions matching attack signatures; introduces latency and is a potential single point of failure.
+- **IPsec** — A framework of protocols (IKE + ESP/AH) that encrypts and authenticates IP traffic between endpoints; the basis of site-to-site VPN.
+- **Jitter** — Variation in packet inter-arrival delay; the key enemy of real-time audio/video; caused by queuing fluctuations; mitigated by LLQ and consistent low-latency paths.
+- **Jumbo frames** — Ethernet frames with MTU up to 9,000 bytes (vs the standard 1,500), used on storage and high-performance networks to reduce per-packet overhead; requires consistent configuration across every switch in the path. (N30)
+- **LACP** — Link Aggregation Control Protocol (IEEE 802.3ad / 802.1AX) — negotiates and maintains a bundle of physical links (a LAG) as one logical link; removes failed members automatically.
+- **LAG** — Link Aggregation Group — a logical link composed of multiple physical links bonded together (via LACP); appears as a single interface to the network; also called port channel or bond.
+- **Landing zone** — The pre-built network, IAM, and governance foundation that every application team inherits when provisioning cloud resources — the cloud equivalent of a shared data-center core fabric with enforced baseline controls.
+- **Latency** — The time a packet takes to travel from source to destination; composed of propagation, transmission, queuing, and processing delay — the floor is set by physics (speed of light), the variable part is queuing, controlled by QoS. N53.
+- **Link-local address** — IPv6 addresses in the fe80::/10 range that are automatically assigned to every IPv6-capable interface and are only routable on the directly connected link segment; always present even on IPv4-only networks.
+- **LLQ (Low-Latency Queue)** — A strict-priority queue that empties before any other class is served; used to guarantee minimal latency for voice/EF traffic; must be capped (typically ≤ 33% of link BW) to avoid starving other classes.
+- **LOCAL_PREF** — A BGP path attribute (0–4294967295, higher preferred) used inside one AS via iBGP to indicate which exit path is preferred; the primary dial for primary/backup interconnect design.
+- **Longest prefix match** — The rule routers use when a packet matches multiple routing-table entries: the entry with the most specific (longest) prefix wins, allowing specific and default routes to coexist. (L3)
+- **Loopback address** — 127.0.0.1 (and the 127.0.0.0/8 block): a special address that refers to the local machine itself; packets to it never leave the host's network stack.
+- **LSDB (Link-State Database)** — The shared topology map that all OSPF routers in an area build by flooding Link-State Advertisements (LSAs); every router in the area holds an identical copy and runs SPF against it.
+- **MAC address** (L2) — hardware address unique to a NIC; local-segment scope; rewritten at each hop. *N03, N05.*
+- **MACsec (IEEE 802.1AE)** — Link-layer encryption standard that encrypts Ethernet frames between two directly connected devices; used to satisfy encryption-in-transit requirements on dedicated interconnect circuits without the overhead of a full IPsec tunnel.
+- **management plane** — The network path used for administrative access (SSH, API calls, console, jump hosts, bastion); must be segmented and logged separately from the data plane.
+- **MED (Multi-Exit Discriminator)** — A BGP path attribute sent to a neighbouring AS as a hint about which entry point is preferred; lower MED is preferred; used to influence inbound traffic on cloud dedicated interconnects.
+- **MIB** — Management Information Base: the structured variable tree a network device exposes via SNMP; each variable has an OID (object identifier) path, e.g. ifHCOutOctets at 1.3.6.1.2.1.31.1.1.1.10.
+- **Micro-segmentation** — Workload-level network policy enforcement — each VM, pod, or container gets its own firewall rules or identity-based policy, so east-west traffic is denied by default even between hosts on the same subnet.
+- **MPLS (Multi-Protocol Label Switching)** — A telco/carrier technology that forwards packets using short numeric labels rather than IP routing at each hop, enabling private managed WAN services with defined QoS classes and topology without a dedicated physical circuit per site pair.
+- **MSS** (L4) — Maximum Segment Size: largest TCP payload per segment; ≈ MTU − IP − TCP headers (1460 over a 1500 MTU). *N04.*
+- **mTLS** (security/L6) — mutual TLS: both client and server present certificates. *N21, S15.*
+- **mtr (My TraceRoute)** — CLI tool combining `ping` and `traceroute`; shows per-hop latency, jitter (StDev), and loss in a single continuous report — the fastest way to locate which hop introduces jitter or loss. N53.
+- **MTTR** — Mean Time to Repair: the average elapsed time from fault detection to full service restoration; a key SLA metric for FSI incident response and regulatory reporting.
+- **MTU** (L2/L3) — Maximum Transmission Unit: largest payload a link carries in one frame (typically 1500 bytes Ethernet); tunnels lower it. *N04.*
+- **NACL (Network ACL)** — AWS stateless subnet-level packet filter evaluated before Security Groups; requires explicit rules for both inbound and outbound directions including ephemeral reply ports (1024–65535).
+- **NAPT (Network Address Port Translation)** — Synonym for PAT; the IETF term (RFC 2663) for the many-to-one NAT that maps private-IP:port pairs to a single public IP with distinct ports. N16.
+- **NAT** (L3) — Network Address Translation: rewrites IPs (typically private↔ public). *N16.*
+- **NAT Gateway** — Managed cloud service (AWS per-AZ; GCP regional Cloud NAT) that allows private-subnet instances to initiate outbound internet connections without being directly reachable from the internet.
+- **NAT-T (NAT Traversal)** — Technique that encapsulates IPsec ESP packets in UDP (port 4500) so they survive NAT rewriting; required whenever an IPsec tunnel crosses a device that does PAT, such as a branch router or cloud NAT gateway. N16.
+- **native VLAN** — The single VLAN on an 802.1Q trunk whose frames are sent *untagged*; misconfiguring it (e.g. leaving it as VLAN 1) enables VLAN hopping attacks.
+- **NDP (Neighbor Discovery Protocol)** — ICMPv6-based protocol (RFC 4861) that replaces ARP in IPv6 networks; uses solicited-node multicast for address resolution, router discovery, prefix advertisement, and duplicate address detection.
+- **NDR** — Network Detection and Response — a behavioral analytics platform that ingests flow telemetry or full-packet captures, baselines normal traffic, and detects anomalies such as lateral movement or slow exfiltration that signatures alone cannot catch.
+- **NEG (Network Endpoint Group)** — GCP construct that adds individual IP:port endpoints — including on-premises hosts reachable via Interconnect — to a GCP load balancer backend service.
+- **NetFlow** — Cisco-originated flow-export protocol (v5/v9) and its IETF successor IPFIX: routers sample each IP 5-tuple flow and export metadata records to a collector, revealing who is talking to whom and how much — without capturing payloads.
+- **NetFlow / IPFIX** — Flow telemetry protocols (NetFlow originated at Cisco; IPFIX is the IETF standard) that export metadata about every IP flow (src/dst IP, port, byte count, duration) from routers and switches to a collector; the primary input for NDR and capacity monitoring.
+- **Network ACL (NACL)** — (AWS/cloud) — a stateless packet filter applied at the subnet boundary in AWS VPCs; evaluated before Security Groups; both inbound and outbound rules must be written explicitly for bidirectional traffic.
+- **Network address** — The first address in a subnet (all host bits set to 0); identifies the subnet itself in routing tables; not assignable to a host.
+- **Network Connectivity Center (NCC)** — GCP's managed hub-and-spoke transit service that centralizes connectivity from VPCs, Cloud VPN tunnels, and Interconnect attachments into a single hub, replacing a custom transit-VPC pattern.
+- **Network tag (GCP)** — A string label attached to a GCP Compute VM that routes and firewall rules can match on, allowing different VMs in the same VPC to follow different egress routes or firewall policies. N41, N42.
+- **Next hop** — The IP address of the immediately adjacent router a host or router forwards a packet to; each device knows only one step, not the full path. (L3)
+- **NGFW (next-generation firewall)** — (network security) — a stateful firewall that also inspects traffic at L7 to identify applications by behaviour rather than port alone; combines firewall, IPS, and application-ID functions in one device.
+- **NMS** — Network Management System: the polling, alerting, and dashboarding platform (e.g. Zabbix, SolarWinds, PRTG) that aggregates SNMP counters and ICMP checks to track availability and utilization across the estate.
+- **non-transitive routing** — The property of VPC peering where a peered VPC will not forward traffic between two of its peers — traffic from A cannot reach C via B unless B runs a router (or managed transit construct) that re-originates the packet.
+- **North-south traffic** — Network traffic that crosses a perimeter boundary — between an external client and an internal service; the traditional focus of perimeter firewalls, WAFs, and DDoS controls. Contrast east-west.
+- **NSG / Security Group / firewall rule** (cloud) — cloud-native packet filters; models differ per cloud. *N42.*
+- **NXDOMAIN** — DNS response code meaning the queried name does not exist; cached by resolvers for the SOA minimum TTL, so a mis-typed name stays 'not found' for minutes to hours.
+- **OCSP (Online Certificate Status Protocol)** — Real-time protocol (RFC 6960) for checking whether a specific certificate has been revoked, queried against the issuing CA's OCSP responder.
+- **OCSP Stapling** — Optimization where the TLS server pre-fetches and attaches a signed OCSP response to the handshake, giving clients revocation status with no added round-trip to the CA.
+- **Org Policy (GCP)** — GCP's preventive guardrail system: constraints applied at the Organization, Folder, or Project level that block actions regardless of what IAM permissions a user holds (e.g., deny public IPs on VMs, restrict resource regions).
 - **OSI model** — 7-layer reference model for networking. *N03.*
-- **PKI** (security) — Public Key Infrastructure: CAs, certificates, and trust
-  chains. *N21, S10.*
+- **OSPF (OSPFv2)** — Open Shortest Path First — a link-state dynamic routing protocol (RFC 2328) used within an enterprise network; each router floods topology advertisements (LSAs), builds a shared Link-State Database, and runs Dijkstra's algorithm to compute the shortest path to every subnet.
+- **Overlay (SD-WAN)** — The IPsec-encrypted tunnels an SD-WAN controller builds on top of underlay circuits, abstracting the physical transport so policy can route traffic per-app across multiple paths. N33.
+- **Oversubscription** — The ratio of total server-port bandwidth to available uplink bandwidth on a switch; a 3:1 ratio means 3 Gbps of potential server traffic compete for 1 Gbps of uplink — acceptable statistically, dangerous when unmeasured or ignored. (N30)
+- **OWASP Core Rule Set (CRS)** — The open-source managed rule set published by OWASP covering the OWASP Top 10 attack classes (SQLi, XSS, etc.); offered as a managed rule group by all major cloud WAF products. N25.
+- **Oxidized / RANCID** — Open-source tools (RANCID is the original; Oxidized the modern replacement) that SSH into network devices on a schedule, store the running config in version control, and diff each poll against the previous snapshot — an unexpected diff is an unscheduled change or a potential compromise.
+- **PAC file (Proxy Auto-Config)** — A JavaScript file a browser fetches and executes per request to decide whether to send traffic via a proxy or directly; the enterprise standard for split-routing egress. (N23)
+- **Packet loss** — The fraction of transmitted packets that never arrive at the receiver; causes TCP throughput collapse via slow-start and application-layer errors in UDP real-time workloads. N53.
+- **Packet mirroring** — A cloud capability that copies raw packet bytes from selected VMs or subnets to a collector (IDS, PCAP store) without affecting the original traffic path; equivalent to a network TAP or SPAN port on-prem. N54.
+- **PAT (Port Address Translation)** — Many-to-one NAT: multiple private hosts share one public IP, differentiated by source port; the form of NAT used at virtually every enterprise internet breakout and cloud NAT gateway. Also called NAPT or IP masquerade. N16.
+- **PCI-DSS** — Payment Card Industry Data Security Standard: the 12-requirement framework (v4.0 current) mandating network segmentation, access control, encryption, and audit logging for any system that stores, processes, or transmits cardholder data.
+- **PE (Provider Edge)** — The carrier's router at the edge of the MPLS core that receives customer traffic from the CE, assigns (pushes) MPLS labels, and enforces the VPN and QoS policy the customer has contracted.
+- **PFS (Perfect Forward Secrecy)** — A property of IKE Phase 2 re-keying: a fresh Diffie-Hellman exchange is performed each time, so compromising one session key exposes no past or future sessions.
+- **PKI** (security) — Public Key Infrastructure: CAs, certificates, and trust chains. *N21, S10.*
+- **Policing** — Enforcing a rate limit by dropping (or re-marking) packets that exceed the limit immediately; low memory cost but causes TCP retransmits; preferred at ingress/untrusted boundaries.
+- **PoP (Point of Presence)** — A CDN or network provider's physical edge location in a city or region; users are routed to the nearest PoP via anycast BGP. N25.
+- **Port channel** — Cisco terminology for a LAG (link aggregation group) — the logical interface that bundles physical member links; also called a bond (Linux) or trunk (some vendors).
+- **Private APN (Access Point Name)** — A carrier-provisioned mobile-network gateway that routes enterprise 4G/5G traffic through the carrier's private core rather than the public internet, providing a WAN-like private path over cellular.
+- **Private DNS zone override** — A cloud-private DNS zone that resolves a managed-service hostname to a private endpoint IP rather than its public IP; required for private connectivity to actually be used — without it, VMs resolve to the public address and bypass the endpoint.
+- **Private Hosted Zone (PHZ)** — (AWS) An AWS Route 53 DNS zone visible only to the VPCs it is explicitly associated with; used to serve private DNS names (e.g. RDS, internal services) in hybrid and cloud-only environments.
+- **Private Service Access** — The older GCP pattern (now largely superseded by PSC) that allocated a /29 RFC 1918 range from your VPC and created a VPC peering to Google's managed-service VPC; limited by GCP's no-transitive-peering constraint.
+- **Private Service Connect (PSC)** — GCP's mechanism for injecting a forwarding-rule-based private endpoint (with a VPC-local IP) into a consumer VPC, so managed services are reachable without a public IP or full VPC peering; supports both Google-managed services and producer-published custom services.
+- **Private zone (DNS)** — A cloud DNS zone (GCP Cloud DNS / Route 53 Private Hosted Zone / Azure Private DNS Zone) whose records are served only to VPCs/VNets you explicitly attach or associate; external resolvers receive NXDOMAIN.
+- **PrivateLink (AWS)** — AWS mechanism that injects an Elastic Network Interface (ENI) with a private IP into a consumer VPC subnet, routing traffic to an AWS-managed or partner service over AWS's internal fabric without traversing the internet.
+- **Propagation delay** — The fixed component of latency set by the physical distance light or electricity must travel through the medium; approximately 5 ms per 1,000 km in fibre — cannot be reduced by buying more bandwidth or tuning QoS. N53.
+- **PSK (pre-shared key)** — A shared secret configured on both VPN peers to authenticate each other in IKE Phase 1; must be stored securely and rotated on a schedule (quarterly for PCI workloads).
+- **PTR record** — DNS record type for reverse lookups — maps an IP address to a hostname; stored in the in-addr.arpa. zone with octets reversed; used by monitoring tools, mail servers, and audit logs.
+- **QoS (Quality of Service)** — The set of mechanisms — classification, queuing, policing, shaping — used to impose business-defined traffic priorities on a shared network link so critical flows (voice, trading) are not crowded out by bulk traffic.
 - **RBAC** (security/IAM) — Role-Based Access Control: access via assigned roles. *S07.*
-- **Reverse proxy** (L7) — sits in front of *servers*, terminating client
-  connections; basis of LBs, WAFs, API gateways. *N24.*
-- **Risk** (security) — likelihood × impact; what security actually prioritizes.
-  *S01.*
-- **Segmentation** (network/security) — dividing a network into isolated zones to
-  limit blast radius. *N27.*
-- **Segregation of duties** (security/process) — splitting a sensitive action
-  across people so no one both performs and approves it (e.g. NetOps builds, the
-  CAB approves a firewall change). *N02.*
-- **SD-WAN** (WAN) — software-defined WAN; cheaper, policy-driven branch
-  connectivity. *N33.*
+- **RBI IT Framework** — Reserve Bank of India Master Directions on IT Governance, Risk, Controls and Assurance Practices (2023): the regulatory mandate that governs network segmentation, change control, audit log retention, vendor access, and annual VAPT for scheduled commercial banks in India.
+- **Recursive resolver (full-service resolver)** — The DNS server that does all iterative work on behalf of a client — querying root, TLD, and authoritative servers in sequence, caching the result; your corporate DNS server or a cloud-provider DNS service plays this role.
+- **Region (cloud)** — A named geographic cluster of cloud infrastructure (e.g. asia-south1 = Mumbai); the unit of data-residency compliance and latency zoning.
+- **Reverse proxy** (L7) — sits in front of *servers*, terminating client connections; basis of LBs, WAFs, API gateways. *N24.*
+- **RFC 1918** — The 1996 IETF standard reserving three IPv4 blocks (10/8, 172.16/12, 192.168/16) as private: routers on the public internet must discard packets with these addresses, so they are only meaningful inside an organization's network.
+- **RFC 6598 / CGNAT range** — The 100.64.0.0/10 block defined by RFC 6598 for Carrier-Grade NAT; not RFC 1918 and not publicly routable — used by SD-WAN vendors for underlay management links and by cloud providers (e.g. AWS EKS pod CIDRs) to avoid exhausting private space.
+- **Risk** (security) — likelihood × impact; what security actually prioritizes. *S01.*
+- **risk surface** — The total set of paths, interfaces, and conditions through which a threat could cause harm in a design; what a design review is actually walking.
+- **Route 53 Resolver inbound endpoint** — (AWS) An ENI-based DNS endpoint inside a VPC that accepts DNS queries forwarded from on-premises networks, allowing on-prem hosts to resolve Route 53 Private Hosted Zone names.
+- **router on a stick (ROAS)** — An inter-VLAN routing design where a single trunk link connects a switch to a router, which uses sub-interfaces — one per VLAN — to route between them; simple but the link is a bottleneck.
+- **Routing table** — An ordered list of prefix/next-hop rules a host or router consults to decide where to forward each packet; processed by longest-prefix match. (L3)
+- **ROV (Route Origin Validation)** — The act of checking a BGP advertisement against RPKI ROAs and dropping routes whose origin ASN or prefix doesn't match — the enforcement step of RPKI.
+- **RPKI (Resource Public Key Infrastructure)** — A cryptographic framework (RFC 6480) that ties ASNs to their authorised IP prefixes via ROAs; routers enforcing ROV reject advertisements that don't match, preventing BGP hijacks.
+- **RTT (Round-Trip Time)** — The time from sending a packet to receiving its reply; what `ping` measures; approximately 2× one-way delay. N53.
+- **Rule base** — (firewall) — the ordered list of permit/deny rules a firewall evaluates top-to-bottom, first-match-wins, against every packet; also called a rule set or policy.
+- **SASE** — Secure Access Service Edge: a Gartner-coined architecture model converging network (SD-WAN, VPN) and security (SWG, CASB, ZTNA, FWaaS) into a cloud-delivered service, so security policy follows the user rather than the network perimeter. Referenced in N37, taught fully in S27.
+- **SCP (Service Control Policy)** — AWS Organizations' deny-only guardrail: a policy attached to an OU or account that caps the maximum permissions any IAM entity in that scope can exercise, without granting any permissions itself.
+- **Scrubbing center** — An upstream facility (ISP-operated or cloud-based) that receives diverted attack traffic via BGP, strips malicious packets, and returns clean traffic to the customer — the correct mitigation for volumetric DDoS that fills the customer's upstream link.
+- **SD-WAN** (WAN) — software-defined WAN; cheaper, policy-driven branch connectivity. *N33.*
+- **Segmentation** (network/security) — dividing a network into isolated zones to limit blast radius. *N27.*
+- **Segregation of duties** (security/process) — splitting a sensitive action across people so no one both performs and approves it (e.g. NetOps builds, the CAB approves a firewall change). *N02.*
+- **Service project** — (GCP Shared VPC) A GCP project attached to a host project that can deploy workloads (VMs, GKE, Cloud Run) into pre-allocated subnets without owning or modifying the network.
+- **Session affinity (sticky sessions)** — A load balancer mode that routes requests from the same client (identified by IP or cookie) to the same backend instance; a workaround for stateful apps that lack a shared session store.
+- **Shaping** — Enforcing a rate limit by buffering over-rate packets and releasing them at the target rate; smoother than policing but adds latency; preferred for TCP bulk flows to avoid retransmit spirals.
+- **Shared VPC** — (GCP) A VPC created in a host project and shared to one or more service projects, so a platform team owns the network plane (subnets, firewall rules, routing) while app teams own workloads running inside it.
+- **Signed URL** — A time-limited, HMAC-signed URL generated by the origin application that a CDN PoP validates before serving a cached object, allowing private content to be cached at the edge without being publicly accessible. *N47.*
+- **SLAAC (Stateless Address Autoconfiguration)** — IPv6 mechanism by which a host derives its own /64 address from the router-advertised prefix plus an Interface Identifier (EUI-64 or random), without a DHCP server.
+- **SNAT (Source NAT)** — Rewriting the source IP (and optionally source port) of an outgoing packet; the mechanism behind PAT/NAPT at egress points. Architects encounter SNAT exhaustion when a NAT device runs out of port numbers for concurrent flows. N16.
+- **SNI (Server Name Indication)** — TLS extension sent in ClientHello carrying the requested hostname, allowing a single IP/load-balancer to select and present the correct certificate for each domain.
+- **SNMP** — Simple Network Management Protocol: the polling and trap protocol (v1/v2c/v3) used by network management systems to read device counters and receive async fault alerts from routers, switches, and firewalls. SNMPv3 with auth+encryption is required in FSI.
+- **socket** — The endpoint of a network connection identified by the pair IP:port; a TCP/UDP connection is uniquely described by the 4-tuple (src IP, src port, dst IP, dst port).
+- **SPAN port** — Switch Port Analyzer — a switch feature that copies traffic from one or more ports/VLANs to a designated monitoring port, used to feed passive IDS or NDR sensors without interrupting the original traffic flow.
+- **Spine-leaf** — A two-stage Clos switching fabric where every leaf switch connects to every spine switch, giving every server pair exactly two hops and consistent east-west latency; the standard topology for modern data centers. (N30)
+- **Split tunneling** — A VPN/ZTNA configuration where only traffic destined for private ranges routes through the tunnel while internet traffic exits locally; improves performance but creates a compliance concern for PCI-scoped users who are simultaneously connected to untrusted internet and the CDE.
+- **Split-horizon DNS (split-view DNS)** — A DNS configuration that returns different answers for the same name depending on the source of the query — typically a private IP to internal clients and a public IP to external ones; used to hide internal topology.
+- **SSL-VPN** — A remote-access VPN that tunnels traffic over TLS (port 443) rather than raw IPsec, improving traversal through hotel and corporate firewalls; the dominant client VPN form since the 2010s.
+- **Stateless firewall (packet filter)** — (network/L3–L4) — a firewall that evaluates each packet in isolation with no memory of prior packets; requires explicit rules for return traffic in both directions.
+- **Sticky session (session affinity)** — An LB configuration that binds a client's requests to the same backend — typically via a cookie or IP hash — to preserve server-local state; trades HA for state locality.
+- **STP (Spanning Tree Protocol)** — IEEE 802.1D protocol that prevents L2 loops in switched networks by blocking redundant paths; runs per VLAN in PVST+ and can cause outages if root bridge election is misconfigured.
 - **Subnet** (L3) — a sub-division of an IP network sharing a routing prefix. *N09.*
-- **TLS** (L6) — Transport Layer Security: encrypts and authenticates sessions.
-  *N21.*
-- **traceroute** (tool/L3) — maps the routers on a path by sending packets with
-  increasing TTL and reading the ICMP "time exceeded" replies. *N06.*
-- **TTL** (L3) — Time To Live: a hop counter in the IP header; decremented by each
-  router, the packet is dropped at 0 (basis of traceroute). *N06.*
+- **Supernet** — A large address block that is subdivided into smaller subnets; e.g. Meridian Bank's 10.0.0.0/8 is the enterprise supernet, carved into /16 blocks per site.
+- **SVI (Switched Virtual Interface)** — A virtual L3 interface configured on a Layer 3 switch for a specific VLAN; acts as the default gateway for all hosts in that VLAN and is where inter-VLAN routing happens on-switch without an external router.
+- **SWG (Secure Web Gateway)** — A cloud-hosted or on-prem forward proxy with URL categorisation, DLP, and TLS inspection; the managed-service evolution of Squid-style proxies. (N23)
+- **SYN cookies** — A TCP stack mechanism (RFC 4987) that encodes connection state into the sequence number instead of a table entry, making a server immune to moderate SYN floods without external mitigation.
+- **SYN flood** — A DDoS protocol attack that sends millions of TCP SYN packets with no follow-up ACK, filling the server's half-open connection table until it rejects legitimate connections.
+- **Throughput** — The actual data rate delivered end-to-end over a measurement window; always ≤ bandwidth and reduced by packet loss, TCP flow control, and protocol overhead. N53.
+- **TIME_WAIT** — TCP state after a graceful connection close where the socket waits 2×MSL (roughly 60 s) before being freed; at high connection rates this can exhaust the ephemeral port range and cause new connections to fail.
+- **TLS** (L6) — Transport Layer Security: encrypts and authenticates sessions. *N21.*
+- **TLS inspection (SSL bumping)** — A proxy technique that terminates the client TLS session, re-signs the server certificate with an internal CA, and re-originates a new TLS connection outbound — allowing the proxy to read and filter HTTPS payloads; requires the internal CA to be trusted on every managed device. (N23)
+- **TLS re-encryption** — A reverse-proxy configuration where TLS is terminated at the proxy (decrypted), then a new TLS session is opened to the backend — providing end-to-end encryption while still allowing the proxy to inspect and route the request; required in PCI-DSS CDE and many FSI designs.
+- **TLS termination** — The point in a network path where a TLS session ends and plaintext is handed to the next component; the termination point determines who can inspect traffic and is a key PCI-DSS design decision.
+- **Tokenisation** — Replacing a sensitive value (e.g. a card PAN) with a non-sensitive surrogate token at the earliest point of entry, so downstream systems never handle the original value and fall outside PCI-DSS scope.
+- **traceroute** (tool/L3) — maps the routers on a path by sending packets with increasing TTL and reading the ICMP "time exceeded" replies. *N06.*
+- **Traffic Mirroring** — AWS's per-ENI packet-mirroring feature: copies raw traffic from individual Elastic Network Interfaces to a Network Load Balancer or target ENI for IDS/PCAP analysis. N54.
+- **Traffic selector (IPsec)** — The src/dst IP range pair that defines which packets are encrypted by a given IPsec SA; must match on both peers or the tunnel establishes but no traffic flows.
+- **Transit Gateway (TGW)** — AWS's managed hub-and-spoke transit service that connects VPCs and on-prem networks through a single routing hub with configurable route tables and per-attachment propagation policies.
+- **Transparent proxy** — A proxy that intercepts traffic at the network layer without client configuration; functionally equivalent to a forward proxy but invisible to the application. (N23)
+- **trunk port** — A switch port that carries multiple VLANs simultaneously on one physical link, using 802.1Q tags to identify which VLAN each frame belongs to; connects switches to switches or switches to routers/L3 switches.
+- **trust boundary** — A line in a design where the security zone or trust level changes (e.g. internet → DMZ, or cloud VPC → on-prem DC); the primary organizing concept for a design review.
+- **TTL** (L3) — Time To Live: a hop counter in the IP header; decremented by each router, the packet is dropped at 0 (basis of traceroute). *N06.*
+- **Tunnel mode (IPsec)** — IPsec mode that wraps the entire original IP packet (including its inner headers) inside a new IP packet — the VPN gateways are the outer IPs, the inner addresses are private. Used for site-to-site VPN.
+- **ULA (Unique Local Address)** — IPv6 addresses in the fc00::/7 range (commonly fd00::/8) defined by RFC 4193; privately routable within an organization but not advertised to the internet — the IPv6 equivalent of RFC 1918.
+- **Underlay (SD-WAN)** — The physical circuits an SD-WAN overlay rides: MPLS, broadband, 4G/5G — the underlay just moves bits; the overlay adds policy. N33.
+- **VAPT** — Vulnerability Assessment and Penetration Testing: the combined practice of scanning for known weaknesses (VA) and actively attempting exploitation (PT) to find what automated scans miss; mandated annually by RBI for critical banking systems.
+- **VIP** — Virtual IP — an IP address shared by multiple physical devices (e.g. the HSRP/VRRP virtual IP); no single device owns it permanently; ownership transfers on failover.
+- **Virtual Interface (VIF)** — AWS Direct Connect's logical partition of a physical port — a private VIF connects to one VPC, a transit VIF connects to a Direct Connect Gateway for multi-VPC/multi-region reach.
+- **Virtual IP (VIP)** — A single IP address presented to clients by a load balancer, masking the pool of backend servers behind it.
+- **Virtual WAN Hub (vWAN)** — (Azure: TODO) Azure's managed transit hub construct, offered in plain and Secured (Azure Firewall embedded) variants; analogous to GCP NCC or AWS Transit Gateway.
 - **VLAN** (L2) — Virtual LAN: logical L2 segmentation over shared switches. *N15.*
-- **VPC / VNet** (cloud L3) — Virtual Private Cloud (GCP/AWS) / Virtual Network
-  (Azure): your private cloud network. *N39.*
+- **VLAN attachment (Interconnect Attachment)** — GCP's logical sub-circuit object that maps an 802.1Q VLAN on a Dedicated or Partner Interconnect port to a Cloud Router and VPC, analogous to AWS's Virtual Interface (VIF) or Azure's ExpressRoute peering.
+- **VLAN hopping** — An attack where a device on an access port sends double-tagged 802.1Q frames to reach a VLAN it should not have access to, typically exploiting a misconfigured native VLAN.
+- **VLSM** — Variable Length Subnet Masking: allocating subnets with different prefix lengths (e.g. /28 for a small DMZ, /22 for a large server farm) to match actual host counts and avoid wasting address space.
+- **VPC / VNet** (cloud L3) — Virtual Private Cloud (GCP/AWS) / Virtual Network (Azure): your private cloud network. *N39.*
+- **VPC endpoint** — A private, regional connection from a VPC to a cloud provider's service (e.g. AWS VPC Interface/Gateway Endpoint, GCP Private Service Connect endpoint) that routes traffic inside the cloud network, bypassing NAT gateways and avoiding public-internet egress charges.
+- **VPC Flow Logs** — Per-flow connection-metadata records (src/dst IP, port, protocol, bytes, disposition) exported by cloud hypervisors at the subnet or NIC level; used for security auditing, anomaly detection, and compliance evidence. Available in GCP and AWS. N54.
+- **VPC peering** — A private, non-transitive L3 connection between two VPCs that routes traffic over the provider backbone without NAT or internet traversal; each pair of VPCs that must communicate requires its own bilateral connection.
+- **VPC Reachability Analyzer** — AWS tool that performs a config-level simulation of a packet path between two endpoints in a VPC, identifying the routing or security-group rule that would block it, without sending real traffic.
+- **VPC Service Controls (VPC SC)** — GCP-specific API-level security perimeter that restricts which identities and resources can access GCP services (e.g. Cloud Storage, BigQuery), preventing data exfiltration even when IAM permissions are present; no exact AWS equivalent.
+- **VPN concentrator** — The gateway device (firewall or dedicated appliance) at the enterprise edge that terminates remote-access VPN tunnels, authenticates clients, and routes them to internal resources; a high-value attack target because it is internet-facing and processes unauthenticated packets.
+- **VRRP** — Virtual Router Redundancy Protocol (RFC 5798) — open-standard FHRP; functionally equivalent to HSRP but multi-vendor; elects a Master and one or more Backups.
 - **WAF** (L7/security) — Web Application Firewall: inspects HTTP for attacks. *N25.*
-- **Zero Trust** (security) — never trust by location; verify identity and context
-  on every request. *S26, N27.*
+- **well-known ports** — Port numbers 0–1023, reserved by IANA for standard services (e.g. 22 SSH, 53 DNS, 80 HTTP, 443 HTTPS); binding to them on a server requires root/administrator privilege.
+- **Wildcard mask** — The bitwise inverse of a subnet mask used in Cisco ACLs; 0 bits mean 'must match,' 1 bits mean 'ignore' — convert to CIDR by subtracting each octet from 255.
+- **WPAD (Web Proxy Auto-Discovery)** — A protocol that lets clients automatically find the PAC file URL via a DNS lookup for wpad.<domain> or DHCP option 252; convenient but can be hijacked if DNS is not locked down. (N23)
+- **X-Forwarded-For** — An HTTP header added by a proxy or load balancer carrying the original client IP address, since the TCP source IP seen by the backend is the LB's own IP; standardised in RFC 7239 as the Forwarded header.
+- **Zero Trust** (security) — never trust by location; verify identity and context on every request. *S26, N27.*
+- **Zone (cloud)** — An independent failure domain within a cloud region — separate power, cooling, and building — used to spread resources for high availability without the cost of multi-region.
+- **ZTNA** — Zero Trust Network Access: an architecture that grants per-application proxied sessions based on identity and device posture, rather than assigning a client IP on the corporate network — eliminating lateral-movement risk inherent in client VPN.
+- **ZTP (Zero-Touch Provisioning)** — A deployment method where a network device (SD-WAN CPE, switch) dials home to a controller on first boot, downloads its full configuration, and becomes production-ready without on-site engineer intervention. N33.

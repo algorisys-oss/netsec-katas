@@ -48,77 +48,77 @@ Numbering is global **within each track**; prereqs cite kata ids (`N08`, `S03`).
 - [x] N06 — Tools: `ping`, `traceroute`/`mtr`, `tcpdump`/Wireshark basics
 
 ## Module N2 — IP addressing & subnetting
-- [ ] N07 — IPv4, classes (historical), private ranges (RFC 1918)
-- [ ] N08 — CIDR & subnet masks: the math, by hand
-- [ ] N09 — Subnetting & VLSM: carve an address plan for Meridian Bank
-- [ ] N10 — IPv6 essentials
-- [ ] N11 — IP planning at enterprise scale: overlap, RFC 6598, M&A pain
+- [x] N07 — IPv4, classes (historical), private ranges (RFC 1918)
+- [x] N08 — CIDR & subnet masks: the math, by hand
+- [x] N09 — Subnetting & VLSM: carve an address plan for Meridian Bank
+- [x] N10 — IPv6 essentials
+- [x] N11 — IP planning at enterprise scale: overlap, RFC 6598, M&A pain
 
 ## Module N3 — Routing & switching
-- [ ] N12 — Routing tables & the default gateway
-- [ ] N13 — Static vs dynamic routing; intro to OSPF
-- [ ] N14 — BGP: the protocol that runs the internet (and your cloud edge)
-- [ ] N15 — VLANs & segmentation; trunking; the L2/L3 boundary
-- [ ] N16 — NAT & PAT; why it shapes cloud egress
+- [x] N12 — Routing tables & the default gateway
+- [x] N13 — Static vs dynamic routing; intro to OSPF
+- [x] N14 — BGP: the protocol that runs the internet (and your cloud edge)
+- [x] N15 — VLANs & segmentation; trunking; the L2/L3 boundary
+- [x] N16 — NAT & PAT; why it shapes cloud egress
 
 ## Module N4 — Names, sessions & the application edge
-- [ ] N17 — DNS deep dive: resolution path, record types, TTL, caching
-- [ ] N18 — DNS in the enterprise: split-horizon, conditional forwarding, hybrid
-- [ ] N19 — DHCP & IPAM
-- [ ] N20 — TCP vs UDP, the 3-way handshake, ports, connection state
-- [ ] N21 — TLS/SSL: handshake, certs, PKI, mTLS, termination  → pairs with S04
-- [ ] N22 — Load balancing: L4 vs L7, algorithms, health checks, sticky sessions
-- [ ] N23 — **Forward proxy**: corporate egress control, PAC files
-- [ ] N24 — **Reverse proxy**: vs load balancer, vs API gateway
-- [ ] N25 — WAF, CDN, and the modern application front door  → pairs with S05
+- [x] N17 — DNS deep dive: resolution path, record types, TTL, caching
+- [x] N18 — DNS in the enterprise: split-horizon, conditional forwarding, hybrid
+- [x] N19 — DHCP & IPAM
+- [x] N20 — TCP vs UDP, the 3-way handshake, ports, connection state
+- [x] N21 — TLS/SSL: handshake, certs, PKI, mTLS, termination  → pairs with S04
+- [x] N22 — Load balancing: L4 vs L7, algorithms, health checks, sticky sessions
+- [x] N23 — **Forward proxy**: corporate egress control, PAC files
+- [x] N24 — **Reverse proxy**: vs load balancer, vs API gateway
+- [x] N25 — WAF, CDN, and the modern application front door  → pairs with S13
 
 ## Module N5 — Network security & perimeter
-- [ ] N26 — Firewalls: stateful vs stateless; rule design; default-deny
-- [ ] N27 — DMZ, segmentation, micro-segmentation, east-west vs north-south
-- [ ] N28 — IDS/IPS, NDR, DDoS protection
-- [ ] N29 — PCI-DSS / RBI / data-residency: how compliance shapes the network
+- [x] N26 — Firewalls: stateful vs stateless; rule design; default-deny
+- [x] N27 — DMZ, segmentation, micro-segmentation, east-west vs north-south
+- [x] N28 — IDS/IPS, NDR, DDoS protection
+- [x] N29 — PCI-DSS / RBI / data-residency: how compliance shapes the network
 
 ## Module N6 — On-premise enterprise & data center networking
-- [ ] N30 — Data center topology: 3-tier vs spine-leaf; oversubscription
-- [ ] N31 — High availability: redundancy, HSRP/VRRP, link aggregation
-- [ ] N32 — WAN building blocks: leased lines, MPLS, broadband, 4G/5G backup
-- [ ] N33 — SD-WAN: why FMCGs love it; how it changes the branch
-- [ ] N34 — QoS: prioritizing voice/trading/critical traffic
-- [ ] N35 — Network management: monitoring, NetFlow, change-control culture
+- [x] N30 — Data center topology: 3-tier vs spine-leaf; oversubscription
+- [x] N31 — High availability: redundancy, HSRP/VRRP, link aggregation
+- [x] N32 — WAN building blocks: leased lines, MPLS, broadband, 4G/5G backup
+- [x] N33 — SD-WAN: why FMCGs love it; how it changes the branch
+- [x] N34 — QoS: prioritizing voice/trading/critical traffic
+- [x] N35 — Network management: monitoring, NetFlow, change-control culture
 
 ## Module N7 — Connectivity: VPN & hybrid links
-- [ ] N36 — IPsec & site-to-site VPN
-- [ ] N37 — Remote-access / client VPN; SSL-VPN; ZTNA as successor → pairs with S07
-- [ ] N38 — Dedicated interconnect: Cloud Interconnect / Direct Connect / ExpressRoute
+- [x] N36 — IPsec & site-to-site VPN
+- [x] N37 — Remote-access / client VPN; SSL-VPN; ZTNA as successor → pairs with S07
+- [x] N38 — Dedicated interconnect: Cloud Interconnect / Direct Connect / ExpressRoute
 
 ## Module N8 — Cloud networking foundations (GCP → AWS → Azure)
-- [ ] N39 — The VPC mental model: GCP (global) vs AWS (regional) vs Azure VNet
-- [ ] N40 — Subnets, regions, zones, cloud IP planning
-- [ ] N41 — Route tables, internet/NAT gateways, egress design
-- [ ] N42 — Cloud firewalls: GCP rules / AWS SG+NACL / Azure NSG
-- [ ] N43 — VPC peering & topology at scale
-- [ ] N44 — Private connectivity: Private Service Connect / PrivateLink / Private Endpoint
-- [ ] N45 — Cloud DNS: Cloud DNS / Route 53 / Azure DNS; public vs private; hybrid
-- [ ] N46 — Cloud load balancing & global front doors
-- [ ] N47 — Cloud CDN & edge
+- [x] N39 — The VPC mental model: GCP (global) vs AWS (regional) vs Azure VNet
+- [x] N40 — Subnets, regions, zones, cloud IP planning
+- [x] N41 — Route tables, internet/NAT gateways, egress design
+- [x] N42 — Cloud firewalls: GCP rules / AWS SG+NACL / Azure NSG
+- [x] N43 — VPC peering & topology at scale
+- [x] N44 — Private connectivity: Private Service Connect / PrivateLink / Private Endpoint
+- [x] N45 — Cloud DNS: Cloud DNS / Route 53 / Azure DNS; public vs private; hybrid
+- [x] N46 — Cloud load balancing & global front doors
+- [x] N47 — Cloud CDN & edge
 
 ## Module N9 — Hybrid & multi-cloud architecture
-- [ ] N48 — Hub-and-spoke / Transit Gateway / NCC / Azure Virtual WAN
-- [ ] N49 — Landing zones & network foundations
-- [ ] N50 — Hybrid DNS resolution end-to-end
-- [ ] N51 — Multi-cloud connectivity & the egress-cost trap
-- [ ] N52 — Shared VPC / centralized vs decentralized network ownership
+- [x] N48 — Hub-and-spoke / Transit Gateway / NCC / Azure Virtual WAN
+- [x] N49 — Landing zones & network foundations
+- [x] N50 — Hybrid DNS resolution end-to-end
+- [x] N51 — Multi-cloud connectivity & the egress-cost trap
+- [x] N52 — Shared VPC / centralized vs decentralized network ownership
 
 ## Module N10 — Observability, performance & troubleshooting
-- [ ] N53 — Latency, bandwidth, throughput, jitter, packet loss — the numbers
-- [ ] N54 — Flow logs & packet mirroring across clouds
-- [ ] N55 — A structured troubleshooting playbook (layer-by-layer)
+- [x] N53 — Latency, bandwidth, throughput, jitter, packet loss — the numbers
+- [x] N54 — Flow logs & packet mirroring across clouds
+- [x] N55 — A structured troubleshooting playbook (layer-by-layer)
 
 ## Module N11 — Networking conversation mastery (capstone)
-- [ ] N56 — Design-review playbook: the questions that expose risk
-- [ ] N57 — Costing a network design (egress, interconnect, LB, NAT, IPs)
-- [ ] N58 — Reading an architecture diagram & spotting what's missing
-- [ ] N59 — Capstone: design Meridian Bank's hybrid GCP+AWS network & defend it
+- [x] N56 — Design-review playbook: the questions that expose risk
+- [x] N57 — Costing a network design (egress, interconnect, LB, NAT, IPs)
+- [x] N58 — Reading an architecture diagram & spotting what's missing
+- [x] N59 — Capstone: design Meridian Bank's hybrid GCP+AWS network & defend it
 
 ---
 
