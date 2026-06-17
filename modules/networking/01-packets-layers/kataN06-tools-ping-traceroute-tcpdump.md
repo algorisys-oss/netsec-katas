@@ -1,6 +1,7 @@
 # Kata N06 — Tools: ping, traceroute/mtr, tcpdump/Wireshark
 
 > **Track:** Networking · **Module:** N1 Packets & layers · **Prereqs:** N03, N04, N05 · **Time:** ~40 min
+> **Tags:** `networking` `tooling` `troubleshooting` `l3-network` `tcp` `first-principles`
 
 ## Why it matters
 

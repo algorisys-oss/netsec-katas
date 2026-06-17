@@ -1,0 +1,20 @@
+node_modules
+dist
+dist-ssr
+*.local
+.vite
+
+# tsc -b / build emit artifacts
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+
+# we use npm (package-lock.json) — ignore other lockfiles
+bun.lock
+bun.lockb
+yarn.lock
+pnpm-lock.yaml
+
+# editor / OS
+.DS_Store
+*.log

@@ -1,6 +1,7 @@
 # Kata N03 — OSI vs TCP/IP: what each layer actually does
 
 > **Track:** Networking · **Module:** N1 Packets & layers · **Prereqs:** N01 · **Time:** ~30 min
+> **Tags:** `networking` `osi` `tcp-ip` `l3-network` `l4-transport` `mental-model`
 
 ## Why it matters
 

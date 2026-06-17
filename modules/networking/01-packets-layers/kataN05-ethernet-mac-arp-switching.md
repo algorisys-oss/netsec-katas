@@ -1,6 +1,7 @@
 # Kata N05 — Ethernet, MAC, ARP, switching (the local segment)
 
 > **Track:** Networking · **Module:** N1 Packets & layers · **Prereqs:** N03, N04 · **Time:** ~30 min
+> **Tags:** `networking` `ethernet` `mac` `arp` `switching` `l2-data-link` `broadcast-domain`
 
 ## Why it matters
 

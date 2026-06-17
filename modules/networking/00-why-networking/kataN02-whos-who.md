@@ -1,6 +1,7 @@
 # Kata N02 — Who's who: IT head, network team, CISO
 
 > **Track:** Networking · **Module:** N0 Why networking matters · **Prereqs:** N01 · **Time:** ~25 min
+> **Tags:** `networking` `who-is-who` `conversation` `change-control` `fsi` `fmcg` `security`
 
 ## Why it matters
 

@@ -1,6 +1,7 @@
 # Kata N01 — The architect's stake in the network
 
 > **Track:** Networking · **Module:** N0 Why networking matters · **Prereqs:** none · **Time:** ~20 min
+> **Tags:** `networking` `first-principles` `cost` `latency` `blast-radius` `compliance` `conversation`
 
 ## Why it matters
 

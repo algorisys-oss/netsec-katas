@@ -87,6 +87,7 @@ first. Same discipline for cloud security services.
 # Kata <N|S>NN — <Title>
 
 > **Track:** Networking|Security · **Module:** <name> · **Prereqs:** <ids> · **Time:** ~N min
+> **Tags:** `tag-one` `tag-two` `tag-three`
 
 ## Why it matters
 2–4 sentences. The business/architecture/risk stakes. Why it comes up with the
@@ -127,6 +128,10 @@ Canonical links (RFCs, NIST, OWASP, official cloud docs).
 - The **running example** (Meridian Bank + Northwind FMCG) is defined once in
   `reference/running-example.md` and reused everywhere.
 - Glossary in `reference/glossary.md`; link first use of each term.
+- **Tags:** every kata carries a `> **Tags:**` line (second blockquote line)
+  with 4–8 backtick-wrapped, lowercase-hyphenated tags for search. Draw from the
+  controlled vocabulary in `reference/tags.md`; only coin a new tag when none
+  fits, and add it to `tags.md` when you do.
 - Cheat-sheets (CIDR, ports, cloud-construct map, security frameworks) in
   `reference/`.
 - `plan.md` is the source of truth for sequence and status. Update it when a kata

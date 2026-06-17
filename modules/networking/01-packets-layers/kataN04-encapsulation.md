@@ -1,6 +1,7 @@
 # Kata N04 — Encapsulation: follow one packet down the stack and back up
 
 > **Track:** Networking · **Module:** N1 Packets & layers · **Prereqs:** N03 · **Time:** ~30 min
+> **Tags:** `networking` `encapsulation` `mtu` `l3-network` `l4-transport` `troubleshooting`
 
 ## Why it matters
 

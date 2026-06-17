@@ -31,6 +31,18 @@ Authoritative docs:
 Still open (ask the learner when relevant): Azure backfill timing; pacing
 (kata/day vs by module); ASCII-only vs Mermaid diagrams.
 
+## Website (`frontend/`)
+
+A React 19 + Vite + React Router 7 + shadcn/ui (Tailwind v4) single-page app.
+**No backend.** It loads the kata markdown directly from `modules/` via
+`import.meta.glob` and parses the `# Kata NN — Title` heading + meta blockquote —
+so **adding a kata markdown file makes it appear in the site automatically**.
+Progress is tracked in `localStorage`. Code lives in `frontend/src/`; all file
+and folder names are lowercase-hyphenated. Run: `cd frontend && npm install &&
+npm run dev`. See `frontend/README.md`. When the kata template changes, keep the
+parser in `frontend/src/lib/katas.ts` in sync (it expects the current heading +
+`> **Track:** … **Module:** … **Prereqs:** … **Time:** …` format).
+
 ## Structure
 
 ```
@@ -38,6 +50,7 @@ netsec-katas/
 ├── CLAUDE.md                      # teaching contract — read first
 ├── plan.md                        # curriculum + status (source of truth)
 ├── HANDOFF.md                     # this file
+├── frontend/                [x]   # web app (see below) — reads katas from modules/
 ├── reference/
 │   ├── running-example.md   [x]   # Meridian Bank + Northwind FMCG — reuse everywhere
 │   ├── lab-setup.md         [x]   # laptop toolchain (netshoot container, CLI tools)

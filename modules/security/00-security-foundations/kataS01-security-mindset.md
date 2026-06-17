@@ -1,6 +1,7 @@
 # Kata S01 — The security mindset: CIA, threat/vuln/risk, defense in depth
 
 > **Track:** Security · **Module:** S0 Security foundations · **Prereqs:** none · **Time:** ~25 min
+> **Tags:** `security` `first-principles` `risk-management` `mental-model` `defense-in-depth`
 
 ## Why it matters
 
