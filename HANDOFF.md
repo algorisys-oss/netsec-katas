@@ -3,7 +3,7 @@
 A pick-up-where-we-left-off briefing. Read this + `CLAUDE.md` + `plan.md` and you
 have full context to continue in a fresh session.
 
-_Last updated: 2026-06-17 (N0/N1 foundations completed)_
+_Last updated: 2026-06-17 (all 99 katas complete; accuracy pass + search pending)_
 
 ## What this project is
 
@@ -54,50 +54,40 @@ netsec-katas/
 ├── reference/
 │   ├── running-example.md   [x]   # Meridian Bank + Northwind FMCG — reuse everywhere
 │   ├── lab-setup.md         [x]   # laptop toolchain (netshoot container, CLI tools)
-│   ├── glossary.md          [~]   # starter; grow as katas are written
+│   ├── glossary.md          [x]   # 506 terms
+│   ├── tags.md             [x]   # controlled tag vocabulary (search)
 │   ├── cheatsheet-cidr.md   [x]   # subnetting ready-reckoner
 │   ├── cheatsheet-ports.md  [ ]   # TODO
 │   ├── cheatsheet-cloud-map.md [ ] # TODO (GCP↔AWS↔Azure↔on-prem)
 │   └── cheatsheet-frameworks.md [ ] # TODO (NIST/ISO/PCI)
 └── modules/
-    ├── networking/
-    │   ├── 00-why-networking/
-    │   │   ├── kataN01-architects-stake.md                 [x]
-    │   │   └── kataN02-whos-who.md                         [x]
-    │   └── 01-packets-layers/
-    │       ├── kataN03-osi-tcpip.md                        [x]
-    │       ├── kataN04-encapsulation.md                    [x]
-    │       ├── kataN05-ethernet-mac-arp-switching.md       [x]
-    │       └── kataN06-tools-ping-traceroute-tcpdump.md    [x]
-    └── security/
-        ├── 00-security-foundations/kataS01-security-mindset.md [x]
-        └── 01-iam/                                         (empty)
+    ├── networking/   (N01–N59, 11 modules — ALL COMPLETE)
+    └── security/     (S01–S40, 11 modules — ALL COMPLETE)
 ```
 
 ## What's done
 
-- ✅ Governing docs: `CLAUDE.md`, `plan.md` (both tracks, 99 katas mapped).
-- ✅ Scaffolding: running example, lab setup, glossary (starter), CIDR cheat-sheet.
-- ✅ **3 exemplar katas** proving the format across both tracks:
-  - `N01` — The architect's stake in the network
-  - `N03` — OSI vs TCP/IP
-  - `S01` — The security mindset (CIA, risk, defense in depth)
+- ✅ Governing docs: `CLAUDE.md`, `plan.md` (both tracks, 99 katas mapped + ticked).
+- ✅ Scaffolding: running example, lab setup, glossary (506 terms), CIDR cheat-sheet,
+  tag vocabulary (`reference/tags.md`).
+- ✅ **ALL 99 katas written** — Track N (N01–N59) and Track S (S01–S40), every
+  module complete. Built via a multi-agent workflow (generate→verify→fix) then put
+  through a second independent adversarial accuracy pass; structurally linted
+  (template, tags, sections), cross-refs/prereqs validated, glossary terms merged.
+- ✅ Each kata tagged with a `> **Tags:**` line from the controlled vocabulary.
+- ✅ Web app (`frontend/`) renders all katas; per-module commits pushed to `main`.
 
-These three are the **reference implementations** of the kata template — match
-their depth, structure, and the "Talk to the IT/security head" sections when
-writing new ones.
+**Reference implementations of the template** (match these when editing): `N01`,
+`N02`, `N03`, `S01` — the hand-written exemplars.
 
-- ✅ **Module N0/N1 foundations complete** (this batch): N02 (who's who), N04
-  (encapsulation), N05 (Ethernet/MAC/ARP/switching), N06 (ping/traceroute/mtr/
-  tcpdump). Glossary grown with their terms.
+## What's next (optional / backlog)
 
-## What's next (recommended order)
-
-1. **Module N2 (subnetting):** N07–N11 — highest-value networking skill;
-   the CIDR cheat-sheet already backs it. Start here.
-2. **In parallel, security S0:** S02 (who's who in security), S03 (threat modeling).
-3. **Fill remaining reference cheat-sheets:** ports, cloud-map, frameworks.
-4. Continue per `plan.md` **Suggested interleave** section.
+1. **Azure backfill:** cloud katas stub Azure as `(Azure: TODO)` in places — fill
+   when ready (doesn't block anything).
+2. **Reference cheat-sheets still TODO:** `cheatsheet-ports.md`,
+   `cheatsheet-cloud-map.md`, `cheatsheet-frameworks.md`.
+3. **Frontend search** over titles/tags/body (the tags exist to power this).
+4. Optional: deeper hands-on labs, diagrams, spaced-repetition review mode.
 
 When writing any kata: open `CLAUDE.md` → copy the template → check `plan.md` for
 prereqs/track → use the running example → verify every IP/CIDR/command/CLI flag →
