@@ -183,7 +183,7 @@ into Git. The fix pattern — AWS Secrets Manager with automatic rotation via La
 | Envelope encryption default | None (manual) | All Cloud KMS–integrated services use envelope encryption natively | AWS KMS envelope encryption (GenerateDataKey) | Azure key wrapping in Key Vault |
 | Audit log | Manual or HSM audit journal | Cloud KMS data-access logs in Cloud Audit Logs | AWS CloudTrail (KMS API calls) | Azure Monitor / Key Vault audit logs |
 | Key rotation | Manual or scheduled script | Automatic rotation (configurable period); re-wrap is app responsibility | Automatic rotation (configurable; AWS re-encrypts for native integrations) | (Azure: TODO) |
-| FIPS 140-2 Level 3 boundary | Physical HSM appliance | Cloud HSM key rings | AWS CloudHSM (Level 3); KMS uses Level 2 | Azure Dedicated HSM (Level 3); Key Vault uses Level 2 |
+| FIPS 140-2 Level 3 boundary | Physical HSM appliance | Cloud HSM key rings | AWS KMS = Level 3 (multi-tenant HSMs, 140-2 since 2023, now 140-3); CloudHSM = Level 3 (single-tenant) | Key Vault software keys = Level 1; Premium HSM-backed = Level 2 (legacy) / 140-3 Level 3 (current); Managed HSM = 140-3 Level 3; Dedicated HSM = Level 3 |
 
 ## Do it (the exercise)
 

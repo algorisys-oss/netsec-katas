@@ -184,7 +184,7 @@ these timers baked in *before* the breach, not after.
 
 | Concept | On-prem | GCP | AWS | Azure |
 |---------|---------|-----|-----|-------|
-| Data residency enforcement | Physical DC location; DBA blocks replication | Org Policy `gcp.resourceLocations`; regional bucket/instance policies | SCP + AWS Config rule `desired-instance-region`; S3 bucket policy `aws:RequestedRegion` | Azure Policy `allowedLocations`; (Azure: TODO confirm naming) |
+| Data residency enforcement | Physical DC location; DBA blocks replication | Org Policy `gcp.resourceLocations`; regional bucket/instance policies | SCP with `aws:RequestedRegion` condition (or Control Tower region-deny guardrail); S3 bucket policy `aws:RequestedRegion` | Azure Policy `allowedLocations`; (Azure: TODO confirm naming) |
 | Encryption at rest with customer key | HSM-backed TDE (DB); LUKS (disk) | Cloud KMS CMEK; key stays in specified region | AWS KMS with key policy + CMK; key per-region | Azure Key Vault + BYOK; (Azure: TODO) |
 | Personal data discovery | DLP appliance / manual tagging | Cloud DLP API (inspect + de-identify jobs) | Amazon Macie (S3 focus); Sensitive Data Discovery | Microsoft Purview (Azure: TODO) |
 | Cross-border transfer mechanism | Legal agreement + contract with outsourcer | SCCs documented in data-processing agreement; no GCP-native enforcement — governance layer | Data residency controls in AWS Artifact; SCCs = legal/contractual, not AWS-enforced | (Azure: TODO) |

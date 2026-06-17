@@ -110,9 +110,9 @@ Both are **phishing-resistant** by construction; neither OTP-based approach is.
 
 Regulators and frameworks (NIST SP 800-63B, PCI-DSS v4.0 Req 8.4.2) now
 explicitly distinguish phishing-resistant from phishing-susceptible MFA. Be
-precise about what PCI-DSS actually mandates: Req 8.4.2 requires MFA for **all**
-access into the CDE — administrative *and* non-administrative — not just admin
-access. Req 8.5.1 requires that MFA be **resistant to replay attacks** and not
+precise about what PCI-DSS actually mandates: Req 8.4.2 requires MFA for **all
+non-console** access into the CDE — administrative *and* non-administrative — not
+just admin access. Req 8.5.1 requires that MFA be **resistant to replay attacks** and not
 susceptible to being circumvented; it does **not** mandate *phishing-resistant*
 MFA. Phishing-resistance is strongly recommended best practice (and under v4.0.1
 a single phishing-resistant factor can substitute for MFA for non-admin CDE

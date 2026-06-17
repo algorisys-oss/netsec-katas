@@ -255,8 +255,9 @@ openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt -untrusted meridian-is
   zero-touch) and **self-managed certs** (you supply the PEM). AWS ACM is similar
   but ACM certs cannot be exported — you cannot take them to another system.
 - Both clouds charge a **per-CA-month fee plus a per-cert fee** — the structure is
-  the same, only the numbers differ. GCP CA Service has tiers (DevOps tier ~$2/CA/month
-  with cheaper per-cert issuance; Enterprise tier ~$20/CA/month + ~$1/cert). AWS Private
+  the same, only the numbers differ. GCP CA Service has tiers (DevOps tier ~$20/CA/month
+  with cheaper per-cert issuance, ~$0.30/cert in the first band; Enterprise tier
+  ~$200/CA/month + ~$0.50/cert in the first band). AWS Private
   CA is ~$400/CA/month plus **tiered** per-cert pricing (~$0.75 only for the first
   band, dropping at higher volumes). Cost matters: Meridian Bank issuing 5,000
   microservice certs/day would model both — and check the current pricing pages,

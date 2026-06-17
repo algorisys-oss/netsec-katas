@@ -152,23 +152,25 @@ internet.
   Instance: i-0a1b2c3d4e5f (10.104.12.45 — Meridian analytics VPC)
   Finding: MEDIUM (in isolation) — CVE-2021-44228 (Log4Shell) detected in
            /opt/analytics/lib/log4j-core-2.14.1.jar
-  CVSS 3.1 base score 10.0 (Critical), network-reachable, no auth required.
-  Scored MEDIUM here because Inspector sees the instance in a private subnet
-  with no inbound path it can prove — the score rises sharply once CNAPP adds
-  the reachability + IAM context below.
+  CVSS 3.1 base score 10.0 (Critical), no auth required.
+  Inspector's contextual score is MEDIUM here: it confirms the CVE and the
+  reachability of the vulnerable port, but it has no view of the instance's
+  IAM role or what that role can reach — the score rises sharply once CNAPP
+  adds the IAM + data-access context below.
   Remediation: update log4j-core to >= 2.17.1 or remove component.
 ```
 
-Without CWPP, this instance looks fine from the network perimeter — it is in
-a private subnet with security groups limiting access. The vulnerability is
-inside the application stack, invisible to a firewall rule review.
+Without CWPP, the vulnerability is invisible to a network or config review: it
+lives inside the application stack (a JAR on disk), not in any security group or
+firewall rule. A perimeter scan never sees it.
 
 **CNAPP correlation (both findings together):**
 
 A CNAPP would join three findings that each look MEDIUM in isolation: the
-Meridian analytics instance is unpatched (Log4Shell), its security group exposes
-port 8443 to `0.0.0.0/0`, and it has an IAM role bound to it with `s3:GetObject`
-on the analytics bucket. The attack path:
+Meridian analytics instance is unpatched (Log4Shell, from CWPP), a CSPM config
+finding shows its security group exposes port 8443 to `0.0.0.0/0`, and an IAM
+finding shows it has a role bound to it with `s3:GetObject` on the analytics
+bucket. No single tool owns all three. The attack path:
 
 ```
   Internet → exploits Log4Shell on i-0a1b2c3d4e5f (port 8443 open to 0.0.0.0/0

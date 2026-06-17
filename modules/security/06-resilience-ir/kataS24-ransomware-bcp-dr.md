@@ -309,8 +309,11 @@ aws s3api delete-object \
 
 - "Is our backup storage immutable — i.e., can a compromised domain admin delete
   our latest backup?"
-  *Good answer:* "S3 Object Lock in Compliance mode; the retention policy requires
-  a root account action to change, and we use a separate account with MFA on root."
+  *Good answer:* "S3 Object Lock in Compliance mode; until the retention period
+  expires, no one — not even the root user — can shorten or remove retention or
+  delete the object version. We also keep it in a separate account with MFA on
+  root as defence-in-depth, though that is not what protects the Compliance-mode
+  lock."
   *Red flag:* "We have Veeam immutability checked" (software immutability in the
   same domain as the attacker is not genuine immutability).
 

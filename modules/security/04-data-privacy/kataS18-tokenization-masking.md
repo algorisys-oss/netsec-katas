@@ -30,7 +30,7 @@ customer-service UIs. Each hop is a PCI-scope expansion.
      │  ← this is the ONLY place the real PAN should live
      │
      ├── Tokenization vault ──────────────────────────┐
-     │   PAN ──hash-based mapping──► TOKEN             │
+     │   PAN ──random-token mapping──► TOKEN           │
      │         e.g. 9876-XXXX-XXXX-4321               │
      ▼                                                 │
 [Downstream: fraud engine]   uses TOKEN ←─────────────┘
@@ -199,7 +199,8 @@ python3 -c "import secrets; print('TOK-' + secrets.token_hex(8).upper())"
 
 # Hash a PAN (to show hashing is NOT tokenization — hashes leak patterns)
 echo -n "4111111111111111" | sha256sum
-# Note: a 16-digit PAN has only ~10^16 possibilities — brute-forceable.
+# Note: a 16-digit PAN has only ~10^9 possibilities once the BIN is known
+# and the Luhn check digit is fixed — brute-forceable.
 # This is why PCI-DSS requires salted hashing or tokenization, not plain hashing.
 
 # Show the Luhn check on a test PAN (luhn algorithm — public knowledge)

@@ -223,7 +223,7 @@ Timeline (condensed):
 | WAF block during incident | Firewall + proxy manual rule | Cloud Armor rule update (API / console) | AWS WAF update | Azure WAF (Front Door or App GW) |
 | Network isolation (contain) | VLAN change, firewall rule | VPC Firewall Rule update; org-policy deny | NACL / Security Group change | NSG change |
 | Credential revocation | AD password reset | Google Workspace suspend; GCP IAM key disable | AWS IAM: disable access key; Cognito: revoke token | Entra ID: sign-out all sessions |
-| Forensic capture | SPAN/TAP + Wireshark | Packet Mirroring → GCS bucket | VPC Traffic Mirroring → NLB | (Azure: TODO) |
+| Forensic capture | SPAN/TAP + Wireshark | Packet Mirroring → internal passthrough NLB / collector instance group | VPC Traffic Mirroring → NLB | (Azure: TODO) |
 | Playbook automation (SOAR) | Cortex XSOAR, Splunk SOAR | Chronicle SOAR (part of Google SecOps) | AWS Security Hub + EventBridge + Lambda | Microsoft Sentinel playbooks |
 | IR runbook storage | Confluence/SharePoint on-prem | Cloud Storage or Docs (separate project) | S3 (separate account) | SharePoint / Azure Storage |
 
@@ -254,10 +254,11 @@ phase:
 > **Scenario:** At 14:30 on a Tuesday, a Northwind FMCG plant operator notices
 > that the WMS (Warehouse Management System) at distribution center DC-07 is
 > running extremely slowly. The IT helpdesk raises a ticket. Two hours later,
-> an NDR alert fires showing anomalous east-west traffic from DC-07's `10.50.x.x`
-> segment toward the Northwind HQ segment at `10.50.0.0/16`. (Recall from
-> `reference/running-example.md` that these ranges overlap with acquired
-> Eastfield Foods — that address plan confusion is also in play.)
+> an NDR alert fires showing anomalous east-west traffic from DC-07's
+> `10.50.7.0/24` segment toward the Northwind HQ segment at `10.50.1.0/24`.
+> (Recall from `reference/running-example.md` that both sit inside the
+> `10.50.0.0/16` Northwind supernet, which overlaps with acquired Eastfield
+> Foods — that address plan confusion is also in play.)
 
 For each phase, write:
 1. One action you would take

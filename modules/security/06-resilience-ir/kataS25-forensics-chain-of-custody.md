@@ -177,10 +177,12 @@ original disk:
 ```bash
 # Acquire image from block device to evidence share
 dc3dd if=/dev/sda hash=sha256 of=/mnt/evidence/mbank-prod-db01.dd \
-  hof=/mnt/evidence/mbank-prod-db01.sha256 \
   log=/mnt/evidence/mbank-prod-db01-acquisition.log
-# dc3dd defaults to MD5 — hash=sha256 selects SHA-256, hof= verifies the output
-# file and logs sector-by-sector; use ddrescue for failing disks
+# dc3dd does not hash unless hash= is specified — hash=sha256 selects SHA-256.
+# The computed hash is recorded in the log= file (or use sha256sum on the image
+# to produce a separate .sha256 text file); use ddrescue for failing disks.
+# Note: hof= would write a SECOND full copy of the data, not a hash — don't
+# point it at a .sha256 file.
 ```
 
 **Step 5 — Log preservation order**  

@@ -166,7 +166,7 @@ roadmap — not "why haven't you patched yet?"
 
 **GCP-first notes:**
 - `gcloud compute os-config patch-jobs execute --instance-filter-all \
-  --patch-config-apt-type=DIST_UPGRADE` initiates a patch job across a fleet.
+  --apt-dist` initiates a patch job across a fleet.
 - OS Config reports can filter by tag (`env=production`) — critical for scoping
   patch jobs to CDE vs non-CDE assets.
 - Security Command Center Premium surfaces CVE findings per resource and links

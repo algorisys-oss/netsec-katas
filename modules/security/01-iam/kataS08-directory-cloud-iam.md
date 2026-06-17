@@ -117,8 +117,11 @@ AWS separates **identity** (IAM users, roles, groups) from **resource policy**
   RESOURCE-BASED POLICY (attached to the resource)
     "s3:GetObject allowed if principal is role payments-lambda"
 
-  Effective permission = identity policy  ∩  resource policy
-     (both must allow; either explicit DENY wins)
+  SAME account (this example): identity policy  ∪  resource policy
+     (EITHER may allow — logical OR; explicit DENY always wins)
+
+  CROSS account: identity policy (caller's acct)  ∩  resource policy (resource's acct)
+     (BOTH must allow; explicit DENY always wins)
 ```
 
 AWS also has **SCPs** (Service Control Policies, see glossary) at the
@@ -194,10 +197,14 @@ gcloud iam workforce-pools providers create-oidc meridian-entra-oidc \
 
 ```
 # Grant the Entra group 'payments-ops' the BigQuery Data Viewer role
-# on the specific dataset — not on the project
-gcloud projects add-iam-policy-binding meridian-payments-prod \
-  --member="principalSet://iam.googleapis.com/locations/global/workforcePools/meridian-entra/group/payments-ops" \
-  --role="roles/bigquery.dataViewer"
+# on the specific dataset — not on the project.
+# Dataset-scoped IAM is set on the dataset itself (bq), not via
+# `gcloud projects add-iam-policy-binding` (which would grant it project-wide).
+PRINCIPAL="principalSet://iam.googleapis.com/locations/global/workforcePools/meridian-entra/group/payments-ops"
+bq add-iam-policy-binding \
+  --member="$PRINCIPAL" \
+  --role="roles/bigquery.dataViewer" \
+  meridian-payments-prod:payments_dataset
 ```
 
 Not `roles/bigquery.admin`. Not `roles/editor`. The single read-only role the job

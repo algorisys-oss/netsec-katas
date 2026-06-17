@@ -147,7 +147,7 @@ at HQ-DC1 (`10.10.0.0/16`). The cardholder data environment (CDE) subnet is
 | Risk | Where it bites Meridian | Architectural control |
 |------|------------------------|----------------------|
 | A01 Broken Access Control | Customer A can read Customer B's account via API if the backend checks only authentication, not resource-level authorisation | Enforce object-level checks in the backend service; audit-log every access to account data |
-| A02 Cryptographic Failures | Account data returned over HTTP (no TLS) in a legacy internal API, or sensitive fields stored in logs | TLS 1.2+ on every hop; PCI-DSS Req 4.2.1 mandates encryption in transit across all CDE paths |
+| A02 Cryptographic Failures | Account data returned over HTTP (no TLS) in a legacy internal API, or sensitive fields stored in logs | TLS 1.2+ on every hop; PCI-DSS Req 4 mandates strong cryptography for cardholder data transmitted over open, public networks |
 | A03 Injection | Transaction search endpoint builds SQL from a query parameter: `WHERE ref LIKE '%{userInput}%'` | Parameterised queries; WAF managed rules as a second layer (not a substitute) |
 | A05 Misconfiguration | GCP Cloud Storage bucket storing statement PDFs has `allUsers: objectViewer` (public read) | Org Policy `constraints/storage.publicAccessPrevention` blocks this at GCP organisation level |
 | A07 Auth Failures | Session tokens with 30-day expiry and no rotation on privilege change | Short-lived JWT (≤15 min); refresh flow; invalidate on password reset; see S04–S06 |
@@ -343,8 +343,8 @@ same backstop. But neither catches everything — CSPM scanning (see S34) in the
 CI/CD pipeline is the architect's control.
 
 **A09 — the logging gap that costs dearly.** In regulated FSI environments,
-RBI guidelines require audit log retention of at least three years, and logs
-must be immutable. A common mistake: application logs go to the same storage
+RBI guidelines require audit log retention of at least one year for security
+logs (longer for transaction records under PMLA), and logs must be immutable. A common mistake: application logs go to the same storage
 that the application can write to — an attacker who compromises the app can
 delete evidence. Logs must be streamed to an immutable sink (write-once storage,
 separate SIEM account) immediately, not batched.

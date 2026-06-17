@@ -138,14 +138,19 @@ gcloud artifacts docker images list \
   asia-south1-docker.pkg.dev/meridian-prod/services \
   --format="value(package,version)"
 
-# The SBOM was attached at build time via cosign:
-cosign download sbom \
+# The SBOM was attached at build time as a signed attestation (cosign v2;
+# `cosign attach/download sbom` are DEPRECATED in v2 in favour of attestations
+# stored via the OCI referrers API):
+cosign download attestation \
+  --predicate-type=https://spdx.dev/Document \
   asia-south1-docker.pkg.dev/meridian-prod/services/mobile-api:v2.4.1
 
 # Parse SBOM for log4j-core < 2.15.0 (the Log4Shell fix version)
-# Output is SPDX JSON; use jq to filter:
-cosign download sbom <image> \
-  | jq '.packages[] | select(.name=="log4j-core") | {name, version}'
+# The attestation payload is a base64-encoded in-toto envelope; decode the
+# predicate (the SPDX JSON) then filter with jq:
+cosign download attestation --predicate-type=https://spdx.dev/Document <image> \
+  | jq -r '.payload' | base64 -d \
+  | jq '.predicate.packages[] | select(.name=="log4j-core") | {name, version}'
 ```
 
 If the SBOM is stored consistently, a one-liner query across images identifies
@@ -180,9 +185,16 @@ steps:
       - '${_IMAGE}'
     # cosign attaches the signature to the registry alongside the image
 
-  - id: attach-sbom
+  - id: attest-sbom
     name: 'gcr.io/projectsigstore/cosign'
-    args: ['attach', 'sbom', '--sbom=sbom.spdx.json', '${_IMAGE}']
+    # cosign v2: attach the SBOM as a signed SPDX attestation (the OCI
+    # referrers API). `cosign attach sbom` is deprecated in v2.
+    args:
+      - attest
+      - '--type=spdxjson'
+      - '--predicate=sbom.spdx.json'
+      - '--key=gcpkms://projects/.../cryptoKeyVersions/1'
+      - '${_IMAGE}'
 ```
 
 The signature uses a key in Cloud KMS (see S11, S12) — the build runner never
@@ -217,7 +229,7 @@ exit code. Gate your deploy pipeline on this check.
 |---------|-------------------|-----|-----|-------|
 | Artifact registry | Nexus, JFrog Artifactory | Artifact Registry | Amazon ECR | Azure Container Registry |
 | SBOM generation | Syft, cdxgen (open source, runs anywhere) | Syft in Cloud Build step | Syft / cdxgen in CodeBuild; Amazon Inspector generates SBOMs | (Azure: TODO) |
-| SBOM attachment & storage | cosign attach (open source) | cosign + Artifact Registry (OCI referrers API) | cosign + ECR (OCI referrers API); Inspector SBOM export | (Azure: TODO) |
+| SBOM attachment & storage | cosign attest --type spdxjson (v2; `attach sbom` deprecated) | cosign + Artifact Registry (OCI referrers API) | cosign + ECR (OCI referrers API); Inspector SBOM export | (Azure: TODO) |
 | Artifact signing | GPG, cosign (Sigstore) | cosign + Cloud KMS key | cosign + AWS KMS key; AWS Signer | (Azure: TODO) |
 | Provenance / SLSA attestation | in-toto attestation + cosign | Cloud Build native SLSA provenance (L2 for managed workers) | CodeBuild provenance (L2 when using managed compute) | (Azure: TODO) |
 | SCA / CVE scanning | OWASP Dependency-Check, Grype | Artifact Registry vulnerability scanning (powered by Container Analysis) | Amazon Inspector v2 (ECR scanning) | (Azure: TODO) |

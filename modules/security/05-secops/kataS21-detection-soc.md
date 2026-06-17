@@ -102,7 +102,7 @@ the loop:
 ### The MITRE ATT&CK framework — the detection map
 
 ATT&CK (Adversarial Tactics, Techniques, and Common Knowledge) is the shared
-vocabulary for attack behavior. It has 15 **tactics** (the *why*: initial
+vocabulary for attack behavior. It has 14 **tactics** (the *why*: initial
 access, lateral movement, exfiltration…) and hundreds of **techniques** (the
 *how*: T1078 Valid Accounts, T1021 Remote Services, T1486 Data Encrypted for
 Impact / ransomware…).
@@ -113,7 +113,7 @@ least one detection rule? Gaps are risk. Banks are audited on it (see S29).
 ```
   ATT&CK Tactic           Example detection rule at Meridian Bank
   ──────────────────────  ────────────────────────────────────────────────────
-  Initial Access          Failed logins > 20/min from single IP → alert T1110
+  Credential Access       Failed logins > 20/min from single IP → alert T1110
   Privilege Escalation    Service account granted Admin role outside change window
   Lateral Movement        Internal port-scan from workstation subnet (10.10.x → 10.10.x)
   Collection              Large file access on core-banking share by non-batch user

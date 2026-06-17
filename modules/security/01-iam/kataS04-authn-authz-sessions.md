@@ -207,7 +207,7 @@ This is machine identity — no human in the loop:
     │  3. POST https://core.meridian.internal/balance   Authorization: Bearer <GCP token>
     ▼
   Core API gateway (on-prem DMZ, 10.10.20.0/24 CDE boundary — N27)
-    │  4. Validate token with GCP Token Introspection endpoint
+    │  4. Validate token by verifying its signature against Google's JWKS public keys and checking iss/aud/exp
     │  5. Check: is balance-api-sa authorized to call /balance? (RBAC lookup)
     │  6. Permit (read-only; no transfer endpoints accessible to this SA)
 ```

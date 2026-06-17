@@ -302,8 +302,7 @@ gcloud compute firewall-rules list --format="table(name,direction,priority,sourc
   --project=YOUR_PROJECT
 
 # Show effective rules for a specific VM (includes inherited Firewall Policies):
-gcloud compute instances network-interfaces get-effective-firewalls \
-  --instance=INSTANCE_NAME \
+gcloud compute instances network-interfaces get-effective-firewalls INSTANCE_NAME \
   --network-interface=nic0 \
   --zone=asia-south1-a
 ```

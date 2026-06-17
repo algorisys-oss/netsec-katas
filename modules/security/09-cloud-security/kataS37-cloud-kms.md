@@ -193,7 +193,7 @@ proof of every access without touching production.
 | Concept | On-prem | GCP | AWS | Azure |
 |---|---|---|---|---|
 | Key management service | Hardware HSM (Thales, nShield) | Cloud KMS | AWS KMS | (Azure: TODO) |
-| HSM-backed keys (FIPS 140-2 L3) | On-prem HSM | Cloud HSM (within Cloud KMS) | KMS with `--origin AWS_CLOUDHSM` or CloudHSM | (Azure: TODO) |
+| HSM-backed keys (FIPS 140-2/140-3 L3) | On-prem HSM | Cloud HSM (within Cloud KMS) | Default AWS KMS (multi-tenant HSMs); CloudHSM / `--origin AWS_CLOUDHSM` for single-tenant dedicated HSM | (Azure: TODO) |
 | Customer-managed keys for storage | Customer runs/integrates HSM | CMEK on GCS, BigQuery, Spanner, etc. | SSE-KMS on S3, EBS, RDS, etc. | (Azure: TODO) |
 | Bring Your Own Key (import) | Key generated in on-prem HSM | Import job (wrapped under Google wrapping key) | Import key material (wrapped under RSA wrapping key) | (Azure: TODO) |
 | Hold Your Own Key / External KMS | Key never leaves premises | Cloud EKM (External Key Manager) | XKS — External Key Store (KMS external key store) | (Azure: TODO) |
@@ -211,9 +211,14 @@ HSM operation executes — critical for data-residency compliance (asia-south1 =
 
 **AWS detail:** AWS KMS keys are regional. A KMS key in ap-south-1 cannot be used by
 a service in us-east-1 (without replication). Multi-region keys exist but are an
-explicit design choice, not a default. For PCI workloads: `aws kms create-key` with
-`--origin AWS_CLOUDHSM` creates an HSM-backed key; without that flag, the key lives in
-shared software-protected KMS.
+explicit design choice, not a default. All default AWS KMS keys are generated and
+held in AWS multi-tenant HSMs validated to FIPS 140-2 / 140-3 Security Level 3 —
+AWS KMS never stores key material in software. For PCI workloads needing a
+single-tenant dedicated HSM (and key exportability), `aws kms create-key` with
+`--origin AWS_CLOUDHSM --custom-key-store-id <id>` backs the key with a CloudHSM
+custom key store (which requires a pre-existing CloudHSM cluster with ≥2 active
+HSMs). Without that, the key uses the default multi-tenant KMS HSMs — still
+hardware-backed and FIPS L3, just shared rather than dedicated.
 
 ## Do it (the exercise)
 
@@ -231,7 +236,7 @@ shared software-protected KMS.
 ### Part 2 — inspect an AWS KMS key policy [needs cloud account]
 
 ```bash
-# Create a test KMS key (us-east-1, software-protected, free-tier eligible)
+# Create a test KMS key (ap-south-1; default multi-tenant HSM-backed, free-tier eligible)
 aws kms create-key \
   --description "kata-s37-test" \
   --key-usage ENCRYPT_DECRYPT \

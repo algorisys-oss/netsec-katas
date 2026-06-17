@@ -103,7 +103,7 @@ exist; the headcount behind each is smaller.
 | Threat detection (cloud posture) | Separate scanner/agent | Security Command Center (SCC) | Amazon GuardDuty | Microsoft Defender for Cloud |
 | GRC evidence / audit log | Audit management tool (e.g. RSA Archer) | Cloud Audit Logs exported to BigQuery | AWS CloudTrail + AWS Audit Manager | Azure Monitor + Microsoft Purview Compliance |
 | Vulnerability scanning (AppSec) | Qualys, Rapid7, Tenable | Artifact Registry / Container Analysis vulnerability scanning; Web Security Scanner (in Security Command Center) | Amazon Inspector; AWS Security Hub | Microsoft Defender for Cloud (DevOps security) |
-| Red team simulation (cloud) | External pen-test firm | Google Cloud permission needed for authorized tests | AWS Penetration Testing Policy (self-service for common services) | Azure Penetration Testing Rules of Engagement |
+| Red team simulation (cloud) | External pen-test firm | No prior approval needed; pen-test your own resources subject to the Cloud Platform Acceptable Use Policy (AUP) | AWS Penetration Testing Policy (self-service for common services) | Azure Penetration Testing Rules of Engagement |
 | Incident response playbooks | Runbook binder; IR retainer | Chronicle SOAR (Siemplify-derived) | AWS Security Hub + Amazon Detective | Microsoft Sentinel SOAR |
 
 > Note on GRC tools: the frameworks (PCI-DSS, RBI, ISO 27001) are the same

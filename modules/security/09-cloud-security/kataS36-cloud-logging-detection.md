@@ -129,7 +129,7 @@ Active since: 2026-06-17T04:12:00Z
 
 ```
 Finding type: Policy:S3/BucketBlockPublicAccessDisabled
-Severity:     HIGH  (score 8.0 / 10)
+Severity:     LOW  (score 2.0 / 10)
 Resource:     arn:aws:s3:::northwind-plant-telemetry
 Account:      123456789012
 Region:       ap-south-1

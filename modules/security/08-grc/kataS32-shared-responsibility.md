@@ -80,8 +80,9 @@ different responsibility boundaries in one request path.
 
 3. **Patch / OS gap.** On IaaS VMs the provider patches the *hypervisor*, not
    the guest OS. Meridian Bank's core banking integration VMs on GCP Compute
-   Engine still need a managed patching process — the provider's Trusted Image
-   Service cannot help after the image is launched.
+   Engine still need a managed patching process — VM Manager (OS Patch
+   Management) is available, but the bank must operate it; the provider does not
+   patch the guest OS for you.
 
 ### Regulatory translation
 

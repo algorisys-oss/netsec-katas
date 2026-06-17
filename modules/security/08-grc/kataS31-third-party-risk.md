@@ -135,7 +135,11 @@ Meridian Bank's card-payment flow depends on a third-party payment gateway
         │   • Written agreement with PayCo
         │   • Annual review of PayCo's PCI compliance status
         │   • Monitoring of PayCo's compliance year-round
-        │   • Breach notification clause (≤ 72 h to Meridian)
+        │  (incident response lives in Req 12.10; PCI sets no
+        │   fixed vendor-notice window)
+        │  Contractual choice (not a PCI mandate):
+        │   • Breach notification clause (e.g. ≤ 72 h to
+        │     Meridian, mirroring GDPR's regulator threshold)
         └──────────────────────────────────────────────────────
 ```
 
@@ -261,9 +265,11 @@ the git history with `git filter-repo`).
 
 - "What is our contractual breach-notification SLA with each Tier-1 vendor, and
   when did we last test that they could actually meet it?"
-  *72 hours is GDPR's notification threshold (DPDP's is far longer — see S19);
-  many vendor contracts say 'reasonable notice' — which is not a compliance
-  answer.*
+  *72 hours is GDPR's regulator-notification threshold; the DPDP Rules 2025
+  set a comparable window — notify the Data Protection Board without delay with
+  a detailed report within 72 hours (see S19), while CERT-In's directive demands
+  reporting within 6 hours. Many vendor contracts say 'reasonable notice' —
+  which is not a compliance answer.*
 
 - "Do we generate an SBOM from our own builds, and do we scan it for CVEs in the
   CI/CD pipeline before we release?"
