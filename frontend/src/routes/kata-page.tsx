@@ -52,8 +52,13 @@ export function KataPage() {
         {kata.tags.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5">
             {kata.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="font-normal">
-                {tag}
+              <Badge
+                key={tag}
+                asChild
+                variant="secondary"
+                className="font-normal transition-colors hover:bg-secondary/70"
+              >
+                <Link to={`/search?tag=${encodeURIComponent(tag)}`}>{tag}</Link>
               </Badge>
             ))}
           </div>

@@ -3,7 +3,7 @@
 A pick-up-where-we-left-off briefing. Read this + `CLAUDE.md` + `plan.md` and you
 have full context to continue in a fresh session.
 
-_Last updated: 2026-06-17 (all 99 katas complete; accuracy pass + search pending)_
+_Last updated: 2026-06-17 (all 99 katas complete; accuracy pass done; web app with search)_
 
 ## What this project is
 
@@ -37,7 +37,7 @@ A React 19 + Vite + React Router 7 + shadcn/ui (Tailwind v4) single-page app.
 **No backend.** It loads the kata markdown directly from `modules/` via
 `import.meta.glob` and parses the `# Kata NN — Title` heading + meta blockquote —
 so **adding a kata markdown file makes it appear in the site automatically**.
-Progress is tracked in `localStorage`. Code lives in `frontend/src/`; all file
+Progress is tracked in `localStorage`; full-text + tag **search** at `/search` (press `/`). Code lives in `frontend/src/`; all file
 and folder names are lowercase-hyphenated. Run: `cd frontend && npm install &&
 npm run dev`. See `frontend/README.md`. When the kata template changes, keep the
 parser in `frontend/src/lib/katas.ts` in sync (it expects the current heading +
@@ -86,8 +86,7 @@ netsec-katas/
    when ready (doesn't block anything).
 2. **Reference cheat-sheets still TODO:** `cheatsheet-ports.md`,
    `cheatsheet-cloud-map.md`, `cheatsheet-frameworks.md`.
-3. **Frontend search** over titles/tags/body (the tags exist to power this).
-4. Optional: deeper hands-on labs, diagrams, spaced-repetition review mode.
+3. Optional: deeper hands-on labs, diagrams, spaced-repetition review mode.
 
 When writing any kata: open `CLAUDE.md` → copy the template → check `plan.md` for
 prereqs/track → use the running example → verify every IP/CIDR/command/CLI flag →

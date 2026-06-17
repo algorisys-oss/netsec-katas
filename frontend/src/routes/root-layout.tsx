@@ -1,6 +1,6 @@
-import { useState } from "react"
-import { Link, Outlet } from "react-router"
-import { Menu, ShieldCheck } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Link, Outlet, useNavigate } from "react-router"
+import { Menu, Search, ShieldCheck } from "lucide-react"
 
 import { AppSidebar } from "@/components/app-sidebar"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -9,6 +9,24 @@ import { cn } from "@/lib/utils"
 
 export function RootLayout() {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+
+  // Press "/" anywhere (outside a field) to jump to search.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      const el = e.target as HTMLElement
+      const typing =
+        el?.tagName === "INPUT" ||
+        el?.tagName === "TEXTAREA" ||
+        el?.isContentEditable
+      if (e.key === "/" && !typing) {
+        e.preventDefault()
+        navigate("/search")
+      }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [navigate])
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,7 +44,21 @@ export function RootLayout() {
           <ShieldCheck className="size-5 text-emerald-500" />
           <span>NetSec Katas</span>
         </Link>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            asChild
+            className="gap-2 text-muted-foreground"
+          >
+            <Link to="/search" aria-label="Search katas">
+              <Search className="size-4" />
+              <span className="hidden sm:inline">Search</span>
+              <kbd className="hidden rounded border bg-muted px-1.5 text-[10px] font-medium sm:inline">
+                /
+              </kbd>
+            </Link>
+          </Button>
           <ThemeToggle />
         </div>
       </header>
