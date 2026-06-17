@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gh": "bash scripts/publish-gh-pages.sh"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",

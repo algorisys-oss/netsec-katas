@@ -25,6 +25,24 @@ npm run build      # type-check + production build to dist/
 npm run preview    # serve the built app
 ```
 
+## Deploy to GitHub Pages
+
+```bash
+npm run gh         # build with the Pages base path + publish to the gh-pages branch
+```
+
+`npm run gh` runs `scripts/publish-gh-pages.sh`, which builds with
+`base=/netsec-katas/`, adds an SPA deep-link fallback (`404.html`) and
+`.nojekyll`, then force-pushes `dist/` to the `gh-pages` branch of `origin`
+(dependency-free; uses your existing git/SSH auth).
+
+**One-time setup:** in the GitHub repo, go to **Settings → Pages → Source:
+"Deploy from a branch", Branch: `gh-pages` / `(root)`**, Save. The site then
+publishes at `https://algorisys-oss.github.io/netsec-katas/`.
+
+For a custom domain or user/org page (served at `/`), run
+`BASE_PATH=/ npm run gh`.
+
 ## How content loads
 
 `src/lib/katas.ts` uses `import.meta.glob("../../../modules/**/kata*.md")` to
