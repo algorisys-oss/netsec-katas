@@ -126,65 +126,65 @@ Numbering is global **within each track**; prereqs cite kata ids (`N08`, `S03`).
 
 ## Module S0 — Security foundations & the CISO's world
 - [x] S01 — The security mindset: CIA triad, threat/vuln/risk, defense in depth
-- [ ] S02 — Who's who in security: CISO, SOC, GRC, red/blue/purple; what they own
-- [ ] S03 — Threat modeling for architects (STRIDE, attack surface, trust boundaries)
+- [x] S02 — Who's who in security: CISO, SOC, GRC, red/blue/purple; what they own
+- [x] S03 — Threat modeling for architects (STRIDE, attack surface, trust boundaries)
 
 ## Module S1 — Identity & Access Management
-- [ ] S04 — AuthN vs AuthZ; sessions, tokens, the login you take for granted
-- [ ] S05 — SSO & federation: SAML, OIDC, OAuth2 — who issues what  → uses N21
-- [ ] S06 — MFA, passwordless, FIDO2/passkeys
-- [ ] S07 — RBAC vs ABAC; least privilege; PAM; joiner-mover-leaver
-- [ ] S08 — Directory services & cloud IAM (Entra ID / AWS IAM / GCP IAM)
+- [x] S04 — AuthN vs AuthZ; sessions, tokens, the login you take for granted
+- [x] S05 — SSO & federation: SAML, OIDC, OAuth2 — who issues what  → uses N21
+- [x] S06 — MFA, passwordless, FIDO2/passkeys
+- [x] S07 — RBAC vs ABAC; least privilege; PAM; joiner-mover-leaver
+- [x] S08 — Directory services & cloud IAM (Entra ID / AWS IAM / GCP IAM)
 
 ## Module S2 — Cryptography, PKI & key management
-- [ ] S09 — Crypto primitives: symmetric, asymmetric, hashing, signing  → uses N21
-- [ ] S10 — PKI & certificates deep dive: chains, CAs, revocation, rotation
-- [ ] S11 — Key management & secrets: KMS, HSM, Vault, envelope encryption
-- [ ] S12 — Encryption at rest vs in transit vs in use; CMEK/BYOK
+- [x] S09 — Crypto primitives: symmetric, asymmetric, hashing, signing  → uses N21
+- [x] S10 — PKI & certificates deep dive: chains, CAs, revocation, rotation
+- [x] S11 — Key management & secrets: KMS, HSM, Vault, envelope encryption
+- [x] S12 — Encryption at rest vs in transit vs in use; CMEK/BYOK
 
 ## Module S3 — Application & API security
-- [ ] S13 — OWASP Top 10 for architects (what each really means in a design)
-- [ ] S14 — Secure SDLC: SAST, DAST, SCA, threat modeling in the pipeline
-- [ ] S15 — API security: authn, rate limiting, gateways, mTLS  → uses N24
-- [ ] S16 — Software supply chain: dependencies, SBOM, signing, provenance
+- [x] S13 — OWASP Top 10 for architects (what each really means in a design)
+- [x] S14 — Secure SDLC: SAST, DAST, SCA, threat modeling in the pipeline
+- [x] S15 — API security: authn, rate limiting, gateways, mTLS  → uses N24
+- [x] S16 — Software supply chain: dependencies, SBOM, signing, provenance
 
 ## Module S4 — Data security & privacy
-- [ ] S17 — Data classification & handling; DLP
-- [ ] S18 — Tokenization & masking (PCI cardholder data in practice)  → uses N29
-- [ ] S19 — Privacy & regulation: GDPR / DPDP / data residency for architects
+- [x] S17 — Data classification & handling; DLP
+- [x] S18 — Tokenization & masking (PCI cardholder data in practice)  → uses N29
+- [x] S19 — Privacy & regulation: GDPR / DPDP / data residency for architects
 
 ## Module S5 — Security operations
-- [ ] S20 — Logging, telemetry & the SIEM; what to collect and why
-- [ ] S21 — Detection engineering, threat intel, SOAR, the SOC workflow
-- [ ] S22 — Vulnerability management & patching at enterprise scale
+- [x] S20 — Logging, telemetry & the SIEM; what to collect and why
+- [x] S21 — Detection engineering, threat intel, SOAR, the SOC workflow
+- [x] S22 — Vulnerability management & patching at enterprise scale
 
 ## Module S6 — Resilience & incident response
-- [ ] S23 — IR lifecycle (NIST): prepare → detect → contain → eradicate → recover
-- [ ] S24 — Ransomware, BCP/DR, backups, tabletop exercises
-- [ ] S25 — Forensics basics & chain of custody (what architects must preserve)
+- [x] S23 — IR lifecycle (NIST): prepare → detect → contain → eradicate → recover
+- [x] S24 — Ransomware, BCP/DR, backups, tabletop exercises
+- [x] S25 — Forensics basics & chain of custody (what architects must preserve)
 
 ## Module S7 — Zero Trust & modern access
-- [ ] S26 — Zero Trust principles — what it really changes  → pairs with N27/N37
-- [ ] S27 — ZTNA, SASE, SSE: the convergence of network + security
-- [ ] S28 — Microsegmentation & identity-aware proxy in practice
+- [x] S26 — Zero Trust principles — what it really changes  → pairs with N27/N37
+- [x] S27 — ZTNA, SASE, SSE: the convergence of network + security
+- [x] S28 — Microsegmentation & identity-aware proxy in practice
 
 ## Module S8 — Governance, risk & compliance
-- [ ] S29 — Frameworks map: NIST CSF, ISO 27001, SOC 2, CIS, PCI-DSS, RBI
-- [ ] S30 — Risk management: appetite, registers, treatment, residual risk
-- [ ] S31 — Third-party / supply-chain risk & audits
-- [ ] S32 — Security in the cloud shared-responsibility model
+- [x] S29 — Frameworks map: NIST CSF, ISO 27001, SOC 2, CIS, PCI-DSS, RBI
+- [x] S30 — Risk management: appetite, registers, treatment, residual risk
+- [x] S31 — Third-party / supply-chain risk & audits
+- [x] S32 — Security in the cloud shared-responsibility model
 
 ## Module S9 — Cloud security posture (GCP → AWS → Azure)
-- [ ] S33 — Cloud IAM deep dive & the over-permissioned-role problem
-- [ ] S34 — CSPM / CWPP / CNAPP: posture management explained
-- [ ] S35 — Cloud network security: GCP/AWS/Azure controls  → uses N42
-- [ ] S36 — Logging & detection in cloud (Security Command Center / GuardDuty / Defender)
-- [ ] S37 — Encryption & key management in cloud (Cloud KMS / AWS KMS / Key Vault)
+- [x] S33 — Cloud IAM deep dive & the over-permissioned-role problem
+- [x] S34 — CSPM / CWPP / CNAPP: posture management explained
+- [x] S35 — Cloud network security: GCP/AWS/Azure controls  → uses N42
+- [x] S36 — Logging & detection in cloud (Security Command Center / GuardDuty / Defender)
+- [x] S37 — Encryption & key management in cloud (Cloud KMS / AWS KMS / Key Vault)
 
 ## Module S10 — Security conversation mastery (capstone)
-- [ ] S38 — Security design-review playbook: the questions that expose risk
-- [ ] S39 — Talking compliance & risk with a CISO without overpromising
-- [ ] S40 — Capstone: security architecture for Meridian Bank's hybrid platform;
+- [x] S38 — Security design-review playbook: the questions that expose risk
+- [x] S39 — Talking compliance & risk with a CISO without overpromising
+- [x] S40 — Capstone: security architecture for Meridian Bank's hybrid platform;
       defend it to the (simulated) CISO and auditor
 
 ---

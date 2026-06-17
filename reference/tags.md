@@ -67,7 +67,7 @@ add it to the right section below. Always include:
 ## Security — appsec, secops, resilience
 `owasp` · `secure-sdlc` · `sast` · `dast` · `sca` · `api-security` ·
 `supply-chain` · `sbom` · `siem` · `telemetry` · `detection-engineering` ·
-`soar` · `soc` · `vulnerability-management` · `patching` · `incident-response` ·
+`soar` · `soc` · `threat-intel` · `vulnerability-management` · `patching` · `incident-response` ·
 `ransomware` · `bcp-dr` · `backups` · `forensics`
 
 ## Security — zero trust & posture
