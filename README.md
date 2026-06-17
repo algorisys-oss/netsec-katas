@@ -41,7 +41,7 @@ web app** for navigation, progress tracking, and search:
 
 ```bash
 ./dev.sh           # start the dev server (http://localhost:5173)
-./gh.sh            # build + publish to GitHub Pages (gh-pages branch)
+./deploy-gh.sh     # build + publish to GitHub Pages (gh-pages branch)
 ```
 
 (Or from `frontend/`: `npm install`, then `npm run dev` / `npm run gh`.)
