@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/netsec-katas/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="NetSec Katas — a hands-on networking + information-security curriculum for solution architects."
+    />
+    <title>NetSec Katas</title>
+    <script>
+      // Set the theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var t = localStorage.getItem("netsec-katas:theme");
+          var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (t === "dark" || (!t && prefersDark)) {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/netsec-katas/assets/index-CTBk_Vy-.js"></script>
+    <link rel="stylesheet" crossorigin href="/netsec-katas/assets/index-XNvqHRM-.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
