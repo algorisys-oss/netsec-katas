@@ -133,14 +133,25 @@ export function RootLayout() {
             © {new Date().getFullYear()} Algorisys Technologies Pvt Ltd. All
             rights reserved.
           </p>
-          <a
-            href={REPO_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1.5 transition-colors hover:text-foreground"
-          >
-            <Github className="size-4" /> Source on GitHub
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href={`${REPO_URL}/commits/main`}
+              target="_blank"
+              rel="noreferrer"
+              title={`Built ${__BUILD_DATE__}`}
+              className="rounded border px-1.5 py-0.5 font-mono text-xs transition-colors hover:text-foreground"
+            >
+              v{__APP_VERSION__} · {__BUILD_DATE__}
+            </a>
+            <a
+              href={REPO_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+            >
+              <Github className="size-4" /> Source on GitHub
+            </a>
+          </div>
         </div>
       </footer>
     </div>
