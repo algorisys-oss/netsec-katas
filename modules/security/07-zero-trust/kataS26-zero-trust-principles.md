@@ -62,7 +62,7 @@ Zero Trust (ZT) — articulated as a framework in NIST SP 800-207 (2020) — mak
 exactly one change to the premise:
 
 ```
-  NETWORK LOCATION = ZERO TRUST
+  NETWORK LOCATION = NO IMPLICIT TRUST
 ```
 
 Being inside the network grants nothing. Every access request is evaluated:

@@ -34,7 +34,7 @@ equivalent signals are scattered across a hierarchy:
   ├── Network plane  (who talked to whom, on which ports)
   │   GCP: VPC Flow Logs  (see N54)
   │   AWS: VPC Flow Logs  (see N54)
-  │   Azure: NSG Flow Logs / (Azure: TODO)
+  │   Azure: VNet flow logs (NSG flow logs retired 2025; Azure: TODO)
   │
   ├── Identity plane  (logins, token issues, privilege escalations)
   │   GCP: Cloud Identity audit events
@@ -163,7 +163,7 @@ PII). This is the setting architects most commonly forget.
 | Concept | On-prem | GCP | AWS | Azure |
 |---------|---------|-----|-----|-------|
 | Control-plane audit log | SIEM via syslog from LDAP/AD, jump hosts | Cloud Audit Logs (Admin Activity + Data Access) | CloudTrail | Activity Log + Entra Audit Log (Azure: TODO) |
-| Network flow telemetry | NetFlow/IPFIX from routers (see N35, N54) | VPC Flow Logs | VPC Flow Logs | NSG Flow Logs (Azure: TODO) |
+| Network flow telemetry | NetFlow/IPFIX from routers (see N35, N54) | VPC Flow Logs | VPC Flow Logs | VNet flow logs (NSG flow logs retired 2025; Azure: TODO) |
 | Threat detection service | SIEM + NDR + IDS signatures | Security Command Center (SCC) — Standard (free) + Premium | GuardDuty (per GB + per finding) | Defender for Cloud (Azure: TODO) |
 | CSPM findings (misconfig) | Nessus / Qualys scans | SCC Standard findings + Security Health Analytics | AWS Security Hub (aggregates GuardDuty, Inspector, Config) | Defender for Cloud Secure Score (Azure: TODO) |
 | Log aggregation / routing | Syslog server / SIEM ingestion | Cloud Logging + Log Router (sinks to BigQuery, GCS, Pub/Sub) | CloudWatch Logs + S3 + Firehose | Log Analytics Workspace (Azure: TODO) |

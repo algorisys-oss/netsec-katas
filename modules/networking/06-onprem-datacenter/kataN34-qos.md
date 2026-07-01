@@ -72,6 +72,12 @@ The commonly used DSCP values / Per-Hop Behaviors (PHBs):
 | CS1 | 8  | 0x08 | Scavenger / low-priority bulk |
 | BE — Best Effort | 0  | 0x00 | Default; everything else |
 
+**How the values are encoded (so you can derive them):** Class Selector marks
+are `CSn = n × 8` (CS1=8, CS3=24, CS5=40). Assured Forwarding marks `AFxy` use
+`DSCP = 8x + 2y`, where `x` (1–4) is the class and `y` (1–3) is the drop
+precedence. So AF11 = 8+2 = 10, AF21 = 16+2 = 18, AF31 = 24+2 = 26,
+AF41 = 32+2 = 34. EF is the fixed value 46.
+
 > **Standards note:** the signaling/management marks above follow the **Cisco
 > enterprise QoS baseline** (SRND), which is what you will meet in most banks
 > and FMCGs. RFC 4594 differs: it puts Signaling at **CS5** and OAM/network
@@ -151,7 +157,7 @@ The network team's QoS design on the WAN router's outbound interface:
   SIP signaling         UDP/TCP 5060–5061             AF31   CBWFQ   5 Mbps
   Market-data feed      UDP dst 239.x.x.x (multicast) AF21   CBWFQ  30 Mbps
   Business apps         TCP 443, 80 (apps)            AF11   CBWFQ  30 Mbps
-  Network management    TCP/UDP 22, 161, 514           CS3   CBWFQ   5 Mbps
+  Network management    TCP/UDP 22, 161, 514           CS3   CBWFQ   5 Mbps  (RFC 4594 assigns network-management to CS2)
   Backup / bulk         TCP dst file-server IPs       CS1   CBWFQ   5 Mbps
   Default / unknown     everything else               BE    CBWFQ   5 Mbps
   ─────────────────────────────────────────────────────────────────────────────

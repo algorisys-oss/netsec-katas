@@ -58,7 +58,9 @@ envelope it never opens. That single sentence resolves countless design argument
 ### Sizes, MTU, and overhead
 
 Each header costs bytes. A standard Ethernet frame carries a **payload up to 1500
-bytes — the MTU** (maximum transmission unit). Typical headers on the wire:
+bytes — the MTU** (maximum transmission unit); 1500 is specifically the L3
+payload/MTU, while the full frame on the wire is up to 1518 bytes (1500 payload +
+14-byte Ethernet header + 4-byte FCS). Typical headers on the wire:
 
 | Header | Typical size |
 |--------|--------------|

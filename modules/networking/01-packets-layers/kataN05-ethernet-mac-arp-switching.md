@@ -63,8 +63,10 @@ multiple broadcast domains; routers separate them at L3.
 ### Addresses, concretely
 
 - A **MAC** is 48 bits, shown as `00:1a:2b:3c:4d:5e`. First 24 bits = **OUI**
-  (vendor), so `00:50:56` = VMware, `02:42` = Docker-assigned. Locally-administered
-  addresses (cloud/virtual NICs) set the 2nd-least-significant bit of the first byte.
+  (vendor) — e.g. `00:50:56` = VMware, a real registered OUI. Separately,
+  **locally-administered** addresses set the 2nd-least-significant bit of the
+  first octet (value `0x02`); Docker's `02:42:...` is such a self-assigned local
+  prefix (note the `0x02` local bit), *not* a registered OUI.
 - `ff:ff:ff:ff:ff:ff` = broadcast (all hosts on the segment).
 - MAC is **flat and local** — it has no hierarchy and never routes between
   networks. That's why we need IP (L3) on top.

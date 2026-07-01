@@ -44,7 +44,7 @@ that the public key in this document belongs to the domain `api.meridian.example
      └── signs ──▶  INTERMEDIATE CA  (issued by Root, not used daily)
                           └── signs ──▶  LEAF / SERVER CERT
                                           subject: api.meridian.example
-                                          public key: (RSA-4096 or EC P-256)
+                                          public key: (EC P-256 or RSA-2048)
                                           SANs: api.meridian.example
                                           validity: not before / not after
                                           serial number, signature algorithm, OCSP URL
@@ -106,7 +106,8 @@ Key things to notice:
 
 4. Everything in `{}` is already encrypted with the derived handshake keys.
 
-5. **TLS 1.2** required 2 RTT before data; TLS 1.3 cut that to 1 RTT (and
+5. **TLS 1.2**'s full handshake required 2 RTT before data (1 RTT on session
+   resumption or with False Start); TLS 1.3 makes the *full* handshake 1 RTT (and
    optionally 0-RTT for reconnects, with replay-attack caveats). Always ask
    which version is in use; TLS 1.0 and 1.1 are deprecated (RFC 8996).
 
@@ -179,7 +180,7 @@ Meridian's mobile app calls `https://api.meridian.example` — hosted on GCP in
                 SANs:    DNS:*.meridian.example, DNS:meridian.example
                 validity: 2025-03-01 to 2026-03-01
                 signature: sha256WithRSAEncryption
-                key: EC P-256 (preferred — smaller, faster than RSA-4096)
+                key: EC P-256 (≈ RSA-3072 strength; smaller, faster than the common RSA-2048 leaf)
 ```
 
 The wildcard `*.meridian.example` covers `api.meridian.example` and

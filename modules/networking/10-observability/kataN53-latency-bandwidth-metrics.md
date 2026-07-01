@@ -224,7 +224,7 @@ bandwidth utilization.
 
 | Concept | On-prem | GCP | AWS | Azure |
 |---------|---------|-----|-----|-------|
-| Latency measurement | `ping`, `mtr`, `iperf3` to a known host | `ping` to cloud IPs; GCP Network Intelligence Center → Connectivity Tests | `ping`; CloudWatch Network Monitor (previewed 2023) | (Azure: TODO) |
+| Latency measurement | `ping`, `mtr`, `iperf3` to a known host | `ping` to cloud IPs; GCP Network Intelligence Center → Connectivity Tests | `ping`; CloudWatch Network Monitor (GA 2024) | (Azure: TODO) |
 | Bandwidth / throughput | `iperf3`, SNMP interface counters | VPC flow logs show byte counts; no built-in iperf equivalent — use GCE instances | VPC flow logs; CloudWatch NetworkIn/Out | (Azure: TODO) |
 | Jitter monitoring | IPSLA / IP SLA (Cisco), commercial NPM | Network Intelligence Center → Performance Dashboard | CloudWatch Network Monitor; Internet Monitor (internet paths) | (Azure: TODO) |
 | Packet loss | Interface error counters; `mtr` | VPC flow logs (dropped flows); Packet Mirroring + `tcpdump` | VPC flow logs; Traffic Mirroring | (Azure: TODO) |

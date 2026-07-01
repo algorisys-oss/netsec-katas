@@ -186,7 +186,7 @@ its owner and zone.
 | HA subnet pattern | Deploy to two physical chassis/feeds | One subnet serves all zones | Separate subnet per AZ — minimum 2× subnets per tier | One subnet, pin resources to zones |
 | Reserved IPs per subnet | 2 (network + broadcast) | 4 | 5 | 5 |
 | Subnet size minimum | Any (/30 practical) | /29 minimum | /28 minimum | /29 minimum |
-| IP address management | IPAM tool (Infoblox, etc.) | Cloud IPAM (preview) / spreadsheet / Terraform | AWS VPC IPAM (service) | Azure IPAM (within portal) |
+| IP address management | IPAM tool (Infoblox, etc.) | Cloud IPAM (GA IP utilization/insights) / spreadsheet / Terraform | AWS VPC IPAM (service) | Azure IPAM (within portal) |
 | Subnet naming & tagging | IPAM or AD conventions | Labels on subnet resource | Tags on subnet resource | Tags on subnet resource |
 | Private RFC 1918 range | Any RFC 1918 | Any RFC 1918 (GCP also supports RFC 6598) | Any RFC 1918 | Any RFC 1918 |
 | Region choice driver | DC location, latency, DR | Nearest region to users + data-residency requirement | Same | Same |

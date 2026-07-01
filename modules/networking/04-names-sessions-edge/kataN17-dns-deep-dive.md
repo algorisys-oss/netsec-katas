@@ -88,7 +88,7 @@ corporate DNS server has a much richer cache than your laptop.
 | **PTR** | Reverse lookup (IP → name) | `44.1.10.10.in-addr.arpa. IN PTR api.meridian.example.` |
 | **SOA** | Start of Authority: serial, refresh, retry, expire, minimum TTL | One per zone |
 | **TXT** | Free-form text | SPF records, domain ownership verification |
-| **SRV** | Service location (port + host) | Used by SIP, XMPP, Kubernetes |
+| **SRV** | Service location (port + host) | Used by SIP, XMPP, Active Directory domain controllers |
 
 CNAME chains resolve left to right. A CNAME target must itself resolve to an A
 or AAAA — you cannot put a CNAME at the zone apex (the naked domain) because the
@@ -176,6 +176,9 @@ example.                172800  IN      NS      a.iana-servers.net.
 meridian.example.       86400   IN      NS      ns1.meridian.example.
 api.meridian.example.   300     IN      A       10.100.1.20
 ```
+
+(Abbreviated/illustrative — real `+trace` output is longer: it shows the full
+root NS set and a `;; Received … bytes from …` line after each stanza.)
 
 Each stanza shows one iteration step — root → TLD → authoritative — exactly the
 path in the mental model above. Run this against any real domain to see the

@@ -43,6 +43,11 @@ Exceptions: `/31` (2 addrs, point-to-point links, RFC 3021) and `/32` (1 host).
 | /31 | 255.255.255.254 | 2          | 2* (P2P links) |
 | /32 | 255.255.255.255 | 1          | 1 (single host) |
 
+> **`*` on the /31 row:** the `2^(32−n) − 2` formula would give 0, but `/31` is
+> the documented exception — RFC 3021 makes *both* addresses usable for
+> point-to-point links (no network/broadcast reservation). So a /31 yields 2
+> usable hosts, not 0.
+
 **Last-octet jump trick:** for /25–/30, block size = `256 − mask_octet`.
 E.g. /26 → mask 192 → blocks of 64 → subnets at .0, .64, .128, .192.
 

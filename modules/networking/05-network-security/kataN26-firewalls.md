@@ -76,7 +76,8 @@ connection and the SYN is permitted, the firewall creates an entry:
 
 Return packets are automatically permitted if they match an established session
 tracked in the state table. You only write rules for *initiated* traffic. For UDP
-(connectionless), stateful firewalls typically set a timeout (e.g. 30 s) after
+(connectionless), stateful firewalls typically set a short idle timeout (often
+tens of seconds; vendor- and protocol-dependent) after
 the last packet — any reply within that window is considered "return traffic."
 
 **ICMP** responses (e.g. ping reply) are similarly tracked: permit an ICMP echo
@@ -100,11 +101,13 @@ The safe baseline for any production network is **default-deny** (sometimes call
 any`. Everything not explicitly permitted is dropped. This is also called a
 *whitelist* model (contrast with a *blacklist* that only blocks known-bad).
 
-In FSI this is not optional — PCI-DSS v4.0 Requirement 1.2.1 mandates that the
-configuration of network security controls restrict inbound and outbound traffic
-to only that which is necessary, and **specifically deny all other traffic**
-(v4.0 Req 1.4.1 covers the Internet↔CDE boundary specifically; in v3.2.1 the
-default-deny language is also Req 1.2.1). RBI guidelines echo this. The auditor
+In FSI this is not optional — PCI-DSS v4.0 mandates restricting traffic to only
+that which is necessary and **specifically denying all other traffic**: Req 1.3.1
+for inbound traffic to the CDE and Req 1.3.2 for outbound traffic from the CDE
+(Req 1.4.1 covers the Internet↔CDE boundary specifically). In v4.0, Req 1.2.1
+governs configuration standards for network security control (NSC) rulesets; the
+deny-all language lived under Req 1.2.1 in the older v3.2.1. RBI guidelines echo
+this. The auditor
 will ask for evidence that the default is deny.
 
 **Rule order matters because evaluation stops at first match.** A common mistake:
@@ -319,7 +322,7 @@ just CIDRs.
    phrase "connection tracking table."
 2. Why does a stateless firewall need explicit return rules, and what makes that
    risky?
-3. What is default-deny? Which PCI-DSS requirement mandates it? (v4.0 Req 1.2.1)
+3. What is default-deny? Which PCI-DSS requirement mandates it? (v4.0 Req 1.3.1/1.3.2)
 4. In the Meridian Bank rule base, why must Rule 1 (deny cloud→CDE) come before
    Rule 2 (permit cloud→core API)?
 5. In AWS, what is the difference between a Security Group and a Network ACL?

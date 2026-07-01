@@ -215,7 +215,7 @@ proper CAB sign-off per N02).
 | L3 route inspection | `ip route`; `show ip route` on router | `gcloud compute routes list`; VPC Route table in Console | `aws ec2 describe-route-tables` | `az network route-table list` |
 | Path tracing | `traceroute -n`; `mtr` | Same tools on GCE VM; also Connectivity Tests in Network Intelligence Center | Same on EC2; VPC Reachability Analyzer | Same on Azure VM; Network Watcher Connection Troubleshoot |
 | L4 port open? | `nc -zv` | Same on GCE VM | Same on EC2 | Same on Azure VM |
-| Firewall drop check | Syslog / firewall logs | VPC Flow Logs; Firewall Rules Logging (per rule) | VPC Flow Logs; Security Group / NACL | NSG Flow Logs; Network Watcher |
+| Firewall drop check | Syslog / firewall logs | VPC Flow Logs; Firewall Rules Logging (per rule) | VPC Flow Logs; Security Group / NACL | NSG Flow Logs (retiring 30 Jun 2025 → migrate to VNet flow logs); Network Watcher |
 | DNS resolution path | `dig`; `nslookup` | `dig` on GCE; Cloud DNS logs | `dig` on EC2; Route 53 Resolver query logs | `dig`; Azure DNS private resolver logs |
 | Packet capture | `tcpdump` on host | `tcpdump` on GCE; Packet Mirroring (see N54) | `tcpdump` on EC2; VPC Traffic Mirroring | `tcpdump` on VM; Network Watcher packet capture |
 | Automated reachability | — | Network Intelligence Center: Connectivity Tests | VPC Reachability Analyzer | Azure Network Watcher |

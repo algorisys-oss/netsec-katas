@@ -37,8 +37,9 @@ a lower layer than anyone first assumes.
   "ping fails" ≠ "host down" — it may just mean ICMP is blocked while TCP/443 works
   fine. Never conclude an outage from ping alone.
 - **`traceroute`** (Linux/mac) / **`tracert`** (Windows) maps the hops. It sends
-  packets with increasing **TTL** (1, 2, 3…); each router that decrements TTL to 0
-  sends back an ICMP "time exceeded," revealing itself. *Caveats:* routers may
+  probes with increasing **TTL** (1, 2, 3…) — UDP probes by default on Linux, ICMP
+  echo on Windows `tracert` — and each router that decrements TTL to 0 sends back
+  an ICMP "time exceeded," revealing itself. *Caveats:* routers may
   rate-limit/hide ICMP (shown as `* * *`), and paths can be asymmetric (the return
   path differs), so a mid-path `*` is often cosmetic, not a fault.
 - **`mtr`** = traceroute + ping, continuously. It's the better tool for *loss and
@@ -65,6 +66,7 @@ mtr -rwc 50 10.10.50.10          # report mode, 50 cycles, wide; read Loss% at e
 
 # L4 — can we actually open the TCP port? (this is the real test, ICMP-independent)
 nc -vz -w3 10.10.50.10 8443      # "succeeded!" = port open; "refused"/"timed out" differ!
+#   note: -z is OpenBSD/traditional netcat; ncat (nmap's nc) differs — check its flags
 #   refused  → host up, nothing listening (or RST from firewall)
 #   timed out → silently dropped (firewall DROP, or no route back)
 

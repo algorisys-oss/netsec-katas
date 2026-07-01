@@ -166,11 +166,15 @@ between them carries all VLANs:
                             native VLAN 99 on both ends
 ```
 
-The trunk allows VLANs 10, 20, 30, 40, 99. If an attacker gains access to an
-access port and sends a double-tagged 802.1Q frame, they could try to hop to
-the native VLAN (VLAN 99 here, management). The fix: never put production
-traffic on the native VLAN; use a dedicated native VLAN ID that
-carries no real hosts.
+The trunk allows VLANs 10, 20, 30, 40, 99. In a **double-tagging** attack, an
+attacker whose access port sits in the native VLAN crafts a frame with two
+802.1Q tags: an **outer tag = the native VLAN** (which the first switch strips,
+because native-VLAN traffic is sent untagged on the trunk) and an **inner tag =
+the target VLAN**. The next switch then reads the surviving inner tag and
+forwards the frame into a VLAN the attacker should never reach — injecting
+traffic *into* it. It is one-way only (there is no return path). The fix: never
+put production traffic on the native VLAN; use a dedicated, unused native VLAN ID
+that carries no real hosts.
 
 ### Northwind FMCG — OT/IT separation
 

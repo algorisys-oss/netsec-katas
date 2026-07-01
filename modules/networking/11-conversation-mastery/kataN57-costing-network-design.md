@@ -101,7 +101,9 @@ trivial.
 ## Worked example
 
 **Meridian Bank: GCP primary region (`asia-south1`, Mumbai) + AWS secondary
-(`ap-southeast-1`, Singapore) + HQ-DC1 on-prem.**
+(`ap-southeast-1`, Singapore) + HQ-DC1 on-prem.** (This Singapore flow is a
+non-residency analytics pipeline; the bank's regulated AWS prod stays in
+`ap-south-1`/Mumbai for RBI data residency — see N59.)
 
 GCP VPC: `10.100.0.0/14` (see `reference/running-example.md`).
 AWS VPC: `10.104.0.0/14`.
@@ -176,7 +178,7 @@ workload fleet.
 
 | Cost meter | On-prem equivalent | GCP | AWS | Azure |
 |---|---|---|---|---|
-| Egress (region→internet) | ISP transit/bandwidth bill | Cloud Egress; ~$0.08–0.12/GB (varies by region) | Data Transfer Out; ~$0.09/GB (first 10 TB/month US) | Bandwidth / Outbound Data Transfer; (Azure: TODO) |
+| Egress (region→internet) | ISP transit/bandwidth bill | Cloud Egress; ~$0.08–0.12/GB (varies by region) | Data Transfer Out; first 100 GB/mo free (aggregate), then ~$0.09/GB (US regions; higher elsewhere) | Bandwidth / Outbound Data Transfer; (Azure: TODO) |
 | Egress (inter-region) | MPLS circuit utilization | Inter-region egress; ~$0.01–0.08/GB | Cross-region data transfer; ~$0.02/GB (same continent) | (Azure: TODO) |
 | Egress (inter-zone) | LAN cost (near-zero) | ~$0.01/GB between zones | ~$0.01/GB between AZs | (Azure: TODO) |
 | Dedicated interconnect | Leased line / MPLS port | Cloud Interconnect (Dedicated or Partner); port-hr + VLAN attachment-hr + data at ~$0.02/GB | Direct Connect; port-hr + data at ~$0.02/GB | ExpressRoute; circuit + gateway + data (Azure: TODO) |
@@ -184,7 +186,7 @@ workload fleet.
 | Load balancer | F5/Nginx appliance (CapEx) | Cloud Load Balancing; forwarding rule-hr (~$0.025) + data processed (~$0.008/GB) | ALB/NLB; LCU-hr + data processed | Azure Load Balancer / Application Gateway; (Azure: TODO) |
 | NAT gateway | NAT device / PAT on router | Cloud NAT; gateway-hr + data processed (~$0.005–0.045/GB by region) | NAT Gateway; gateway-hr + data processed (~$0.045–0.052/GB) | NAT Gateway; (Azure: TODO) |
 | VPC endpoints / Private Service Connect | On-prem private network paths (no transit charge) | Private Service Connect endpoint; per endpoint-hr | VPC Interface / Gateway Endpoints; interface-hr + data for interface; gateway endpoints free | Private Endpoint; (Azure: TODO) |
-| Public (external) IP addresses | Static IP from ISP | External IP; ~$0.005/hr in-use (attached to VM, running or stopped), higher rate reserved-but-unattached — not free since Feb 2024 | Elastic IP / public IPv4; ~$0.005/hr for all public IPv4 incl. attached to a running instance since Feb 2024 (only a 750 hr/month EC2 free-tier allowance) | Public IP; (Azure: TODO) |
+| Public (external) IP addresses | Static IP from ISP | External IP; ~$0.005/hr in-use (attached to VM, running or stopped), higher rate reserved-but-unattached — a long-standing GCP charge | Elastic IP / public IPv4; ~$0.005/hr for all public IPv4 incl. attached to a running instance since Feb 2024 (only a 750 hr/month EC2 free-tier allowance) | Public IP; (Azure: TODO) |
 | CDN egress | CDN contract | Cloud CDN; ~$0.02–0.08/GB (cheaper than direct egress) | CloudFront; ~$0.0085–0.12/GB (tiered) | Azure CDN; (Azure: TODO) |
 
 ## Do it (the exercise)

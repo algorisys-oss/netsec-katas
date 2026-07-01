@@ -188,6 +188,7 @@ required.
 | L4 TCP/UDP LB (regional) | Cisco ACE / F5 LTM | **Regional external/internal Passthrough Network LB** | **Network Load Balancer (NLB)** | **Azure Load Balancer** |
 | Internal L7 LB (private only) | Internal F5 / HAProxy | **Internal Application Load Balancer** | **Internal ALB** | **Internal Application Gateway** |
 | Internal L4 LB (private only) | Internal VIP / keepalived | **Internal Passthrough Network LB** | **Internal NLB** | **Internal Azure Load Balancer** |
+| L3 transparent appliance insertion (inline security appliances) | (no direct equivalent — inline bump-in-the-wire) | **ILB-as-next-hop** | **Gateway Load Balancer (GWLB)** | (Azure: TODO) |
 | WAF attach point | Inline appliance before LB | **Cloud Armor** (attached to global/regional LB) | **AWS WAF** (attached to ALB / CloudFront) | (Azure: TODO) |
 | DDoS protection | Carrier-scrubbing / on-prem appliance | **Cloud Armor** (volumetric DDoS + adaptive protection) | **AWS Shield Standard/Advanced** | (Azure: TODO) |
 | Managed TLS cert | Manual cert on F5 | **Certificate Manager** (auto-provisioned, auto-renewed) | **ACM (AWS Certificate Manager)** | (Azure: TODO) |
@@ -206,6 +207,8 @@ required.
   in the Global Application LB (traffic enters at a PoP, stays on backbone).
 - On AWS, **NLB** can preserve client IP (flow hash); **ALB** replaces the
   client IP unless you read the `X-Forwarded-For` header.
+- AWS **Classic Load Balancer (CLB)** is the legacy pre-2016 AWS LB, superseded
+  by ALB (L7) and NLB (L4); not chosen for new designs.
 
 ## Do it (the exercise)
 

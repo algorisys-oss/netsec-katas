@@ -34,7 +34,9 @@ of a transaction ledger may outrank everything; for a public website, availabili
   VULNERABILITY   a weakness it could exploit       "unpatched server, weak password"
   RISK            likelihood × impact of that match  "what we actually act on"
 
-  RISK ≈ Threat  ×  Vulnerability  ×  Impact
+  RISK ≈ Likelihood × Impact
+        where Likelihood ≈ Threat × Vulnerability
+        so   RISK ≈ (Threat × Vulnerability) × Impact
 ```
 
 You can't remove threats (attackers exist). You reduce **vulnerabilities** and

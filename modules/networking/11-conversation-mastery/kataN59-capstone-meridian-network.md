@@ -147,8 +147,8 @@ what crosses the boundary.
 ### Step 4 — Segmentation and the CDE
 
 PCI-DSS requires the Cardholder Data Environment (CDE) to be isolated. In
-Meridian's design the CDE lives in HQ-DC1 on `10.10.16.0/20` (a /20 carved from
-the HQ /16). Cloud workloads that touch card data are placed in a dedicated
+Meridian's design the CDE lives in HQ-DC1 on `10.10.20.0/24`. Cloud workloads
+that touch card data are placed in a dedicated
 subnet (`10.100.8.0/24`, the `gcp-prod-data` subnet above) and communicate
 with the on-prem CDE only through a named, logged firewall policy — not by
 default routing.
@@ -157,12 +157,12 @@ The path from a GCP app server to the CDE:
 
 ```
 gcp-prod-app (10.100.4.x)
-  → GCP firewall: allow tcp/8443 to 10.10.16.0/20, log-all
+  → GCP firewall: allow tcp/8443 to 10.10.20.0/24, log-all
   → GCP hub VPC
   → Cloud Interconnect
   → HQ-DC1 edge router
-  → on-prem firewall: allow tcp/8443 from 10.100.4.0/22 to 10.10.16.0/20, log-all
-  → CDE segment (10.10.16.0/20)
+  → on-prem firewall: allow tcp/8443 from 10.100.4.0/22 to 10.10.20.0/24, log-all
+  → CDE segment (10.10.20.0/24)
 ```
 
 Every hop has a named rule, and every rule is logged. The auditor can trace a
@@ -207,7 +207,7 @@ internet-reachable surface. (See N41, N46.)
 | Cloud DNS (private) | Internal DNS server | Cloud DNS private zone | Route 53 private hosted zone | Azure Private DNS zone |
 | WAF / front door | On-prem WAF / reverse proxy | Cloud Armor + Global Ext. LB | AWS WAF + ALB / CloudFront | Azure Front Door + WAF |
 | Egress NAT | NAT44 on perimeter firewall | Cloud NAT | NAT Gateway | Azure NAT Gateway |
-| Flow logging | NetFlow / sFlow on switches | VPC Flow Logs | VPC Flow Logs | NSG flow logs |
+| Flow logging | NetFlow / sFlow on switches | VPC Flow Logs | VPC Flow Logs | NSG flow logs (retiring 30 Jun 2025 → migrate to VNet flow logs) |
 | BGP interconnect | BGP on PE router | Cloud Router (BGP over Interconnect) | Direct Connect Gateway + BGP | ExpressRoute circuit + BGP |
 
 ## Do it (the exercise)

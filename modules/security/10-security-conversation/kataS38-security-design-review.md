@@ -158,9 +158,9 @@ one hop from the core banking firewall with a private source IP.
   quarterly cadence is ASV vulnerability *scanning* under Req 11.3.2 — not pen
   testing.)
 - RBI / PMLA retention: audit logs for all access to `10.10.20.0/24` retained per
-  the applicable retention policy (security logs typically ≥ 1 year under the RBI
-  Cyber Security Framework; transaction/KYC records 5 years under PMLA), with
-  integrity protection.
+  the applicable retention policy (security logs ≥6 months online, with longer
+  archival retention per the applicable RBI direction; transaction/KYC records
+  5 years under PMLA), with integrity protection.
 - Data residency: is `asia-south1` (Mumbai) the GCP region in use? If analytics
   data includes customer identifiers, DPDP Act obligations apply.
 
@@ -179,7 +179,7 @@ runbook.
 | In-transit encryption | MACsec on WAN circuits | MACsec on Dedicated Interconnect, or TLS | MACsec on Direct Connect, or TLS | MACsec on ExpressRoute, or TLS |
 | Key management evidence | HSM / SafeNet | Cloud KMS (CMEK), Cloud HSM | AWS KMS (CMEK), CloudHSM | Key Vault (BYOK) (Azure: TODO full detail) |
 | Posture / misconfiguration | Manual audit | Security Command Center | AWS Security Hub, GuardDuty | Microsoft Defender for Cloud |
-| Flow telemetry | NetFlow / sFlow | VPC Flow Logs → Cloud Logging | VPC Flow Logs → CloudWatch/S3 | NSG Flow Logs → Log Analytics |
+| Flow telemetry | NetFlow / sFlow | VPC Flow Logs → Cloud Logging | VPC Flow Logs → CloudWatch/S3 | VNet flow logs → Log Analytics (NSG flow logs retired 2025) |
 | Change evidence for auditors | CMDB + change tickets | Cloud Audit Logs (immutable) | CloudTrail | Azure Activity Log |
 | Blast-radius isolation | Physical segmentation | VPC perimeter + VPC-SC | VPC + SCP (org-level deny) | VNet + Management Groups |
 

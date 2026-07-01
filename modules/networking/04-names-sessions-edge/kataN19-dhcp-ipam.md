@@ -67,6 +67,7 @@ central server.
   Lease duration    : 28800 seconds (8 hours)
   Lease renewal T1  : 14400 s (50% mark — try to renew with same server)
   Lease renewal T2  : 25200 s (87.5% mark — broadcast to any server)
+                      (server may override T1/T2 defaults)
   Domain search     : meridian.example corp.meridian.example
 ```
 

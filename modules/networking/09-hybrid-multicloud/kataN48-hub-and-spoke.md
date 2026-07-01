@@ -180,7 +180,7 @@ reach which.
 | East-west inspection | Firewall in traffic path | VM-based NGFW or Cloud Next-Gen Firewall in hub | Network Firewall in inspection VPC or Centralized Firewall on TGW | Azure Firewall in the vWAN Secured Hub |
 | On-prem attachment | N/A | Cloud Interconnect VLAN attachment or HA VPN | Direct Connect or Site-to-Site VPN | ExpressRoute or VPN Gateway |
 | VPC peering (non-transitive) | N/A | VPC Network Peering | VPC Peering | VNet Peering |
-| Managed routing SLA | Router FHRP (HSRP/VRRP) | NCC managed; Cloud Router HA | TGW: 99.99% SLA | vWAN Hub: 99.95% SLA |
+| Managed routing SLA | Router FHRP (HSRP/VRRP) | NCC managed; Cloud Router HA | TGW: 99.99% SLA (check current SLA) | vWAN Hub: 99.95% SLA (check current SLA) |
 
 **GCP NCC vs bare hub-VPC peering**
 

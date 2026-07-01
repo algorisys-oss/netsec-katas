@@ -113,9 +113,9 @@ Step 2 — SAST (CI, on every PR diff)
 
 Step 3 — SCA (build step, runs after compile)
   Tool: OWASP Dependency-Check (Maven plugin)
-  Finds: commons-collections 3.2.1  →  CVE-2015-7501  (CVSS 9.8)
-         spring-core 5.3.25          →  CVE-2023-20861 (CVSS 5.3, SpEL DoS,
-                                          fixed in 5.3.26)
+  Finds: commons-collections 3.2.1  →  CVE-2015-7501  (~9.8, Red Hat/GHSA Critical)
+         spring-core 5.3.25          →  CVE-2023-20861 (CVSS ~6.5 NVD, SpEL DoS,
+                                          score varies by feed, fixed in 5.3.26)
   Action: commons-collections flagged Critical → must upgrade before deploy.
           spring-core flagged Medium → scheduled for next sprint.
 
@@ -148,7 +148,7 @@ After fixes, the pipeline green-lights the PR. The CISO's dashboard shows:
 |------|-------|
 | Cost to fix a bug: in design | ~$80 |
 | Cost to fix a bug: in production (FSI, change control) | ~$7,500+ |
-| Commons-collections CVE-2015-7501 CVSS | 9.8 |
+| Commons-collections CVE-2015-7501 CVSS | ~9.8 (score varies by feed) |
 | OWASP ZAP default active-scan threads | 5 (configurable) |
 | SBOM formats (main) | CycloneDX (JSON/XML), SPDX |
 
@@ -220,7 +220,7 @@ AWS equivalent: ECR image signing with AWS Signer + Notation.
        <dependency>
          <groupId>commons-collections</groupId>
          <artifactId>commons-collections</artifactId>
-         <version>3.2.1</version>   <!-- CVE-2015-7501, CVSS 9.8 -->
+         <version>3.2.1</version>   <!-- CVE-2015-7501, CVSS ~9.8 (score varies by feed) -->
        </dependency>
      </dependencies>
    </project>

@@ -147,7 +147,7 @@ network access to and from the CDE is restricted to required flows.
 |---------|---------|-----|-----|-------|
 | Microsegmentation | Host firewall (iptables/nftables) or NSX distributed firewall | VPC firewall rules by service account or network tag | Security Groups per ENI + AWS Network Firewall for stateful east-west inspection | (Azure: TODO — NSG + Azure Firewall; Illumio for agent-based) |
 | Workload identity for policy | AD computer account / Kerberos SPN | GCP Service Account (used as firewall source/target) | IAM role on EC2 instance profile; SG-to-SG referencing | (Azure: TODO — Managed Identity) |
-| Identity-Aware Proxy | Nginx + OIDC plugin; Cloudflare Access | **GCP Cloud IAP** (native; Google Workspace / Cloud Identity) | **AWS Verified Access** (GA 2023); ALB + Cognito as lighter alternative | (Azure: TODO — Azure AD Application Proxy) |
+| Identity-Aware Proxy | Nginx + OIDC plugin; Cloudflare Access | **GCP Cloud IAP** (native; Google Workspace / Cloud Identity) for GCP-hosted apps; **BeyondCorp Enterprise + connector** covers arbitrary on-prem apps | **AWS Verified Access** (GA 2023); ALB + Cognito as lighter alternative | (Azure: TODO — Azure AD Application Proxy) |
 | Top-down deny (org-wide) | Panorama / Cisco ACI contract | Hierarchical Firewall Policy (org/folder level) | SCPs at the AWS Organization level | (Azure: TODO) |
 
 **GCP vs AWS microseg key difference:** GCP VPC firewall rules natively reference

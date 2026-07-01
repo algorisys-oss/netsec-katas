@@ -202,7 +202,7 @@ detects the L7 pattern and applies rate-based/ML-generated rules.
 | IDS (passive) | Dedicated appliance (Snort/Suricata on SPAN port; Cisco Firepower passive) | Packet Mirroring → IDS VM/appliance (partner solutions via Marketplace) | VPC Traffic Mirroring → partner IDS | (Azure: TODO) |
 | IPS (inline) | Hardware appliance inline (Cisco Firepower, Palo Alto, Fortinet) | Packet Mirroring + inline inspection VM in a gateway VPC | AWS Gateway Load Balancer (GWLB) + partner inline appliance | (Azure: TODO) |
 | NDR | On-prem NDR appliance + sensors (Darktrace, ExtraHop, Vectra) | Chronicle + Packet Mirroring; partner NDR via Marketplace | Amazon GuardDuty (flow-based detection); partner NDR via AWS Marketplace | Microsoft Defender for Cloud (network detection component) |
-| Flow telemetry (NDR input) | NetFlow / IPFIX from routers and switches | VPC Flow Logs (see N54) | VPC Flow Logs | NSG Flow Logs |
+| Flow telemetry (NDR input) | NetFlow / IPFIX from routers and switches | VPC Flow Logs (see N54) | VPC Flow Logs | VNet flow logs (NSG flow logs retired 2025) |
 | DDoS (volumetric) | ISP-level scrubbing (null-route or BGP blackhole); on-site anti-DDoS appliance | Cloud Armor (edge, integrated with external LB) | AWS Shield Standard (auto); AWS Shield Advanced (managed, SRT support) | Azure DDoS Protection — Network Protection / IP Protection SKU (the former "Basic" tier is now free always-on platform coverage) |
 | DDoS (L7 application) | WAF + rate limiting (see N25) | Cloud Armor security policies (rate-based rules, adaptive protection) | AWS WAF rate-based rules + Shield Advanced | Azure WAF + Azure DDoS Protection (Network/IP Protection) |
 | SIEM integration | SIEM (Splunk, IBM QRadar) receives IDS/IPS alerts via syslog | Chronicle SIEM + Cloud Logging | Amazon Security Lake + GuardDuty findings | Microsoft Sentinel |
@@ -286,7 +286,8 @@ No tools needed. Draw the TCP 3-way handshake:
 
   SYN flood:
   Attacker ──SYN (spoofed src IP)──► Server (allocates entry; waits for ACK)
-  [no ACK ever arrives — entry sits in half-open table until timeout, ~75 sec]
+  [no ACK ever arrives — entry sits in half-open table until a timeout
+   (OS-dependent, historically on the order of a minute)]
   Repeat millions of times → half-open table fills → server rejects legitimate SYNs
 ```
 

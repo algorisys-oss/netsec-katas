@@ -258,7 +258,8 @@ SD-WAN overlays use IPsec. IPsec adds header overhead:
 
 ```
   Standard Ethernet MTU:   1500 bytes
-  IPsec tunnel (ESP/AH):  − 50–80 bytes overhead (ESP header + IV + padding + auth tag)
+  IPsec tunnel (ESP):     − 50–80 bytes overhead (ESP header + IV + padding + auth tag)
+                            (encrypted overlays use ESP; AH provides integrity only, no encryption)
   Effective payload MTU:   ~1420–1450 bytes (varies by mode and cipher)
 ```
 

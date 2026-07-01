@@ -175,7 +175,7 @@ lockout threshold for a detection capability against distributed credential stuf
 |---------|---------|-----|-----|-------|
 | System/app logs | Syslog / Windows Event Forwarding | Cloud Logging (structured JSON log sink) | CloudWatch Logs | Azure Monitor Logs |
 | Cloud control-plane audit | N/A | Cloud Audit Logs (Admin Activity, Data Access) | CloudTrail | Azure Activity Log |
-| Network flow records | NetFlow / IPFIX from router | VPC Flow Logs (N54) | VPC Flow Logs | NSG Flow Logs |
+| Network flow records | NetFlow / IPFIX from router | VPC Flow Logs (N54) | VPC Flow Logs | VNet flow logs (NSG flow logs retired 2025) |
 | DNS query logging | On-prem DNS debug log / DDI tool | Cloud DNS query logging (per-zone policy) | Route 53 Resolver Query Logging | Azure DNS diagnostic logs |
 | Threat detection / SIEM | Splunk, QRadar, ArcSight | Chronicle (Google SecOps) | Amazon Security Hub + GuardDuty | Microsoft Sentinel |
 | Cloud-native threat detection | N/A | Security Command Center (SCC) | GuardDuty | Microsoft Defender for Cloud |

@@ -206,7 +206,7 @@ addressed with NAT at the DC edge, not in cloud.
 | Baseline firewall policy | Central firewall (Palo Alto, Fortinet, etc.) | **Hierarchical Firewall Policies** + Cloud NGFW | **Network Firewall** + Security Groups / NACLs | Azure Firewall + NSG policy |
 | IP governance | IPAM (Infoblox, etc.) | Manual allocation + Org Policy deny invalid ranges | AWS IPAM (VPC IPAM) | Azure Virtual Network Manager |
 | Dedicated connectivity | MPLS / leased line to DC | **Cloud Interconnect** (Dedicated or Partner) | **AWS Direct Connect** | **Azure ExpressRoute** |
-| Central logging / telemetry | Syslog → SIEM | VPC Flow Logs → Log sink → Chronicle/Pub/Sub | VPC Flow Logs → S3 → Security Hub / SIEM | NSG Flow Logs → Log Analytics → Sentinel |
+| Central logging / telemetry | Syslog → SIEM | VPC Flow Logs → Log sink → Chronicle/Pub/Sub | VPC Flow Logs → S3 → Security Hub / SIEM | VNet flow logs → Log Analytics → Sentinel (NSG flow logs retired 2025) |
 | Landing zone automation | Gold image + Ansible | **Cloud Foundation Toolkit** (CFT) / Terraform blueprints | **AWS Control Tower** + Landing Zone Accelerator | **Azure Landing Zone** (ALZ) Bicep/Terraform |
 | Policy enforcement timing | Manual change-control | Org Policy (preventive), Security Command Center (detective) | SCPs (preventive), Config Rules (detective) | Azure Policy (preventive + detective) |
 

@@ -71,8 +71,9 @@ connection was made but not *what* was exchanged.
 ### TLS inspection (SSL bumping)
 
 Some enterprises break open TLS to inspect HTTPS content. The proxy:
-1. Intercepts the CONNECT, terminates TLS with a **proxy CA cert** issued to the
-   target domain (e.g. `api.saas.com`) signed by an internal CA.
+1. Intercepts the CONNECT, terminates TLS by generating a **server (leaf)
+   certificate** for the target domain (e.g. `api.saas.com`) on-the-fly, signed
+   by the proxy's internal CA.
 2. Re-originates a new TLS connection to the real server.
 3. Inspects (and can block/log) the decrypted payload.
 
@@ -355,7 +356,8 @@ path.
 
 - RFC 7235 §3.2 — `407 Proxy Authentication Required` and how proxy auth works
   at the HTTP layer.
-- RFC 7231 §4.3.6 — the `CONNECT` method spec (originally defined in RFC 2817).
+- CONNECT semantics were formalized in RFC 2817 and restated in RFC 7231 §4.3.6
+  (now RFC 9110 §9.3.6).
 - [Proxy Auto-Config (PAC) — MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Proxy_servers_and_tunneling/Proxy_Auto-Configuration_PAC_file) — the full PAC JavaScript API.
 - Squid access log format: `http://www.squid-cache.org/Doc/config/logformat/` — how
   to read what the proxy actually records.

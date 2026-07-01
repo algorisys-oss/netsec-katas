@@ -61,7 +61,8 @@ different categories:
 
 A password alone is one factor — all eggs in the "know" basket. A stolen password
 is undetectable without a second factor. This is why every FSI security policy
-mandates MFA for privileged accounts (PCI-DSS Req 8.4, RBI IT Framework §6).
+mandates MFA for privileged accounts (PCI-DSS Req 8.4.1 — MFA for all non-console
+administrative access into the CDE, RBI IT Framework §6).
 
 ---
 
@@ -253,8 +254,12 @@ access card PANs even if compromised. This is how token scope limits blast radiu
 # Generate a test JWT at https://jwt.io or use this local approach:
 TOKEN=$(curl -s https://httpbin.org/bearer | python3 -c "import sys,json; print(json.load(sys.stdin).get('token','no token found'))" 2>/dev/null || echo "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlByaXlhIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c")
 
-# Decode the payload (middle part) without a library:
-echo "$TOKEN" | cut -d'.' -f2 | base64 -d 2>/dev/null | python3 -m json.tool
+# Decode the payload (middle part) without a library.
+# JWT uses base64url (unpadded, with -_ instead of +/), so convert to standard
+# base64 and re-pad before decoding — plain `base64 -d` can fail on such tokens:
+P=$(echo "$TOKEN" | cut -d'.' -f2 | tr '_-' '/+')
+printf '%s' "$P$(printf '=%.0s' $(seq $(( (4 - ${#P} % 4) % 4 ))))" \
+  | base64 -d 2>/dev/null | python3 -m json.tool
 ```
 
 Look at the decoded payload. Ask yourself:

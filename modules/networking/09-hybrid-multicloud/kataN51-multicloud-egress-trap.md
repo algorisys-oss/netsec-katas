@@ -40,7 +40,7 @@ Rule of thumb for 2024–2025 list pricing (always verify with pricing calculato
 - AWS egress to internet: ~$0.09/GB (first 100 GB/month free, then tiered)
 - Cloud-to-cloud (GCP ↔ AWS) via internet: both providers charge their own egress
   — you pay **twice**, once on each side
-- Via dedicated link (Cloud Interconnect / Direct Connect): typically ~$0.02/GB
+- Via dedicated link (Cloud Interconnect / Direct Connect): typically ~$0.02–0.05/GB
   egress, often cheaper than internet egress
 
 ### 2. The three ways clouds talk to each other
@@ -182,7 +182,7 @@ and compliance team requires east-west inspection of inter-cloud flows.
 |---------|-------------------|-----|-----|-------|
 | Dedicated private link to cloud provider | Private leased line / MPLS to DC | **Cloud Interconnect** (Dedicated or Partner) | **Direct Connect** (Dedicated or Hosted) | ExpressRoute |
 | Cloud-to-cloud via private backbone | Site-to-site MPLS between DCs | Cloud Interconnect + cross-connect + Direct Connect (at same IX) | Same, from AWS side | (Azure: TODO) |
-| Encrypted tunnel over internet (budget option) | IPsec VPN between firewalls | **Cloud VPN** (HA VPN, 2 tunnels, 3 Gbps each) | **Site-to-Site VPN** (up to 1.25 Gbps per tunnel) | VPN Gateway |
+| Encrypted tunnel over internet (budget option) | IPsec VPN between firewalls | **Cloud VPN** (HA VPN, 2 tunnels, up to ~3 Gbps per tunnel, per-flow, best-effort) | **Site-to-Site VPN** (up to 1.25 Gbps per tunnel) | VPN Gateway |
 | Transit routing hub | Core router / MPLS PE | **Network Connectivity Center (NCC)** | **Transit Gateway (TGW)** | Virtual WAN |
 | Egress pricing unit | Bandwidth (committed rate) | Per-GB; free within same region, priced cross-region & internet | Per-GB tiered; free tier 100 GB/month | Per-GB tiered |
 | Private service endpoint (no internet) | MPLS private APN | **Private Service Connect (PSC)** | **PrivateLink** | Private Endpoint |

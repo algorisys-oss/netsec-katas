@@ -60,7 +60,7 @@ that scales across 100 projects without per-project configuration.
 |---|---|---|
 | Prevent VMs from getting external IPs: `constraints/compute.vmExternalIpAccess` set to `allowedValues: []` | Deny `ec2:AllocateAddress` in prod OUs except by the platform account | `Deny effect` policy: `Microsoft.Network/publicIPAddresses` creation blocked in production subscriptions |
 | Restrict resource regions to `asia-south1` for data-residency | SCP denying EC2/RDS in non-approved regions | Azure Policy `allowedLocations` initiative |
-| Enforce VPC Flow Logs on all subnets (no built-in constraint — use a custom Org Policy constraint or an SCC detector) | SCP requiring GuardDuty + CloudTrail enabled on all accounts | Azure Policy `deployIfNotExists` for NSG flow logs |
+| Enforce VPC Flow Logs on all subnets (no built-in constraint — use a custom Org Policy constraint or an SCC detector) | SCP requiring GuardDuty + CloudTrail enabled on all accounts | Azure Policy `deployIfNotExists` for VNet flow logs (NSG flow logs retired 2025) |
 
 At Meridian Bank, the GCP Org Policy enforcing `asia-south1` for regulated data
 and blocking external IP addresses on production VMs are the two controls the
@@ -272,7 +272,7 @@ uses three VPCs:
 | Hierarchical / enterprise-enforced rules | Vendor-managed rule push from NGFW manager | Hierarchical Firewall Policy (Org → Folder → VPC) | AWS Firewall Manager (centrally managed SGs/WAF) | Azure Firewall Manager |
 | WAF | Physical WAF appliance (F5, Fortinet) | Cloud Armor (OWASP CRS) | AWS WAF + managed rule groups | Azure WAF (Front Door / App Gateway) |
 | DDoS — volumetric | Scrubbing center / ISP blackhole | Cloud Armor Standard / Managed Protection Plus | AWS Shield Standard / Shield Advanced | Azure DDoS Protection Basic / Standard |
-| Network flow evidence | NetFlow / IPFIX from firewall | VPC Flow Logs (subnet-level) | VPC Flow Logs (per-ENI or subnet) | NSG Flow Logs → Traffic Analytics |
+| Network flow evidence | NetFlow / IPFIX from firewall | VPC Flow Logs (subnet-level) | VPC Flow Logs (per-ENI or subnet) | VNet flow logs → Traffic Analytics (NSG flow logs retired 2025) |
 | Packet-level inspection / IDS | Inline IPS or SPAN-fed IDS | Cloud IDS (Palo Alto, via Packet Mirroring) | AWS Network Firewall / Traffic Mirroring → IDS | Azure Firewall Premium (IDPS) |
 
 ## Do it (the exercise)

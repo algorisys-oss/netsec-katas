@@ -172,8 +172,10 @@ patterns, credential stuffing, or data exfiltration. Alerts ship to the SIEM.
 
 Cost reality check: a `/20` (4,092 usable hosts in GCP, which reserves 4 per
 range) mirroring all traffic at 1 Gbps average ≈ 10.8 TB/day of mirrored bytes.
-At GCP's Packet Mirroring pricing (~$0.05 per GB as of early 2026), that is
-~$540/day. In practice Meridian would mirror only the card-processor VMs — a
+At GCP's Packet Mirroring pricing (~$0.05 per GB as of early 2026 — verify
+current Packet Mirroring model and pricing, as the product is being
+re-architected), that is ~$540/day. In practice Meridian would mirror only the
+card-processor VMs — a
 properly aligned `10.100.16.32/27` (.32–.63, 32 addresses) — and filter to the
 specific service ports, dropping the cost by ~90%.
 
@@ -194,10 +196,10 @@ exfiltrating to an unexpected internet IP after an OT/IT boundary break).
 
 | Concept | On-prem | GCP | AWS | Azure |
 |---------|---------|-----|-----|-------|
-| Flow logging | NetFlow / IPFIX exported from router or firewall | **VPC Flow Logs** (per subnet, sampling configurable, sinks to Cloud Logging/Storage/BigQuery) | **VPC Flow Logs** (per ENI, subnet, or VPC; published to CloudWatch Logs or S3) | **NSG Flow Logs** stored in Azure Storage (Azure: flow log API v2 supports Traffic Analytics via Log Analytics) |
+| Flow logging | NetFlow / IPFIX exported from router or firewall | **VPC Flow Logs** (per subnet, sampling configurable, sinks to Cloud Logging/Storage/BigQuery) | **VPC Flow Logs** (per ENI, subnet, or VPC; published to CloudWatch Logs or S3) | **NSG Flow Logs** stored in Azure Storage (retiring 30 Jun 2025 → migrate to VNet flow logs; Azure: flow log API v2 supports Traffic Analytics via Log Analytics) |
 | Flow log granularity | Per-flow, per-interface | Per subnet or per VM NIC; 5 s–15 min aggregation | Per ENI (elastic network interface); 1 min or 10 min intervals | Per NSG (covers the NIC or subnet the NSG is attached to) |
 | Flow log sink / query | NetFlow collector (e.g. ntopng, Elastic) | Cloud Logging, Cloud Storage, BigQuery | CloudWatch Logs, S3 + Athena | Azure Storage, Log Analytics / Sentinel |
-| Packet mirroring / SPAN | SPAN port, network TAP | **Packet Mirroring** (policy on subnet or VM tag; copies to ILB/collector) | **VPC Traffic Mirroring** (on individual ENIs; copies to NLB or target ENI) | **Azure vNET TAP** — (Azure: TODO — feature exists in preview on select regions; check current GA status) |
+| Packet mirroring / SPAN | SPAN port, network TAP | **Packet Mirroring** (policy on subnet or VM tag; copies to ILB/collector — verify current model & pricing, product being re-architected) | **VPC Traffic Mirroring** (on individual ENIs; copies to NLB or target ENI) | **Azure vNET TAP** — (Azure: TODO — feature exists in preview on select regions; check current GA status) |
 | IDS integration | Dedicated IDS appliance on SPAN port | Packet Mirroring → IDS VM or Cloud IDS (managed) | Traffic Mirroring → partner IDS (e.g. Suricata via Marketplace) or Gateway Load Balancer GWLB | Azure vNET TAP → partner sensor (Azure: TODO) |
 | Managed IDS (no sensor VM) | Rarely on-prem | **Cloud IDS** (powered by Palo Alto, mirrors under the hood) | **Amazon Inspector** (not traffic IDS — vulnerability scan); GuardDuty analyses VPC Flow Logs for threat signals | **Microsoft Defender for Cloud** + Azure Sentinel (log-based; no inline mirroring equivalent in GA) |
 | Egress / transit flow visibility | Core switch / MPLS PE router | Enable **VPC Flow Logs** (subnet-level) and **Cloud NAT logging** for north-south; **Packet Mirroring** for east-west | Enable Flow Logs on **Transit Gateway** ENI or NAT Gateway | Enable Flow Logs on **VPN Gateway** or **NAT Gateway** (Azure: TODO) |

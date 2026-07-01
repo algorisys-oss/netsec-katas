@@ -30,6 +30,7 @@ Two models. **OSI** (7 layers) is the teaching/reference model everyone *names*.
  ───────────────────────────────────────────────────────────────────────
  2 Data Link    ┐
  1 Physical     ┴─ Link        │ Link/Network     Ethernet, MAC, ARP, Wi-Fi, cables
+                                                   (ARP straddles L2/L3 — it maps L3 addresses to L2)
 ```
 
 The mnemonic (7→1): **A**ll **P**eople **S**eem **T**o **N**eed **D**ata

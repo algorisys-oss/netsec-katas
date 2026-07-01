@@ -370,7 +370,8 @@ network-ops, not the security team. The architect must ask who owns them.
 **The audit log that no one reads.** Cloud Audit Logs enabled on GCP, CloudTrail
 on AWS — but exported to a storage bucket with no SIEM integration, no alert, and
 a 30-day retention. Logs are evidence for forensics; they are not detection.
-At Meridian Bank, RBI mandates 2 years of log retention for critical systems.
+At Meridian Bank, RBI requires ≥6 months online, with longer archival retention
+per the applicable RBI direction, for logs from critical systems.
 Confirm the retention policy and the alert rule, not just the "logs enabled" checkbox.
 
 ## Going deeper (optional)

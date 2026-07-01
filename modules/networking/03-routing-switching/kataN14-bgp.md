@@ -19,11 +19,15 @@ questions.
 ### Interior vs exterior routing (see N13)
 
 OSPF fills the routing table *inside* a single network. BGP fills it *between*
-networks. The boundary is the **Autonomous System (AS)** — a network under one
+networks. BGP is a **path-vector** protocol: each route carries the full
+**AS_PATH** (the list of ASes it traversed), which peers use for loop prevention
+and path selection. Peers exchange routes over a **TCP session on port 179**.
+The boundary is the **Autonomous System (AS)** — a network under one
 administrative policy (a company, a cloud provider, an ISP). Each AS has an
 **ASN** (AS Number):
 
-- Public ASNs: 1–64511 (within the 16-bit range; Google = AS15169, AWS = AS16509).
+- 16-bit public ASNs run 1–64495 (64512–65534 are private, RFC 6996; 0, 23456,
+  65535 are reserved). Google = AS15169, AWS = AS16509.
   4-byte ASNs (RFC 6793) extend the public space up to 4199999999.
 - **Private ASNs: 64512–65534** — used on private interconnects and enterprise
   WANs, just as RFC 1918 addresses are used for private IPs
@@ -108,7 +112,7 @@ and N11 for the Northwind/Eastfield overlap story).
 |---------|---------|-----|-----|-------|
 | Private interconnect | MPLS / leased line | Cloud Interconnect (Dedicated or Partner) | AWS Direct Connect | (Azure: TODO) |
 | BGP speaker | CPE router you own | Cloud Router (managed; no router VM) | Virtual Private Gateway or Transit Gateway | (Azure: TODO) |
-| ASN on cloud side | Carrier ASN | AS15169 public, or private ASN per VLAN attachment | Private VGW default 64512 (since 2018; AS7224 is the legacy default, still used on public VIFs), or customer-chosen private ASN | (Azure: TODO) |
+| ASN on cloud side | Carrier ASN | Cloud Router BGP ASN is private/configurable: Google side defaults to 16550 on Partner Interconnect; on Dedicated you choose the peer ASN. (AS15169 is Google's PUBLIC internet-peering ASN, not the interconnect BGP session ASN.) | Private VGW default 64512 (since 2018; AS7224 is the legacy default, still used on public VIFs), or customer-chosen private ASN | (Azure: TODO) |
 | Route propagation | Redistribute BGP → OSPF on CPE | Cloud Router auto-populates VPC route table | BGP routes propagate to VGW / TGW route table | (Azure: TODO) |
 | Path preference (outbound from on-prem) | LOCAL_PREF on CPE | Set LOCAL_PREF on your CPE; Cloud Router does not expose LOCAL_PREF | Set LOCAL_PREF on customer router | (Azure: TODO) |
 | Path preference (inbound to cloud) | MED, AS_PATH prepend | Cloud Router honours MED; lower = preferred entry | AWS honours MED and AS_PATH length | (Azure: TODO) |

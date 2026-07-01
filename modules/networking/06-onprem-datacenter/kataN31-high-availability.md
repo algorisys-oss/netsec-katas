@@ -184,8 +184,9 @@ this design before a design review:
 What happens when RTR-A's NIC fails hard (link down):
 1. RTR-A's uplink LAG loses a member; if only 1 member remains, LACP keeps
    the bundle up (minimum-links = 1).
-2. RTR-B misses three consecutive HSRP hellos (3 s × 3 = 9 s < 10 s hold
-   timer), then transitions to Active at ~10 s.
+2. RTR-B stops receiving HSRP hellos from RTR-A. HSRP does not count missed
+   hellos — RTR-B transitions to Active only when its **10 s hold timer**
+   (reset by each hello) expires with no hello received.
 3. RTR-B sends a **gratuitous ARP** for 10.10.10.1, binding the virtual MAC
    to RTR-B's uplink. Switches update their CAM tables.
 4. Server traffic resumes via RTR-B. Downtime: ~10 s (configurable down to

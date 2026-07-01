@@ -68,7 +68,8 @@ host addresses in a single subnet. That is intentional; it enables auto-config
 ::1/128             Loopback (like 127.0.0.1)
 fe80::/10           Link-local: auto-assigned, not routed beyond the link
 fc00::/7            Unique Local Address (ULA): RFC 4193, like RFC 1918 private
-                      → fc00::/8 and fd00::/8 sub-ranges; fd:: is commonly used
+                      → of fc00::/7, only fd00::/8 is currently usable
+                        (locally-assigned prefixes); fc00::/8 is reserved/undefined
 2000::/3            Global Unicast Address (GUA): routable on the public internet
                       → the space cloud providers and ISPs assign from
 ff00::/8            Multicast (replaces IPv4 broadcast)

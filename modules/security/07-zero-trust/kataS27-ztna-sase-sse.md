@@ -211,7 +211,7 @@ by the cloud-delivered SSE subscription. Northwind avoids hardware refresh on a
 
 | Concept | On-prem | GCP | AWS | Azure |
 |---------|---------|-----|-----|-------|
-| ZTNA (per-app access) | Citrix Access Gateway, BIG-IP APM (on-prem ZTNA) | Cloud IAP (Identity-Aware Proxy) — per-app, no VPN needed | AWS Verified Access (per-app, identity + device-posture gated) | (Azure: TODO — Entra Application Proxy covers internal apps) |
+| ZTNA (per-app access) | Citrix Access Gateway, BIG-IP APM (on-prem ZTNA) | Cloud IAP (GCP-hosted apps); BeyondCorp Enterprise + connector for on-prem apps — per-app, no VPN needed | AWS Verified Access (per-app, identity + device-posture gated) | (Azure: TODO — Entra Application Proxy covers internal apps) |
 | SWG (internet egress control) | Squid / Bluecoat / Zscaler appliance | Secure Web Proxy (SWP) — native forward proxy / SWG (third-party such as Palo Alto / Zscaler also common) | AWS Network Firewall (+ Gateway LB for SWG appliance) | (Azure: TODO — Defender for Cloud Apps + Firewall Premium) |
 | CASB | Symantec, McAfee, Netskope on-prem | Google Workspace DLP / CASB (built-in); Palo Alto NGFW for third-party SaaS | Amazon Macie (data); AWS Security Hub; third-party CASB | (Azure: TODO — Microsoft Defender for Cloud Apps) |
 | SASE (full stack) | HQ data center as hub (legacy) | BeyondCorp Enterprise (Google's ZTNA + Chrome Enterprise) | No single AWS-native SASE; AWS partners with Palo Alto Prisma, Zscaler | (Azure: TODO — Microsoft Entra + Defender stack loosely equivalent) |

@@ -100,7 +100,8 @@ return traffic is covered," they are counting on a stateful device — verify th
 ```
 
 `TIME_WAIT` is the 2×MSL (Maximum Segment Lifetime) pause after close; typically
-60 seconds. Under high connection-rate workloads (e.g. a payment gateway) you can
+60 seconds (this is Linux-specific — a fixed 60 s; RFC 793's MSL is 2 minutes, so
+2×MSL would be 4 min). Under high connection-rate workloads (e.g. a payment gateway) you can
 exhaust ephemeral ports if connections don't close cleanly — this is a real
 production problem (see Pitfalls).
 
@@ -317,8 +318,11 @@ which are stateless in the path.
 **TIME_WAIT port exhaustion at Meridian Bank's payment gateway.** Short-lived HTTPS
 connections to the card-processor API close quickly. Each goes through `TIME_WAIT`
 for ~60 seconds. At 1,000 connections/second × 60 s = 60,000 sockets in
-`TIME_WAIT` simultaneously. The Linux ephemeral range (32,768–60,999) is ~28,000
-ports. Without `SO_REUSEADDR` / `tcp_tw_reuse` tuning or persistent connections
+`TIME_WAIT` simultaneously. Because every connection targets the *same*
+destination IP:port (the card-processor API), the connection 4-tuple varies only
+by source port — so the ~28,000-port Linux ephemeral range (32,768–60,999) is the
+hard ceiling. (A different destination IP or port would free the whole range
+again.) Without `SO_REUSEADDR` / `tcp_tw_reuse` tuning or persistent connections
 (keep-alive), the gateway runs out of source ports and starts dropping new
 connections. The tell-tale error is `EADDRNOTAVAIL` / "cannot assign requested
 address" from `connect()`/`bind()` — *not* "connection refused" (`ECONNREFUSED`),

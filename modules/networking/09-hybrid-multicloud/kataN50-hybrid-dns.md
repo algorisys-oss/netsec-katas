@@ -162,6 +162,8 @@ Step-by-step resolution:
 
 ```
 1.  VM sends UDP query to 169.254.169.254:53 (Cloud DNS stub resolver)
+      (note, see N45: 169.254.169.254 is the shared metadata/DNS link-local
+       address — here it serves DNS, distinct from its IMDS metadata role)
 2.  Cloud DNS checks: does a private zone match *.internal.meridian.local? No.
 3.  Cloud DNS checks: does a forwarding policy match? Yes —
       rule: *.internal.meridian.local → forward to 10.10.1.53

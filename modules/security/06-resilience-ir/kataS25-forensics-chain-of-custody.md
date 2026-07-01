@@ -227,7 +227,7 @@ sha256sum /mnt/evidence/gcp-audit-logs-meridian-production.json \
 | Concept | On-prem | GCP | AWS | Azure |
 |---------|---------|-----|-----|-------|
 | Immutable audit log | Syslog shipped to SIEM | Cloud Audit Logs (Admin Activity: 400 days; Data Access: configurable) | CloudTrail (90 days event history; S3 bucket for long-term) | Azure Activity Log / Microsoft Sentinel (Azure: TODO) |
-| Network flow evidence | NetFlow/IPFIX from routers (N35) | VPC Flow Logs — subnet or NIC level, export to Cloud Storage/BigQuery | VPC Flow Logs — per-ENI, export to S3 or CloudWatch | NSG Flow Logs (Azure: TODO) |
+| Network flow evidence | NetFlow/IPFIX from routers (N35) | VPC Flow Logs — subnet or NIC level, export to Cloud Storage/BigQuery | VPC Flow Logs — per-ENI, export to S3 or CloudWatch | VNet flow logs (NSG flow logs retired 2025; Azure: TODO) |
 | Packet capture | SPAN port / network TAP | Packet Mirroring (to IDS VM or PCAP bucket) | Traffic Mirroring (per ENI, to NLB or target) | (Azure: TODO) |
 | Cloud evidence preservation | Legal hold on tape | Log bucket lock (Object Retention / retention policy) + Log sink to separate project | S3 Object Lock (WORM) on CloudTrail bucket | (Azure: TODO) |
 | Incident containment | ACL/firewall block | Firewall rule or org policy deny; quarantine network tag | Security Group revoke-all / NACL deny; VPC isolation | (Azure: TODO) |

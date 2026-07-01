@@ -54,8 +54,11 @@ to publish; the private key never leaves its owner.
 ```
 
 **Guarantees:** Confidentiality (only the private-key holder can read it).
-**Common algorithms:** RSA-2048 / RSA-4096, ECDH/ECDSA on P-256 or P-384.
-Elliptic curve variants are preferred today — smaller keys, same security level.
+**Common algorithms:** RSA-OAEP (RSA-2048 / RSA-4096) for direct encryption; ECIES
+or ECDH-for-key-agreement (on P-256 or P-384) for the elliptic-curve equivalent.
+(ECDSA is a *signature* algorithm — no confidentiality — so it belongs in the
+signing section, not here.) Elliptic curve variants are preferred today — smaller
+keys, same security level.
 **Cost:** ~1,000× slower than AES per byte. Never used for bulk data.
 **Where you see it:** Key exchange (wrapping a symmetric key so it can travel
 safely), TLS handshake, encrypted email (S/MIME, PGP).
@@ -94,7 +97,7 @@ Signing flips the asymmetric key direction and adds a hash:
   Alice signs a document:
 
   1. Compute:  digest = SHA-256(document)
-  2. Encrypt:  signature = RSA-encrypt(digest, Alice's PRIVATE key)
+  2. Encrypt:  signature = RSA-encrypt(digest, Alice's PRIVATE key)  (simplified — see caveat below)
   3. Send:     document + signature
 
   Bob verifies:
@@ -237,7 +240,7 @@ not a password.
 openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -pubout -out public.pem
 
-# Sign: hash the file and encrypt the hash with the private key
+# Sign: hash the file and encrypt the hash with the private key (simplified — see caveat below)
 openssl dgst -sha256 -sign private.pem -out transfer.sig plaintext.txt
 
 # Verify: recompute the hash and check against signature using the public key
@@ -336,9 +339,10 @@ nmap --script ssl-enum-ciphers -p 443 <host>
 
 ## Going deeper (optional)
 
-- RFC 5116 — "An Interface and Algorithms for Authenticated Encryption": the
-  specification behind AES-GCM, the authenticated-encryption mode that protects
-  both confidentiality and integrity in one pass.
+- RFC 5116 — "An Interface and Algorithms for Authenticated Encryption": the AEAD
+  interface standardizing how AES-GCM is used (GCM itself is defined in NIST SP
+  800-38D), the authenticated-encryption mode that protects both confidentiality
+  and integrity in one pass.
 - NIST SP 800-57 Part 1 Rev 5 — Recommendation for Key Management: the authoritative
   source for key lengths, key types, and rotation guidance; what a good CISO cites.
 - RFC 8017 — PKCS #1: RSA cryptography standard; the spec behind RSA signing.

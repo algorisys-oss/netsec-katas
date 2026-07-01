@@ -10,7 +10,7 @@ steps are always marked `[needs cloud account]` and are optional until Module 8.
 |------|-----|-------|-------|
 | `ping` | reachability | built-in | built-in |
 | `traceroute` / `mtr` | path + per-hop loss | `apt install traceroute mtr` | `brew install mtr` |
-| `dig` / `nslookup` | DNS queries | `apt install dnsutils` | built-in / `brew install bind` |
+| `dig` / `nslookup` | DNS queries | `apt install dnsutils` | `nslookup` built-in; `brew install bind` pulls full BIND to get `dig` |
 | `ip` (iproute2) | addresses, routes, links | built-in | use `ifconfig`/`netstat` or Linux container |
 | `tcpdump` | packet capture | `apt install tcpdump` | built-in |
 | Wireshark | packet capture GUI | `apt install wireshark` | `brew install --cask wireshark` |

@@ -102,7 +102,8 @@ cloud interconnect speaks.
 OSPF (RFC 2328 for IPv4 / OSPFv2; RFC 5340 for IPv6 / OSPFv3) is a
 **link-state** protocol. Every router learns the entire topology and runs
 **Dijkstra's shortest-path algorithm** locally to compute the best route to
-every destination.
+every destination. OSPF runs **directly over IP as protocol number 89** — not
+over TCP or UDP; it provides its own reliability and neighbor handling.
 
 The three steps:
 
@@ -228,7 +229,9 @@ Neighbor ID     Pri   State           Dead Time   Interface
 
 On a **broadcast segment** (Ethernet), OSPF elects a **Designated Router
 (DR)** and **Backup DR (BDR)** to reduce LSA flooding. All other routers only
-form full adjacencies with the DR/BDR, not with each other. On point-to-point
+form full adjacencies with the DR/BDR, not with each other. Non-DR routers send
+their LSAs to **224.0.0.5 (AllSPFRouters)**, while the DR and BDR listen on
+**224.0.0.6 (AllDRouters)** and re-flood on 224.0.0.5. On point-to-point
 links (/30, /31), there is no DR/BDR election — both sides go directly to
 FULL state.
 
